@@ -1,0 +1,5 @@
+.idea
+*/.DS_Store
+.DS_Store
+public/upload
+common/config/db.php

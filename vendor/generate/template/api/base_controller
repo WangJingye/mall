@@ -1,0 +1,10 @@
+<?php
+
+namespace {{app}}\common\controller;
+
+use component\RestController;
+
+class BaseController extends RestController
+{
+
+}
