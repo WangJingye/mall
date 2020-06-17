@@ -9,11 +9,20 @@
         <input type="text" class="form-control search-input" name="nickname" value="<?= $this->params['nickname'] ?>">
     </div>
     <div class="form-content">
+        <span class="col-form-label search-label">订单类型</span>
+        <select class="form-control search-input" name="order_type">
+            <option value="">请选择</option>
+            <?php foreach ($this->orderTypeList as $k => $v): ?>
+                <option value="<?= $k ?>" <?= $this->params['order_type'] == (string)$k ? 'selected' : '' ?>><?= $v ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="form-content">
         <span class="col-form-label search-label">状态</span>
         <select class="form-control search-input" name="status">
             <option value="">请选择</option>
             <?php foreach ($this->statusList as $k => $v): ?>
-                <option value="<?= $k ?>" <?= $this->params['status'] == (string)$k ? 'selected' : '' ?>><?= $v ?></option>
+                <option value="<?= $k ?>" <?= $this->params['status'] == (string)$k ? 'selected' : '' ?>><?= $v . '(' . $this->virtualStatusList[$k] . ')' ?></option>
             <?php endforeach; ?>
         </select>
     </div>

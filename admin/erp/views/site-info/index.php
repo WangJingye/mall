@@ -91,12 +91,14 @@
         width: 100%;
     }
 
-    a{
-        color:#000;
+    a {
+        color: #000;
     }
-    a:hover{
+
+    a:hover {
         text-decoration: none;
     }
+
     @media (min-width: 1050px) {
 
         .main-panel {
@@ -185,7 +187,7 @@
 <div class="content-info">
     <div class="product-info">
         <div class="detail-title">商品总览</div>
-        <div class="detail-info" style="height: 10rem">
+        <div class="detail-info">
             <div class="detail-info-one">
                 <div class="detail-info-number"><?= $this->data['product_total'] ?></div>
                 <div>商品总数</div>
@@ -205,37 +207,19 @@
         <div class="detail-info">
             <div class="detail-info-one">
                 <div class="detail-info-number"><?= $this->data['today_user_normal'] ?></div>
-                <div>今日新增普通会员</div>
+                <div>今日新增会员</div>
             </div>
             <div class="detail-info-one">
                 <div class="detail-info-number"><?= $this->data['yesterday_user_normal'] ?></div>
-                <div>昨日新增普通会员</div>
+                <div>昨日新增会员</div>
             </div>
             <div class="detail-info-one">
                 <div class="detail-info-number"><?= $this->data['month_user_normal'] ?></div>
-                <div>本月新增普通会员</div>
+                <div>本月新增会员</div>
             </div>
             <div class="detail-info-one">
                 <div class="detail-info-number"><?= $this->data['user_total_normal'] ?></div>
-                <div>普通会员总数</div>
-            </div>
-        </div>
-        <div class="detail-info">
-            <div class="detail-info-one">
-                <div class="detail-info-number"><?= $this->data['today_user_profession'] ?></div>
-                <div>今日新增企业会员</div>
-            </div>
-            <div class="detail-info-one">
-                <div class="detail-info-number"><?= $this->data['yesterday_user_profession'] ?></div>
-                <div>昨日新增企业会员</div>
-            </div>
-            <div class="detail-info-one">
-                <div class="detail-info-number"><?= $this->data['month_user_profession'] ?></div>
-                <div>本月新增企业会员</div>
-            </div>
-            <div class="detail-info-one">
-                <div class="detail-info-number"><?= $this->data['user_total_profession'] ?></div>
-                <div>企业会员总数</div>
+                <div>会员总数</div>
             </div>
         </div>
     </div>
@@ -245,38 +229,37 @@
     <div class="detail-info" style="height: 8rem">
         <div class="detail-info-one">
             <div class="detail-info-title">实物订单</div>
-            <a href="<?= \App::$urlManager->createUrl('erp/order/index', ['status' => \admin\extend\Constant::ORDER_STATUS_CREATE]) ?>"
+            <a href="<?= \App::$urlManager->createUrl('erp/order/index', [
+                'status' => \admin\extend\Constant::ORDER_STATUS_CREATE,
+                'order_type' => \admin\extend\Constant::ORDER_TYPE_REAL
+            ]) ?>"
                class="detail-info-content-one">待付款订单（<span
                         class="detail-info-number"><?= $this->data['order_real_unpaid'] ?></span>）
             </a>
-            <a href="<?= \App::$urlManager->createUrl('erp/order/index', ['status' => \admin\extend\Constant::ORDER_STATUS_PAID]) ?>"
+            <a href="<?= \App::$urlManager->createUrl('erp/order/index', [
+                    'status' => \admin\extend\Constant::ORDER_STATUS_PAID,
+                    'order_type' => \admin\extend\Constant::ORDER_TYPE_REAL
+                ]
+            ) ?>"
                class="detail-info-content-one">待发货订单（<span
                         class="detail-info-number"><?= $this->data['order_real_undelviver'] ?></span>）
             </a>
         </div>
         <div class="detail-info-one">
             <div class="detail-info-title">虚拟订单</div>
-            <a href="<?= \App::$urlManager->createUrl('erp/order/virtual-index', ['status' => \admin\extend\Constant::ORDER_STATUS_CREATE]) ?>"
+            <a href="<?= \App::$urlManager->createUrl('erp/order/index', [
+                'status' => \admin\extend\Constant::ORDER_STATUS_CREATE,
+                'order_type' => \admin\extend\Constant::ORDER_TYPE_VIRTUAL
+            ]) ?>"
                class="detail-info-content-one">待确认收款订单（<span
                         class="detail-info-number"><?= $this->data['order_virtual_unpaid'] ?></span>）
             </a>
-            <a href="<?= \App::$urlManager->createUrl('erp/order/virtual-index', ['status' => \admin\extend\Constant::ORDER_STATUS_PAID]) ?>"
+            <a href="<?= \App::$urlManager->createUrl('erp/order/index', [
+                'status' => \admin\extend\Constant::ORDER_STATUS_PAID,
+                'order_type' => \admin\extend\Constant::ORDER_TYPE_VIRTUAL
+            ]) ?>"
                class="detail-info-content-one">待确认使用订单（<span
                         class="detail-info-number"><?= $this->data['order_virtual_unused'] ?></span>）
-            </a>
-        </div>
-        <div class="detail-info-one">
-            <div class="detail-info-title">商品审核</div>
-            <a href="<?= \App::$urlManager->createUrl('erp/product/verify-index', ['verify_status' => 0]) ?>"
-               class="detail-info-content-two">待审核商品（<span
-                        class="detail-info-number"><?= $this->data['product_unverified'] ?></span>）
-            </a>
-        </div>
-        <div class="detail-info-one">
-            <div class="detail-info-title">企业审核</div>
-            <a href="<?=\App::$urlManager->createUrl('erp/user-verify/index', ['verify_status' => 0])?>"
-               class="detail-info-content-two">待审核企业（<span
-                        class="detail-info-number"><?= $this->data['user_unverified'] ?></span>）
             </a>
         </div>
     </div>
