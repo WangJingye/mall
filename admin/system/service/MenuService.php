@@ -241,7 +241,6 @@ class MenuService extends BaseService
                 $controller = str_replace('.php', '', $v);
                 $v = 'admin\\' . $module . '\\controller\\' . substr($v, 0, -4);
                 $methodList = get_class_methods($v);
-
                 foreach ((array)$methodList as $method) {
                     if (strpos($method, 'Action') === false) {
                         continue;

@@ -16,4 +16,9 @@ class Constant
     const BILL_TYPE_REFUND = 2;
     const BILL_TYPE_SPREAD = 3;
     const BILL_RELATION_ORDER = 1;
+
+    const CASH_OUT_STATUS_UNVERIFIED = 1;
+    const CASH_OUT_STATUS_ACCEPT = 2;
+    const CASH_OUT_STATUS_REJECT = 3;
+
 }

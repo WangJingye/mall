@@ -420,6 +420,33 @@ class Db extends ObjectAccess
     }
 
     /**
+     * 增加或减少
+     * @param array $arr ['key'=>['+','value']]
+     * @throws Exception
+     */
+    public function change(array $arr)
+    {
+        $set = [];
+        foreach ($arr as $key => $v) {
+            if (!is_array($v) && count($v) != 2) {
+                throw new \Exception('sql 增加或减少设置有误');
+            }
+            $symbol = $v[0];
+            $value = $v[1];
+            $set[] = '`' . $key . '`' . ' = `' . $key . '` ' . $symbol . ' ' . $value;
+        }
+        $condition = '';
+        if ($this->condition) {
+            $condition = ' where ' . $this->condition;
+        }
+        $sql = 'update ' . $this->table_name . ' set ' . implode(',', $set) . $condition;
+        if ($this->db->exec($sql) === false) {
+            $error = $this->db->errorInfo();
+            throw new \Exception($error[2]);
+        }
+    }
+
+    /**
      * @param $data
      * @return string
      */
