@@ -69,6 +69,7 @@ class CashOutController extends BaseController
     }
 
     /**
+     * 提现审核
      * @throws \Exception
      */
     public function verifyAction()
@@ -83,6 +84,7 @@ class CashOutController extends BaseController
                 if ($model['status'] != Constant::CASH_OUT_STATUS_UNVERIFIED) {
                     throw new \Exception('状态有误，请确认');
                 }
+                \Db::startTrans();
                 \Db::table('CashOut')->where(['id' => $model['id']])->update([
                         'status' => $params['status'],
                         'remark' => $params['id'],
@@ -104,8 +106,10 @@ class CashOutController extends BaseController
                         ->where(['user_id' => $model['user_id']])
                         ->decrease('frozen_money', $model['amount']);
                 }
+                \Db::commit();
                 return $this->success('审核成功');
             } catch (\Exception $e) {
+                \Db::rollback();
                 return $this->error($e->getMessage());
             }
         }

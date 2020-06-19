@@ -25,7 +25,9 @@
             <tr>
                 <td>客户信息</td>
                 <td>订单信息</td>
+                <?php if ($this->order['order_type'] == 1): ?>
                 <td>联系人信息</td>
+                <?php endif;?>
             </tr>
             <tr>
                 <td>
@@ -63,14 +65,16 @@
                         <div><span>备注:</span><span><?= $this->order['remark'] ?></span></div>
                     </div>
                 </td>
-                <td>
-                    <div class="detail-info">
-                        <div><span>姓名:</span><span><?= $this->order['receiver_name'] ?></span></div>
-                        <div><span>手机号:</span><span><?= $this->order['receiver_mobile'] ?></span></div>
-                        <div><span>收货地址:</span><span><?= $this->order['receiver_address'] ?></span></div>
-                        <div><span>邮编:</span><span><?= $this->order['receiver_postal'] ?></span></div>
-                    </div>
-                </td>
+                <?php if ($this->order['order_type'] == 1): ?>
+                    <td>
+                        <div class="detail-info">
+                            <div><span>姓名:</span><span><?= $this->order['receiver_name'] ?></span></div>
+                            <div><span>手机号:</span><span><?= $this->order['receiver_mobile'] ?></span></div>
+                            <div><span>收货地址:</span><span><?= $this->order['receiver_address'] ?></span></div>
+                            <div><span>邮编:</span><span><?= $this->order['receiver_postal'] ?></span></div>
+                        </div>
+                    </td>
+                <?php endif; ?>
             </tr>
         </table>
     </div>

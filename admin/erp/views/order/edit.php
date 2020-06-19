@@ -43,7 +43,7 @@
                 <small class="text-muted">点击选择用户</small>
             </div>
         </div>
-        <div class="col-sm-6 row form-col-inline">
+        <div class="col-sm-6 row form-col-inline receiver-group">
             <label class="col-sm-4 text-nowrap col-form-label form-label">收件人姓名</label>
             <div class="col-sm-8">
                 <input type="text" name="receiver_name" class="form-control"
@@ -51,21 +51,21 @@
                        placeholder="请输入收件人">
             </div>
         </div>
-        <div class="col-sm-6 row form-col-inline">
+        <div class="col-sm-6 row form-col-inline receiver-group">
             <label class="col-sm-4 text-nowrap col-form-label form-label">收件人手机号</label>
             <div class="col-sm-8">
                 <input type="text" name="receiver_mobile" class="form-control"
                        value="<?= $this->model['receiver_mobile'] ?>" placeholder="请输入收件人手机号">
             </div>
         </div>
-        <div class="col-sm-6 row form-col-inline">
+        <div class="col-sm-6 row form-col-inline receiver-group">
             <label class="col-sm-4 text-nowrap col-form-label form-label">收件人地址</label>
             <div class="col-sm-8">
                 <input type="text" name="receiver_address" class="form-control"
                        value="<?= $this->model['receiver_address'] ?>" placeholder="请输入收件人地址">
             </div>
         </div>
-        <div class="col-sm-6 row form-col-inline">
+        <div class="col-sm-6 row form-col-inline receiver-group">
             <label class="col-sm-4 text-nowrap col-form-label form-label">收件人邮编</label>
             <div class="col-sm-8">
                 <input type="text" name="receiver_postal" class="form-control"

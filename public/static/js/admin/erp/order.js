@@ -10,18 +10,6 @@ $(function () {
             user_id: {
                 required: true
             },
-            receiver_name: {
-                required: true
-            },
-            receiver_mobile: {
-                required: true
-            },
-            receiver_address: {
-                required: true
-            },
-            receiver_postal: {
-                required: true
-            },
             rate_money: {
                 required: true
             }
@@ -35,18 +23,6 @@ $(function () {
             },
             user_id: {
                 required: '请选择用户'
-            },
-            receiver_name: {
-                required: '请输入收件人'
-            },
-            receiver_mobile: {
-                required: '请输入收件人联系电话'
-            },
-            receiver_address: {
-                required: '请输入收件地址'
-            },
-            receiver_postal: {
-                required: '请输入收件邮编'
             },
             rate_money: {
                 required: '请输入优惠金额'
@@ -279,7 +255,7 @@ $(function () {
                 $this.parent().find('input[name=coupon_id]').val(info['id']);
                 $('input[name=rate_money]').val(info['price']);
                 showMoney();
-                if(!$this.parent().find('.search-clear-btn').get(0)) {
+                if (!$this.parent().find('.search-clear-btn').get(0)) {
                     $this.after('<span class="search-clear-btn"><i class="glyphicon glyphicon-remove-circle"></i></span>');
                 }
             }
@@ -344,6 +320,19 @@ $(function () {
         showMoney();
     });
     $('select[name=order_type]').change(function () {
+        if ($(this).val() == 1) {
+            $('input[name=receiver_name]').rules('add', {required: true, messages: {required: '请输入收件人'}});
+            $('input[name=receiver_mobile]').rules('add', {required: true, messages: {required: '请输入收件人联系电话'}});
+            $('input[name=receiver_address]').rules('add', {required: true, messages: {required: '请输入收件地址'}});
+            $('input[name=receiver_postal]').rules('add', {required: true, messages: {required: '请输入收件邮编'}});
+            $('.receiver-group').show();
+        } else if ($(this).val() == 2) {
+            $('input[name=receiver_name]').rules('remove', 'required');
+            $('input[name=receiver_mobile]').rules('remove', 'required');
+            $('input[name=receiver_address]').rules('remove', 'required');
+            $('input[name=receiver_postal]').rules('remove', 'required');
+            $('.receiver-group').hide();
+        }
         $('tr.order-detail-variation').remove();
         $('.empty-variation-tr').show();
         showMoney();
