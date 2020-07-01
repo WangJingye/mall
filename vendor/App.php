@@ -23,6 +23,10 @@ class App extends ObjectAccess
 
     public static function init()
     {
+        //未定义APP_DEBUG，默认为debug模式
+        if (!defined('APP_DEBUG')) {
+            define('APP_DEBUG', true);
+        }
         static::$config = new Config();
         static::$urlManager = new UrlManager();
         static::$session = new Session();
