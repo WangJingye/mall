@@ -33,7 +33,7 @@
                        href="<?= \App::$urlManager->createUrl('{{module}}/{{controllerUrl}}/edit', ['{{primaryKey}}' => $v['{{primaryKey}}']]) ?>">
                         <i class="glyphicon glyphicon-pencil"></i> 编辑
                     </a>
-                    <div class="btn btn-danger btn-sm remove-btn" data-{{primaryKey}}="<?= $v['{{primaryKey}}'] ?>">
+                    <div class="btn btn-danger btn-sm remove-btn" data-id="<?= $v['{{primaryKey}}'] ?>">
                         <i class="glyphicon glyphicon-trash"></i> 删除
                     </div>{{statusIndex}}{{sortIndex}}
                 </td>

@@ -355,6 +355,7 @@ class Db extends ObjectAccess
 
     /**
      * @param $data
+     * @throws Exception
      */
     public function update($data)
     {
@@ -377,6 +378,11 @@ class Db extends ObjectAccess
         }
     }
 
+    /**
+     * @param $field
+     * @param int $number
+     * @throws Exception
+     */
     public function increase($field, $number = 0)
     {
         $set = [];
@@ -398,6 +404,11 @@ class Db extends ObjectAccess
         }
     }
 
+    /**
+     * @param $field
+     * @param $number
+     * @throws Exception
+     */
     public function decrease($field, $number)
     {
         $set = [];
@@ -449,6 +460,7 @@ class Db extends ObjectAccess
     /**
      * @param $data
      * @return string
+     * @throws Exception
      */
     public function insert($data)
     {
@@ -485,8 +497,8 @@ class Db extends ObjectAccess
     }
 
     /**
-     * @param array $data
-     * @throws \Exception
+     * @param $list
+     * @throws Exception
      */
     public function multiInsert($list)
     {
@@ -688,6 +700,10 @@ class Db extends ObjectAccess
         return $sql;
     }
 
+    /**
+     * @param $sql
+     * @throws Exception
+     */
     public function exec($sql)
     {
         if ($this->db->exec($sql) === false) {

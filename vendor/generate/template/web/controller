@@ -49,7 +49,7 @@ class {{table}}Controller extends BaseController
             }
         }
         $this->title = '创建{{tablename}}';
-        if (isset($params['{{primaryKey}}']) && $params['{{primaryKey}}']) {
+        if (!empty($params['{{primaryKey}}'])) {
             $model = \Db::table('{{table}}')->where(['{{primaryKey}}' => $params['{{primaryKey}}']])->find();
             if (!$model) {
                 throw new \Exception('数据不存在');
@@ -67,10 +67,10 @@ class {{table}}Controller extends BaseController
         $params = \App::$request->params->toArray();
         if (\App::$request->isAjax() && \App::$request->isPost()) {
             try {
-                if (!isset($params['{{primaryKey}}']) || $params['{{primaryKey}}'] == '') {
+                if (empty($params['id'])) {
                     throw new \Exception('非法请求');
                 }
-                $this->{{mtable}}Service->delete{{table}}($params);
+                \Db::table('{{table}}')->where(['{{primaryKey}}' => $params['id']])->delete();
                 return $this->success('删除成功');
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());

@@ -1,9 +1,0 @@
-<?php
-
-namespace {{app}}\{{module}}\service;
-
-use {{app}}\common\service\BaseService;
-
-class {{table}}Service extends BaseService
-{
-}

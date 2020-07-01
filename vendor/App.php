@@ -37,6 +37,7 @@ class App extends ObjectAccess
             $request = Request::instance();
             $request->parseParams();
             self::$request = $request;
+
             if ($request->action == 'generate' && $request->controller == null) {
                 self::generateHtml();
                 exit;
@@ -73,26 +74,19 @@ class App extends ObjectAccess
             if ($errorCode == 0) {
                 $errorCode = 400;
             }
-            if (APP == 'api' || (APP == 'admin' && \App::$request->isAjax())) {
+            if (APP == 'api' || (APP == 'admin' && $request->isAjax())) {
                 exit(json_encode(['code' => $errorCode, 'message' => $e->getMessage(), 'data' => null]));
             } else if (APP == 'console') {
                 throw new \Exception($e->getMessage(), $e->getCode());
             }
             header('status:' . $errorCode);
-            $errorMsg = [
-                400 => '400 BAD REQUEST',
-                404 => '404 NOT FOUND',
-                500 => '500 Internal Server Error',
-            ];
-            if (APP_DEBUG) {
-                throw $e;
-            }
-            $view = APP_PATH . 'common/' . 'layout/' . $errorCode . '.php';
-            if (file_exists($view)) {
+            $view = APP_PATH . 'common/' . 'layout/error.php';
+            if (!APP_DEBUG && file_exists($view)) {
                 include $view;
                 exit();
+            } else {
+                throw $e;
             }
-            echo $errorMsg[$errorCode];
         }
     }
 

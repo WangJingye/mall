@@ -160,9 +160,6 @@ class SiteInfoController extends BaseController
         $data['product_unverified']=\Db::table('Product')
             ->where(['verify_status' => 0])
             ->count();
-        $data['user_unverified']=\Db::table('UserVerify')
-            ->where(['verify_status' => 0])
-            ->count();
         $this->assign('data', $data);
     }
 }

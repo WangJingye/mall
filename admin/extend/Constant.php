@@ -21,4 +21,8 @@ class Constant
     const CASH_OUT_STATUS_ACCEPT = 2;
     const CASH_OUT_STATUS_REJECT = 3;
 
+    const USER_LEVEL_STATUS_UNVERIFIED = 1;
+    const USER_LEVEL_STATUS_ACCEPT = 2;
+    const USER_LEVEL_STATUS_REJECT = 3;
+
 }

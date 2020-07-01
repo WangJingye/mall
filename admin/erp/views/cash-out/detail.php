@@ -27,10 +27,6 @@
                 </td>
             </tr>
             <tr>
-                <td class="table-thead">所在地</td>
-                <td><?= $this->user['city'] ?></td>
-            </tr>
-            <tr>
                 <td class="table-thead">钱包余额</td>
                 <td><?= $this->wallet['balance'] ?></td>
             </tr>

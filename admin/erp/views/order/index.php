@@ -88,7 +88,7 @@
                         </a>
                         <a class="btn btn-primary btn-sm"
                            href="<?= \App::$urlManager->createUrl('erp/order/edit', ['order_id' => $v['order_id']]) ?>">
-                            <i class="glyphicon glyphicon-eye-open"></i> 编辑
+                            <i class="glyphicon glyphicon-pencil"></i> 编辑
                         </a>
                     </div>
                     <div style="margin-top: 0.2rem">

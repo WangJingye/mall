@@ -35,13 +35,4 @@ class {{table}}Service extends BaseService
         }
     }
 
-    /**
-     * @param $data
-     * @throws \Exception
-     */
-    public function delete{{table}}($data)
-    {
-        \Db::table('{{table}}')->where($data)->delete();
-    }
-
 }
