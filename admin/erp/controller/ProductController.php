@@ -144,7 +144,7 @@ class ProductController extends BaseController
                     throw new \Exception('非法请求');
                 }
                 \Db::startTrans();
-                $this->productService->trace($params['status'] == 1 ? '上架' : '下架', $params);
+                $this->productService->productTrace($params['status'] == 1 ? '上架' : '下架', $params);
                 \Db::table('Product')->where(['product_id' => $params['product_id']])->update(['status' => $params['status']]);
                 \Db::commit();
                 return $this->success($params['status'] == 1 ? '已上架' : '已下架');
