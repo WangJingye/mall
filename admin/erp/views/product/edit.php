@@ -79,7 +79,7 @@
             array_unshift($listCategory, 0); ?>
             <?php foreach ($listCategory as $i => $pId): ?>
                 <?php if (isset($this->categoryList[$pId])): ?>
-                    <select name="category_id[<?= $i ?>]" class="form-control select2 category-select">
+                    <select ] class="form-control select2 category-select">
                         <option value="">请选择</option>
                         <?php foreach ($this->categoryList[$pId] as $key => $v): ?>
                             <option value="<?= $key ?>" <?= in_array($key, $selectedCategoryList) ? 'selected' : '' ?>><?= $v ?></option>
@@ -259,6 +259,6 @@
     </div>
 </form>
 <script>
-    categoryList =<?=json_encode($this->categoryList)?>;
+    categoryList = <?=json_encode($this->categoryList)?>;
 </script>
 <?php $this->appendScript('user-search.js')->appendScript('product.js') ?>

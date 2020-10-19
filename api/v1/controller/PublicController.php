@@ -38,4 +38,17 @@ class PublicController extends BaseController
             return $this->error($e);
         }
     }
+
+    public function indexAction()
+    {
+        $carousels = \Db::table('Carousel')
+            ->field(['title', 'pic', 'link_type', 'link_id'])
+            ->where(['carousel_type' => 1])
+            ->where(['is_show' => 1])
+            ->order('sort desc')
+            ->findAll();
+        $res = [
+            'carousels' => $carousels
+        ];
+    }
 }

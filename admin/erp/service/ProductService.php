@@ -139,6 +139,7 @@ class ProductService extends BaseService
     public function saveProduct($data)
     {
         $params = $data;
+        $data['category_id'] = json_decode($data['category_id'], true);
         $extra = [
             'category' => $data['category_id'],
             'images' => $data['pic'],

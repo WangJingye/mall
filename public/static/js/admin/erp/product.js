@@ -10,9 +10,6 @@ $(function () {
             product_code: {
                 required: true
             },
-            category_id: {
-                required: true
-            },
             brand_id: {
                 required: true
             },
@@ -29,9 +26,6 @@ $(function () {
             },
             product_code: {
                 required: '请输入商品SPU'
-            },
-            category_id: {
-                required: '请选择商品分类'
             },
             brand_id: {
                 required: '请选择品牌'
@@ -110,29 +104,34 @@ $(function () {
         }, 'json');
     });
 
-    $('.product-category-select-group').on('change', 'select', function () {
+    $('.product-category-select-group').on('change', 'select.category-select', function () {
+        var $this = $(this);
+        var group = $this.parents('.product-category-select-group');
+        group.find('select.category-select').removeClass('cate-target');
+        $this.addClass('cate-target');
+        var flag = 0;
+        group.find('select.category-select').each(function () {
+            if (flag === 1) {
+                $(this).select2('destroy').remove();
+            } else if ($(this).hasClass('cate-target')) {
+                flag = 1;
+            }
+        });
         var cList = null;
         if ($(this).val().length) {
             if (categoryList.hasOwnProperty($(this).val())) {
                 cList = categoryList[$(this).val()];
             }
         }
-        var index = $(this).index();
-        $('.product-category-select-group').find('select').each(function () {
-            if ($(this).index() > index) {
-                $(this).select2('destroy');
-                $(this).remove();
-            }
-        });
         if (cList != null) {
-            var selectHtml = '<select name="category_id[' + (index + 1) + ']" class="form-control select2 category-select">' +
+            var selectHtml = '<select class="form-control select2 category-select">' +
                 '<option value="">请选择</option>';
             for (var i in cList) {
                 selectHtml += '<option value="' + i + '">' + cList[i] + '</option>';
             }
             selectHtml += '</select>';
-            $('.product-category-select-group').find('.sr-only').before(selectHtml);
-            $('.product-category-select-group').find('select').eq(index + 1).select2();
+            group.find('.sr-only').before(selectHtml);
+            group.find('select.category-select').last().select2();
         }
     });
     $('.add-product-params-btn').click(function () {
@@ -210,7 +209,9 @@ $(function () {
             $('.ajaxDropDownView[data-id="' + args.product_id + '"]').toggle();
             return false;
         }
+        $.loading('show');
         $.post($this.data('url'), args, function (res) {
+            $.loading('hide');
             if (res.code == 200) {
                 $('.ajaxDropDownView').remove();
                 $this.parents('tr').after(res.data.html);
@@ -351,13 +352,17 @@ function saveForm() {
         formData.delete('product_weight');
         formData.delete('freight_id');
     }
-    var max = $('.category-select').length;
+    var max = $('select.category-select').length;
+    var cvList = [];
     for (i = 0; i < max; i++) {
-        if (!$('.category-select').eq(i).val().length) {
+        var categoryValue = $('select.category-select').eq(i).val();
+        cvList.push(categoryValue);
+        if (!categoryValue.length) {
             $.error('请选择完整分类');
             return false;
         }
     }
+    formData.append('category_id', JSON.stringify(cvList));
     max = $('.product-params-box').find('tr.params-data').length;
     var productParams = [];
     for (i = 0; i < max; i++) {

@@ -32,6 +32,9 @@ class App extends ObjectAccess
         static::$session = new Session();
     }
 
+    /**
+     * @throws Exception
+     */
     public static function run()
     {
         try {
@@ -81,7 +84,7 @@ class App extends ObjectAccess
             if (APP == 'api' || (APP == 'admin' && $request->isAjax())) {
                 exit(json_encode(['code' => $errorCode, 'message' => $e->getMessage(), 'data' => null]));
             } else if (APP == 'console') {
-                throw new \Exception($e->getMessage(), $e->getCode());
+                throw $e;
             }
             header('status:' . $errorCode);
             $view = APP_PATH . 'common/' . 'layout/error.php';
@@ -94,6 +97,9 @@ class App extends ObjectAccess
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function generateHtml()
     {
         if (self::$request->isPost()) {
