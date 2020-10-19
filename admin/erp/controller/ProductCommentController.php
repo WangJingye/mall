@@ -115,8 +115,14 @@ class ProductCommentController extends BaseController
             if (empty($params['ids']) || !isset($params['reply']) || $params['reply'] == '') {
                 throw new \Exception('非法请求');
             }
-            \Db::table('ProductComment')->where(['comment_id' => ['in', explode(',', $params['ids'])]])
-                ->update(['reply' => $params['reply'], 'status' => 2]);
+            \Db::table('ProductComment')
+                ->where(['comment_id' => ['in', explode(',', $params['ids'])]])
+                ->where(['status' => 1])
+                ->update([
+                    'reply' => $params['reply'],
+                    'operator' => \App::$user['admin_id'],
+                    'status' => 2
+                ]);
             return $this->success('已回复');
         } catch (\Exception $e) {
             return $this->error($e->getMessage());

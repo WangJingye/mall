@@ -118,6 +118,12 @@ $(function () {
             }
         })
     });
+    $('.view-btn').click(function () {
+        var html='2222';
+        $.showModal({
+            title: '评论回复', content: html, width: '30vw', okTitle: false, cancelTitle: false
+        });
+    });
 });
 
 function saveForm() {

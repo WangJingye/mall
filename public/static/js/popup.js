@@ -120,19 +120,26 @@ jQuery.extend({
         for (var k in options) {
             opts[k] = options[k];
         }
+        var footerHtml = '';
+        if (opts['okTitle'] !== false || opts['cancelTitle'] !== false) {
+            footerHtml = '<div class="modal-event-footer">';
+            if (opts['cancelTitle'] !== false) {
+                footerHtml += '<div class="btn btn-outline-secondary modal-event-close">' + opts['cancelTitle'] + '</div>';
+            }
+            if (opts['okTitle'] !== false) {
+                footerHtml += '<div class="btn btn-outline-primary modal-event-confirm">' + opts['okTitle'] + '</div>';
+            }
+            footerHtml += '</div>';
+        }
         var html = '<div id="modal-event">' +
             '<div class="modal-event-backdrop"></div>' +
             '<div class="modal-event-show">' +
             '<div class="modal-event-header">' +
             '<div class="modal-event-header-title">' + opts['title'] + '</div>' +
-            '<div class="modal-event-header-close"><i' +
-            'class="glyphicon glyphicon-remove"></i></div>' +
+            '<div class="modal-event-header-close"><i class="glyphicon glyphicon-remove"></i></div>' +
             '</div>' +
             '<div class="modal-event-body">' + opts['content'] + '</div>' +
-            '<div class="modal-event-footer">' +
-            '<div class="btn btn-outline-secondary modal-event-close">' + opts['cancelTitle'] + '</div>' +
-            '<div class="btn btn-outline-primary modal-event-confirm">' + opts['okTitle'] + '</div>' +
-            '</div>' +
+            footerHtml +
             '</div>' +
             '</div>';
         $(document.body).append(html);
@@ -140,7 +147,7 @@ jQuery.extend({
         modalEventView.show();
         if (options['width'] != 'auto') {
             var width = document.documentElement.clientWidth || document.body.clientWidth;
-            if(width>768){
+            if (width > 768) {
                 modalEventView.find('.modal-event-show').css('width', options['width']);
             }
         }

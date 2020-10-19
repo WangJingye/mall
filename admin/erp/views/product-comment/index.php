@@ -56,6 +56,7 @@
             <th>评价</th>
             <th>是否显示</th>
             <th>评论时间</th>
+            <th>状态</th>
             <th>操作</th>
         </tr>
         <?php foreach ($this->list as $v): ?>
@@ -77,10 +78,15 @@
                     </div>
                 </td>
                 <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
+                <td><?= $this->statusList[$v['status']] ?></td>
                 <td>
                     <?php if ($v['status'] == 1): ?>
                         <div class="btn btn-success btn-sm share-btn" data-id="<?= $v['comment_id'] ?>">
                             <i class="glyphicon glyphicon-share-alt"></i> 回复
+                        </div>
+                    <?php elseif ($v['status'] == 2): ?>
+                        <div class="btn btn-success btn-sm view-btn" data-id="<?= $v['comment_id'] ?>">
+                            <i class="glyphicon glyphicon-eye-open"></i> 查看回复内容
                         </div>
                     <?php endif; ?>
                     <div class="btn btn-danger btn-sm remove-btn" data-comment_id="<?= $v['comment_id'] ?>">
