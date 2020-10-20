@@ -16,7 +16,8 @@
     }
 </style>
 <div class="alert alert-success" role="alert">
-    <div>当前订单状态：<?= $this->statusList[$this->order['status']] ?></div>
+    <div>
+        当前订单状态：<?= $this->statusList[$this->order['order_type']][$this->order['order_group']][$this->order['status']] ?></div>
 </div>
 <div class="table-responsive" style="width: 80%;margin: auto">
     <div class="detail-title">基本信息</div>
@@ -26,8 +27,8 @@
                 <td>客户信息</td>
                 <td>订单信息</td>
                 <?php if ($this->order['order_type'] == 1): ?>
-                <td>联系人信息</td>
-                <?php endif;?>
+                    <td>联系人信息</td>
+                <?php endif; ?>
             </tr>
             <tr>
                 <td>
@@ -38,7 +39,8 @@
                 </td>
                 <td>
                     <div class="detail-info">
-                        <div><span>订单类型:</span><span><?= $this->orderTypeList[$this->order['order_type']] ?></span>
+                        <div>
+                            <span>订单类型:</span><span><?= $this->orderTypeList[$this->order['order_type']] . ' | ' . $this->orderGroupList[$this->order['order_group']] ?></span>
                         </div>
                         <div><span>订单编号:</span><span><?= $this->order['order_code'] ?></div>
                         <div><span>下单时间:</span><span><?= date('Y-m-d H:i:s', $this->order['create_time']) ?></span>
@@ -59,8 +61,11 @@
                                 </div>
                             <?php endif; ?>
                         <?php else: ?>
-                            <div><span>使用时间:</span><span><?= date('Y-m-d H:i:s', $this->order['receive_time']) ?></span>
-                            </div>
+                            <?php if ($this->order['receive_time']): ?>
+                                <div>
+                                    <span>使用时间:</span><span><?= date('Y-m-d H:i:s', $this->order['receive_time']) ?></span>
+                                </div>
+                            <?php endif; ?>
                         <?php endif; ?>
                         <div><span>备注:</span><span><?= $this->order['remark'] ?></span></div>
                     </div>
@@ -97,7 +102,7 @@
                         <?php endif; ?>
                     </td>
                     <td><?= $v['product_name'] ?></td>
-                    <td><?= $v['rules_value'] ?></td>
+                    <td><?= $v['rules_value'] ? $v['rules_value'] : '<i style="color: #666">无规格</i>' ?></td>
                     <td><?= $v['variation_code'] ?></td>
                     <td><?= $v['price'] ?></td>
                     <td><?= $v['number'] ?></td>
@@ -118,6 +123,10 @@
                             <div><span>运费:</span><span style="color:#dc3545"><?= $this->order['freight_money'] ?></span>
                             </div>
                         <?php endif; ?>
+                        <?php if ($this->coupon): ?>
+                            <div><span>优惠券:</span><span style="color:#dc3545"><?= $this->coupon['coupon_name'] ?></span>
+                            </div>
+                        <?php endif; ?>
                         <div><span>优惠:</span><span style="color:#dc3545"><?= $this->order['rate_money'] ?></span></div>
                         <div><span>订单总金额:</span><span style="color:#dc3545"><?= $this->order['money'] ?></span></div>
                     </td>
@@ -133,7 +142,7 @@
                     <td>物流方式</td>
                     <td>物流单号</td>
                 </tr>
-                <?php if ($this->order['status'] >= \admin\extend\Constant::ORDER_STATUS_SHIP && $this->transport): ?>
+                <?php if ($this->order['status'] >= \admin\extend\Constant::ORDER_STATUS_SHIPPED && $this->transport): ?>
                     <tr>
                         <td><?= $this->transport['transport_name'] ?></td>
                         <td><?= $this->order['transport_order'] ?></td>

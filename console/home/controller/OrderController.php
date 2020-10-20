@@ -19,7 +19,7 @@ class OrderController extends ConsoleController
     public function cancelAction()
     {
         $orderList = \Db::table('Order')->where([
-            'status' => Constant::ORDER_STATUS_CREATE,
+            'status' => Constant::ORDER_STATUS_CREATED,
             'create_time' => ['<=', time() + \App::$config['site_info']['expire_order_pay'] * 60]
         ])->findAll();
         try {

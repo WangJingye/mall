@@ -51,7 +51,7 @@
                 </tr>
                 <tr>
                     <td style="background-color: #e9ecef">性别</td>
-                    <td><?= $this->genderList[$this->model['gender']] ?></td>
+                    <td><?= $this->model['gender'] ? $this->genderList[$this->model['gender']] : '' ?></td>
                     <td style="background-color: #e9ecef">注册时间</td>
                     <td><?= date('Y-m-d H:i:s', $this->model['create_time']) ?></td>
                 </tr>
@@ -115,7 +115,7 @@
                     <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
                     <td><?= $v['money'] ?></td>
                     <td><?= $v['pay_money'] ?></td>
-                    <td><?= $v['order_type'] == \admin\extend\Constant::ORDER_TYPE_REAL ? $this->orderStatusList[$v['status']] : $this->orderVirtualStatusList[$v['status']] ?></td>
+                    <td><?= $this->orderStatusList[$v['order_type']][$v['order_group']][$v['status']] ?></td>
                     <td>
                         <a href="<?= \App::$urlManager->createUrl('erp/order/detail', ['order_id' => $v['order_id']]) ?>"
                            target="_blank" class="btn btn-sm btn-outline-success">查看</a>
@@ -139,8 +139,8 @@
     </div>
 </div>
 <script>
-    var orderTypeList =<?=json_encode($this->orderTypeList);?>;
-    var orderStatusList =<?=json_encode($this->orderStatusList);?>;
-    var orderVirtualStatusList =<?=json_encode($this->orderVirtualStatusList);?>;
+    var orderTypeList = <?=json_encode($this->orderTypeList);?>;
+    var orderStatusList = <?=json_encode($this->orderStatusList);?>;
+    var orderVirtualStatusList = <?=json_encode($this->orderVirtualStatusList);?>;
 </script>
 <?php $this->appendScript('user.js') ?>

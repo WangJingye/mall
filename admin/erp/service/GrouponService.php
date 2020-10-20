@@ -32,6 +32,8 @@ class GrouponService extends BaseService
         }
         if (isset($params['status']) && $params['status'] != '') {
             $selector->where(['status' => $params['status']]);
+        } else {
+            $selector->where(['status' => ['>', 0]]);
         }
         if (isset($params['create_userid']) && $params['create_userid'] != '') {
             $selector->where(['create_userid' => $params['create_userid']]);

@@ -141,23 +141,23 @@ class SiteInfoController extends BaseController
             ->count();
 
         $data['order_real_unpaid'] = \Db::table('Order')
-            ->where(['order_type' => 1])
-            ->where(['status' => Constant::ORDER_STATUS_CREATE])
+            ->where(['order_type' => Constant::ORDER_TYPE_REAL])
+            ->where(['status' => Constant::ORDER_STATUS_CREATED])
             ->count();
         $data['order_real_undelviver'] = \Db::table('Order')
-            ->where(['order_type' => 1])
-            ->where(['status' => Constant::ORDER_STATUS_PAID])
+            ->where(['order_type' => Constant::ORDER_TYPE_REAL])
+            ->where(['status' => Constant::ORDER_STATUS_PENDING])
             ->count();
         $data['order_virtual_unpaid'] = \Db::table('Order')
-            ->where(['order_type' => 2])
-            ->where(['status' => Constant::ORDER_STATUS_CREATE])
+            ->where(['order_type' => Constant::ORDER_TYPE_VIRTUAL])
+            ->where(['status' => Constant::ORDER_STATUS_CREATED])
             ->count();
         $data['order_virtual_unused'] = \Db::table('Order')
-            ->where(['order_type' => 2])
-            ->where(['status' => Constant::ORDER_STATUS_PAID])
+            ->where(['order_type' => Constant::ORDER_TYPE_VIRTUAL])
+            ->where(['status' => Constant::ORDER_STATUS_SHIPPED])
             ->count();
 
-        $data['product_unverified']=\Db::table('Product')
+        $data['product_unverified'] = \Db::table('Product')
             ->where(['verify_status' => 0])
             ->count();
         $this->assign('data', $data);

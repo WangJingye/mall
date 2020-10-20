@@ -10,24 +10,75 @@ class OrderService extends BaseService
 {
 
     public $statusList = [
-        '1' => '待付款',
-        '2' => '待发货',
-        '3' => '已发货',
-        '4' => '已完成',
-        '5' => '已关闭',
-    ];
+        '1' => [//实物订单
+            '1' => [//普通订单
+                Constant::ORDER_STATUS_CREATED => '待付款',
+                Constant::ORDER_STATUS_PAID => '已付款',
+                Constant::ORDER_STATUS_PENDING => '待发货',
+                Constant::ORDER_STATUS_SHIPPED => '已发货',
+                Constant::ORDER_STATUS_RECEIVED => '已收货',
+                Constant::ORDER_STATUS_COMPLETE => '已完成',
+                Constant::ORDER_STATUS_CLOSE => '已关闭',
+            ],
+            '2' => [//团购订单
+                Constant::ORDER_STATUS_CREATED => '待付款',
+                Constant::ORDER_STATUS_PAID => '待成团',
+                Constant::ORDER_STATUS_PENDING => '待发货',
+                Constant::ORDER_STATUS_SHIPPED => '已发货',
+                Constant::ORDER_STATUS_RECEIVED => '已收货',
+                Constant::ORDER_STATUS_COMPLETE => '已完成',
+                Constant::ORDER_STATUS_CLOSE => '已关闭',
+            ],
+            '3' => [//团购订单
+                Constant::ORDER_STATUS_CREATED => '待付款',
+                Constant::ORDER_STATUS_PAID => '已付款',
+                Constant::ORDER_STATUS_PENDING => '待发货',
+                Constant::ORDER_STATUS_SHIPPED => '已发货',
+                Constant::ORDER_STATUS_RECEIVED => '已收货',
+                Constant::ORDER_STATUS_COMPLETE => '已完成',
+                Constant::ORDER_STATUS_CLOSE => '已关闭',
+            ],
+        ],
+        '2' => [
+            '1' => [
+                Constant::ORDER_STATUS_CREATED => '待付款',
+                Constant::ORDER_STATUS_PAID => '已付款',
+                Constant::ORDER_STATUS_PENDING => '等待电子券',
+                Constant::ORDER_STATUS_SHIPPED => '已发送电子券',
+                Constant::ORDER_STATUS_RECEIVED => '已使用',
+                Constant::ORDER_STATUS_COMPLETE => '已完成',
+                Constant::ORDER_STATUS_CLOSE => '已关闭',
+            ],
+            '2' => [
+                Constant::ORDER_STATUS_CREATED => '待付款',
+                Constant::ORDER_STATUS_PAID => '待成团',
+                Constant::ORDER_STATUS_PENDING => '已成团',
+                Constant::ORDER_STATUS_SHIPPED => '已发送电子券',
+                Constant::ORDER_STATUS_RECEIVED => '已使用',
+                Constant::ORDER_STATUS_COMPLETE => '已完成',
+                Constant::ORDER_STATUS_CLOSE => '已关闭',
+            ],
+            '3' => [
+                Constant::ORDER_STATUS_CREATED => '待付款',
+                Constant::ORDER_STATUS_PAID => '已付款',
+                Constant::ORDER_STATUS_PENDING => '等待电子券',
+                Constant::ORDER_STATUS_SHIPPED => '已发送电子券',
+                Constant::ORDER_STATUS_RECEIVED => '已使用',
+                Constant::ORDER_STATUS_COMPLETE => '已完成',
+                Constant::ORDER_STATUS_CLOSE => '已关闭',
+            ],
+        ],
 
-    public $virtualStatusList = [
-        '1' => '待收款',
-        '2' => '已付款',
-        '3' => '待使用',
-        '4' => '已使用',
-        '5' => '已关闭',
     ];
 
     public $orderTypeList = [
-        '1' => '实物订单',
-        '2' => '虚拟物品订单',
+        Constant::ORDER_TYPE_REAL => '实物订单',
+        Constant::ORDER_TYPE_VIRTUAL => '虚拟物品订单',
+    ];
+    public $orderGroupList = [
+        Constant::ORDER_GROUP_NORMAL => '普通订单',
+        Constant::ORDER_GROUP_GROUPON => '团购订单',
+        Constant::ORDER_GROUP_FLASHSALE => '秒杀订单',
     ];
 
     /**
@@ -233,7 +284,7 @@ class OrderService extends BaseService
     public function close($data)
     {
         $order = \Db::table('Order')->where(['order_id' => $data['id']])->find();
-        if ($order['status'] != Constant::ORDER_STATUS_CREATE) {
+        if ($order['status'] != Constant::ORDER_STATUS_CREATED) {
             throw new \Exception('只有待付款的订单才可以关闭');
         }
         \Db::table('Order')->where(['order_id' => $order['order_id']])->update(['status' => Constant::ORDER_STATUS_CLOSE]);
@@ -254,11 +305,11 @@ class OrderService extends BaseService
     public function ship($data)
     {
         $order = \Db::table('Order')->where(['order_id' => $data['id']])->find();
-        if ($order['status'] != Constant::ORDER_STATUS_PAID) {
-            throw new \Exception('只有已支付的订单才可以发货');
+        if ($order['status'] != Constant::ORDER_STATUS_PENDING) {
+            throw new \Exception('只有待发货的订单才可以发货');
         }
         \Db::table('Order')->where(['order_id' => $order['order_id']])->update([
-            'status' => Constant::ORDER_STATUS_SHIP,
+            'status' => Constant::ORDER_STATUS_SHIPPED,
             'transport_id' => $data['transport_id'],
             'transport_order' => $data['transport_order'],
             'deliver_time' => time(),
@@ -278,12 +329,12 @@ class OrderService extends BaseService
         } else {
             $order = \Db::table('Order')->where(['order_id' => $id])->find();
         }
-        if ($order['status'] != Constant::ORDER_STATUS_PAID) {
-            throw new \Exception('只有已支付的订单才可以发送电子券');
+        if ($order['status'] != Constant::ORDER_STATUS_PENDING) {
+            throw new \Exception('只有待发送的订单才可以发送电子券');
         }
         \Db::table('Order')->where(['order_id' => $order['order_id']])
             ->update([
-                'status' => Constant::ORDER_STATUS_SHIP,
+                'status' => Constant::ORDER_STATUS_SHIPPED,
                 'deliver_time' => time(),
             ]);
         $this->orderTrace('发送电子券', $order['order_id']);
@@ -293,16 +344,16 @@ class OrderService extends BaseService
      * @param $data
      * @throws \Exception
      */
-    public function complete($data)
+    public function receive($data)
     {
         $order = \Db::table('Order')->where(['order_id' => $data['id']])->find();
 
-        if ($order['status'] != Constant::ORDER_STATUS_SHIP) {
+        if ($order['status'] != Constant::ORDER_STATUS_SHIPPED) {
             throw new \Exception('订单状态有误，请确认');
         }
         \Db::table('Order')->where(['order_id' => $order['order_id']])
             ->update([
-                'status' => Constant::ORDER_STATUS_COMPLETE,
+                'status' => Constant::ORDER_STATUS_RECEIVED,
                 'receive_time' => time()
             ]);
         $this->orderTrace($order['order_type'] == 1 ? '确认收货' : '使用电子券', $order['order_id']);
@@ -314,18 +365,76 @@ class OrderService extends BaseService
      * @param $data
      * @throws \Exception
      */
+    public function complete($data)
+    {
+        $order = \Db::table('Order')->where(['order_id' => $data['id']])->find();
+
+        if ($order['status'] != Constant::ORDER_STATUS_RECEIVED) {
+            throw new \Exception('订单状态有误，请确认');
+        }
+        \Db::table('Order')->where(['order_id' => $order['order_id']])
+            ->update([
+                'status' => Constant::ORDER_STATUS_COMPLETE,
+            ]);
+        $this->orderTrace('评价', $order['order_id']);
+        //分销返利
+        (new SpreadService())->spreadBackMoney($order);
+    }
+
+    /**
+     * @param $data
+     * @throws \Exception
+     */
     public function pay($data)
     {
         $order = \Db::table('Order')->where(['order_id' => $data['id']])->find();
-        if ($order['status'] != Constant::ORDER_STATUS_CREATE) {
+        if ($order['status'] != Constant::ORDER_STATUS_CREATED) {
             throw new \Exception('只有待付款的订单才可以进行收款操作');
         }
-        \Db::table('Order')->where(['order_id' => $order['order_id']])->update([
-            'status' => Constant::ORDER_STATUS_PAID,
-            'pay_method' => $data['pay_method'],
-            'pay_money' => $data['pay_money']
-        ]);
         $order['status'] = Constant::ORDER_STATUS_PAID;
+        if ($order['order_group'] == Constant::ORDER_GROUP_GROUPON) {
+            if (isset($data['collage_id'])) {
+                $collage = \Db::table('GrouponCollage')->where(['collage_id' => $data['collage_id']])->find();
+                if ($collage['status'] == 2 && $collage['expire_time'] < time()) {
+                    throw new \Exception('成团失败，请加入其他团');
+                }
+                $collage['extra'] = $collage['extra'] ? json_decode($collage['extra'], true) : [];
+                $collage['extra'][] = [
+                    'user_id' => $order['user_id'],
+                    'order_code' => $order['order_code'],
+                ];
+                if (count($collage['extra']) >= $collage['number']) {
+                    if ($collage['status'] == 1) {
+                        //成团完毕15分钟内该团允许加入
+                        $collage['expire_time'] = time() + 15 * 60;
+                    }
+                    $collage['status'] = 2;
+                }
+                if ($collage['status'] == 2) {
+                    $order['status'] = Constant::ORDER_STATUS_PENDING;
+                }
+                $collage['extra'] = json_encode($collage['extra']);
+                \Db::table('GrouponCollage')->where(['collage_id' => $data['collage_id']])->save($collage);
+            } else {
+                $extra = json_decode($order['extra'], true);
+                $groupon = \Db::table('Groupon')->where(['id' => $extra['go_id']])->find();
+                if ($groupon['group_user_number'] > 1) {
+                    $collage = [
+                        'go_id' => $extra['go_id'],
+                        'number' => $groupon['group_user_number'],
+                        'start_userid' => $order['user_id'],
+                        'extra' => json_encode([['user_id' => $order['user_id'], 'order_code' => $order['order_code']]])
+                    ];
+                    \Db::table('GrouponCollage')->insert($collage);
+                } else {
+                    $order['status'] = Constant::ORDER_STATUS_PENDING;
+                }
+            }
+        }
+        $order['pay_method'] = $data['pay_method'];
+        $order['pay_money'] = $data['pay_money'];
+        $order['pay_time'] = time();
+        \Db::table('Order')->where(['order_id' => $order['order_id']])->update($order);
         $bill = [
             'title' => $order['order_title'],
             'user_id' => $order['user_id'],
@@ -338,8 +447,8 @@ class OrderService extends BaseService
         ];
         \Db::table('UserBill')->insert($bill);
         $this->orderTrace('付款', $order['order_id']);
-        //虚拟物品订单直接发货
-        if ($order['order_type'] == Constant::ORDER_TYPE_VIRTUAL) {
+        //待发送的虚拟物品订单直接发货
+        if ($order['status'] == Constant::ORDER_STATUS_PENDING && $order['order_type'] == Constant::ORDER_TYPE_VIRTUAL) {
             $this->sendVoucher($order);
         }
     }
@@ -376,7 +485,7 @@ class OrderService extends BaseService
                 $userList[$v['user_id']]['telephone'],
                 $v['money'],
                 $v['pay_money'],
-                $this->statusList[$v['status']]
+                $this->statusList[$v['order_type']][$v['order_group']][$v['status']]
             ];
             $data[] = $arr;
         }

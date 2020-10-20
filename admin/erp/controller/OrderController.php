@@ -47,10 +47,10 @@ class OrderController extends BaseController
         $transportList = $this->orderService->getDataList('Transport', 'transport_id', 'transport_name');
         $this->assign('transportList', $transportList);
         $this->assign('statusList', $this->orderService->statusList);
-        $this->assign('virtualStatusList', $this->orderService->virtualStatusList);
         $payMethodList = $this->orderService->getDataList('PayMethod', 'method_id', 'name');
         $this->assign('payMethodList', $payMethodList);
         $this->assign('orderTypeList', $this->orderService->orderTypeList);
+        $this->assign('orderGroupList', $this->orderService->orderGroupList);
     }
 
     /**
@@ -183,6 +183,28 @@ class OrderController extends BaseController
             }
         }
     }
+    /**
+     * 收货/使用电子券
+     * @throws \Exception
+     */
+    public function receiveAction()
+    {
+        $params = \App::$request->params->toArray();
+        if (\App::$request->isAjax() && \App::$request->isPost()) {
+            try {
+                if (!isset($params['id']) || $params['id'] == '') {
+                    throw new \Exception('非法请求');
+                }
+                \Db::startTrans();
+                $this->orderService->receive($params);
+                \Db::commit();
+                return $this->success('订单已完成');
+            } catch (\Exception $e) {
+                \Db::rollback();
+                return $this->error($e->getMessage());
+            }
+        }
+    }
 
     /**
      * 详情
@@ -201,7 +223,7 @@ class OrderController extends BaseController
         $this->assign('variationList', $variationList);
         $this->assign('user', $user);
         $this->assign('statusList', $this->orderService->statusList);
-        if ($order['status'] >= Constant::ORDER_STATUS_SHIP) {
+        if ($order['status'] >= Constant::ORDER_STATUS_SHIPPED) {
             $transport = \Db::table('Transport')->where(['transport_id' => $order['transport_id']])->find();
             $this->assign('transport', $transport);
         }
@@ -210,6 +232,11 @@ class OrderController extends BaseController
         $operatorList = $this->orderService->getOperateUserList($traceList);
         $this->assign('operatorList', $operatorList);
         $this->assign('orderTypeList', $this->orderService->orderTypeList);
+        $this->assign('orderGroupList', $this->orderService->orderGroupList);
+        if(!empty($order['coupon_id'])){
+            $coupon=\Db::table('CouponUser')->where(['id'=>$order['coupon_id']])->find();
+            $this->assign('coupon',$coupon);
+        }
     }
 
     /**

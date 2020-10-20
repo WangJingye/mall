@@ -3,21 +3,9 @@
         padding: 0.5rem;
     }
 
-    .groupon-variation-box .variation-price, .groupon-variation-box .variation-stock {
+    .variation-price, .variation-stock, .variation-product-price {
         width: 5rem;
         display: inline-block;
-    }
-
-    .groupon-variation-box .product-price {
-        color: red;
-        font-size: 1rem;
-    }
-
-    .groupon-variation-box .market-price {
-        margin-left: 0.2rem;
-        font-size: 0.6rem;
-        text-decoration: line-through;
-        color: #666
     }
 
     @media (min-width: 992px) {
@@ -35,7 +23,7 @@
             <input type="text" name="product_name" readonly class="form-control form-search-product"
                    placeholder="点击选择商品"
                    value="<?= $this->product['product_name'] ?>">
-            <input type="hidden" name="product_id" value="<?= $this->model['product_id'] ?>">
+            <input type="hidden" name="product_id" value="<?= $this->product['product_id'] ?>">
         </div>
     </div>
     <div class="form-group row">
@@ -51,6 +39,14 @@
             <input type="text" name="start_time" class="form-control"
                    value="<?= $this->model['start_time'] ? date('Y-m-d H:i:s', $this->model['start_time']) : '' ?>"
                    placeholder="开始时间，格式为2019-01-01 00:00:00">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>成团人数</label>
+        <div class="col-sm-10">
+            <input type="number" name="group_user_number" class="form-control"
+                   value="<?= $this->model['group_user_number'] ? $this->model['group_user_number'] : 1 ?>"
+                   placeholder="请输入成团人数">
         </div>
     </div>
     <div class="form-group row">
@@ -87,11 +83,8 @@
                                 <?= $v['variation_code'] ?>
                             </td>
                             <td><?= $v['rules_value'] !== '' ? $v['rules_value'] : '<i style="color: #666">无规格</i>' ?></td>
-                            <td>
-                                <input type="hidden" class="market-price" value="<?= $v['market_price'] ?>">
-                                <span class="product-price"><?= $v['product_price'] ?></span>
-                                <span class="market-price"><?= $v['market_price'] ?></span>
-                            </td>
+                            <td><input type="number" class="form-control variation-product-price"
+                                       value="<?= $v['product_price'] ?>">
                             <td><input type="number" class="form-control variation-price" value="<?= $v['price'] ?>">
                             </td>
                             <td><input type="number" class="form-control variation-stock" value="<?= $v['stock'] ?>">

@@ -230,14 +230,14 @@
         <div class="detail-info-one">
             <div class="detail-info-title">实物订单</div>
             <a href="<?= \App::$urlManager->createUrl('erp/order/index', [
-                'status' => \admin\extend\Constant::ORDER_STATUS_CREATE,
+                'status' => \admin\extend\Constant::ORDER_STATUS_CREATED,
                 'order_type' => \admin\extend\Constant::ORDER_TYPE_REAL
             ]) ?>"
                class="detail-info-content-one">待付款订单（<span
                         class="detail-info-number"><?= $this->data['order_real_unpaid'] ?></span>）
             </a>
             <a href="<?= \App::$urlManager->createUrl('erp/order/index', [
-                    'status' => \admin\extend\Constant::ORDER_STATUS_PAID,
+                    'status' => \admin\extend\Constant::ORDER_STATUS_PENDING,
                     'order_type' => \admin\extend\Constant::ORDER_TYPE_REAL
                 ]
             ) ?>"
@@ -248,14 +248,14 @@
         <div class="detail-info-one">
             <div class="detail-info-title">虚拟订单</div>
             <a href="<?= \App::$urlManager->createUrl('erp/order/index', [
-                'status' => \admin\extend\Constant::ORDER_STATUS_CREATE,
+                'status' => \admin\extend\Constant::ORDER_STATUS_CREATED,
                 'order_type' => \admin\extend\Constant::ORDER_TYPE_VIRTUAL
             ]) ?>"
                class="detail-info-content-one">待确认收款订单（<span
                         class="detail-info-number"><?= $this->data['order_virtual_unpaid'] ?></span>）
             </a>
             <a href="<?= \App::$urlManager->createUrl('erp/order/index', [
-                'status' => \admin\extend\Constant::ORDER_STATUS_PAID,
+                'status' => \admin\extend\Constant::ORDER_STATUS_PENDING,
                 'order_type' => \admin\extend\Constant::ORDER_TYPE_VIRTUAL
             ]) ?>"
                class="detail-info-content-one">待确认使用订单（<span

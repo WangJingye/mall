@@ -1,13 +1,19 @@
 $(function () {
     $('#save-form').validate({
         rules: {
-            product_name: {
-                required: true
-            },
-            group_user_number: {
-                required: true
-            },
             title: {
+                required: true
+            },
+            product_id: {
+                required: true
+            },
+            variation_code: {
+                required: true
+            },
+            product_price: {
+                required: '请输入原价'
+            },
+            price: {
                 required: true
             },
             start_time: {
@@ -18,14 +24,19 @@ $(function () {
             }
         },
         messages: {
-            product_name: {
-                required: '请选择所属商品'
-            },
-            group_user_number: {
-                required: '请输入成团人数'
-            },
             title: {
                 required: '请输入标题'
+            },
+            product_name: {
+                required: '请选择商品'
+            },
+            variation_code: {
+                required: '请选择sku'
+            },
+            price: {
+                required: '请输入秒杀价'
+            }, product_price: {
+                required: '请输入原价'
             },
             start_time: {
                 required: '请输入开始时间'
@@ -49,7 +60,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/groupon/delete', args, function (res) {
+        $.post('/erp/flash-sale/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -85,66 +96,25 @@ $(function () {
             }
         });
     });
-    $('.add-sku-btn').click(function () {
+    $('.form-search-product-variation').click(function () {
+        var $this = $(this);
         var productId = $('input[name=product_id]').val();
         if (!productId.length) {
             $.error('请选择商品');
             return false;
         }
         getProductVariationSearch({
-            multiple: true,
+            multiple: false,
             args: {
                 product_id: productId,
                 search: false
             },
             callback: function (data) {
-                var html = '';
-                var existList = [];
-                $('.groupon-variation-box').find('.data-tr .variation-id').each(function () {
-                    existList.push($(this).val());
-                });
-                for (var i in data) {
-                    var info = data[i]['info'];
-                    if (existList.indexOf(info['variation_id'].toString()) != -1) {
-                        continue;
-                    }
-                    html += '<tr class="data-tr">' +
-                        '<td><input type="hidden" class="variation-id" value="' + info['variation_id'] + '">' + info['variation_code'] + '</td>' +
-                        '<td>' + (info['rules_value'] !== '' ? info['rules_value'] : '<i style="color: #666">无规格</i>') + '</td>' +
-                        '<td><input type="number" class="form-control variation-product-price" value="' + info['price'] + '"></td>' +
-                        '<td><input type="number" class="form-control variation-price"></td>' +
-                        '<td><input type="number" class="form-control variation-stock"></td>' +
-                        '<td><div class="btn btn-sm btn-danger remove-variation-btn"><i class="glyphicon glyphicon-remove"></i></div></td>' +
-                        '</tr>';
-                }
-                $('.groupon-variation-box').find('.last-tr').before(html);
+                var info = data['info'];
+                $this.val(info['variation_code']);
+                $('input[name=product_price]').val(info['price']);
             }
         });
-    });
-    $('.groupon-variation-box').on('click', '.remove-variation-btn', function () {
-        if (!confirm('是否删除此记录？')) {
-            return false;
-        }
-        $(this).parents('tr.data-tr').remove();
-    });
-    $('.end-btn').click(function () {
-        if (!confirm('是否立即结束团购？')) {
-            return false;
-        }
-        let $this = $(this);
-        let args = {
-            id: $(this).data('id'),
-        };
-        $.loading('show');
-        $.post('/erp/groupon/stop', args, function (res) {
-            $.loading('hide');
-            if (res.code == 200) {
-                $.success(res.message);
-                $this.parents('tr').find('.status').html('已结束');
-            } else {
-                $.error(res.message);
-            }
-        }, 'json');
     });
 });
 
@@ -160,30 +130,6 @@ function saveForm() {
             formData.append($(this).attr('name'), $(this)[0].files[0]);
         }
     });
-    var max = $('.groupon-variation-box').find('.data-tr').length;
-    var vList = [];
-    for (var i = 0; i < max; i++) {
-        var tr = $('.groupon-variation-box').find('.data-tr').eq(i);
-        var variation = {
-            'variation_id': tr.find('input.variation-id').val(),
-            'price': tr.find('input.variation-price').val(),
-            'stock': tr.find('input.variation-stock').val(),
-        };
-        if (!variation['price'].length) {
-            $.error('SKU价格有误');
-            return false;
-        }
-        if (!variation['stock'].length) {
-            $.error('SKU库存有误');
-            return false;
-        }
-        vList.push(variation);
-    }
-    if (!vList.length) {
-        $.error('请至少选择一个SKU');
-        return false;
-    }
-    formData.append('variation', JSON.stringify(vList))
     $.loading('show');
     $.ajax({
         url: form.attr('action'),

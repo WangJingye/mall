@@ -132,7 +132,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/order/complete', args, function (res) {
+        $.post('/erp/order/receive', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success('已收货');
@@ -152,7 +152,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/order/complete', args, function (res) {
+        $.post('/erp/order/receive', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success('已使用');

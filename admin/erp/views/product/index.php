@@ -122,14 +122,14 @@
                         <?php endif; ?>
                     </div>
                     <div style="margin-top: 0.5rem">
-                        <div class="btn btn-warning btn-sm set-groupon" data-id="<?= $v['product_id'] ?>"
-                             data-url="<?= \App::$urlManager->createUrl('erp/product/set-groupon') ?>">
+                        <a class="btn btn-warning btn-sm"
+                           href="<?= \App::$urlManager->createUrl('erp/groupon/edit', ['product_id' => $v['product_id']]) ?>">
                             <i class="glyphicon glyphicon-star"></i> 设置团购
-                        </div>
-                        <div class="btn btn-danger btn-sm set-flash-sale" data-id="<?= $v['product_id'] ?>"
-                             data-url="<?= \App::$urlManager->createUrl('erp/product/set-flash-sale') ?>">
+                        </a>
+                        <a class="btn btn-danger btn-sm"
+                           href="<?= \App::$urlManager->createUrl('erp/flash-sale/edit', ['product_id' => $v['product_id']]) ?>">
                             <i class="glyphicon glyphicon glyphicon-fire"></i> 设置秒杀
-                        </div>
+                        </a>
                     </div>
                     <div style="margin-top: 0.5rem">
                         <div class="btn btn-info btn-sm set-sort-btn" data-id="<?= $v['product_id'] ?>">

@@ -18,15 +18,6 @@
         </select>
     </div>
     <div class="form-content">
-        <span class="col-form-label search-label">状态</span>
-        <select class="form-control search-input" name="status">
-            <option value="">请选择</option>
-            <?php foreach ($this->statusList as $k => $v): ?>
-                <option value="<?= $k ?>" <?= $this->params['status'] == (string)$k ? 'selected' : '' ?>><?= $v . '(' . $this->virtualStatusList[$k] . ')' ?></option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-    <div class="form-content">
         <?= \admin\extend\input\TimeSearch::instance('create_time', '下单时间', $this->params)->show() ?>
     </div>
     <?php $searchList = ['order_id' => '订单ID', 'order_code' => '订单编号']; ?>
@@ -68,7 +59,11 @@
             <tr>
                 <td><input type="checkbox" class="check-one" value="<?= $v['order_id'] ?>"></td>
                 <td><?= $v['order_id'] ?></td>
-                <td><?= $this->orderTypeList[$v['order_type']] ?></td>
+                <td>
+                    <?= $this->orderTypeList[$v['order_type']] ?>
+                    <hr style="margin: 0;padding: 0;">
+                    <?= $this->orderGroupList[$v['order_group']] ?>
+                </td>
                 <td>
                     <div><?= $v['order_title'] ?></div>
                     <hr style="margin: 0;padding: 0;">
@@ -79,7 +74,7 @@
                 <td><?= $this->userList[$v['user_id']]['telephone'] ?></td>
                 <td><?= $v['money'] ?></td>
                 <td><?= $v['pay_money'] ?></td>
-                <td><?= $v['order_type'] == \admin\extend\Constant::ORDER_TYPE_VIRTUAL ? $this->virtualStatusList[$v['status']] : $this->statusList[$v['status']] ?></td>
+                <td><?= $this->statusList[$v['order_type']][$v['order_group']][$v['status']] ?></td>
                 <td>
                     <div>
                         <a class="btn btn-outline-success btn-sm"
@@ -92,18 +87,18 @@
                         </a>
                     </div>
                     <div style="margin-top: 0.2rem">
-                        <?php if ($v['status'] == \admin\extend\Constant::ORDER_STATUS_CREATE): ?>
+                        <?php if ($v['status'] == \admin\extend\Constant::ORDER_STATUS_CREATED): ?>
                             <div class="btn btn-outline-danger btn-sm pay-btn" data-id="<?= $v['order_id'] ?>">
                                 <i class="iconfont icon-pay"></i> 收款
                             </div>
                             <div class="btn btn-outline-danger btn-sm close-btn" data-id="<?= $v['order_id'] ?>">
                                 <i class="glyphicon glyphicon-remove"></i> 关闭
                             </div>
-                        <?php elseif ($v['status'] == \admin\extend\Constant::ORDER_STATUS_PAID): ?>
+                        <?php elseif ($v['status'] == \admin\extend\Constant::ORDER_STATUS_PENDING): ?>
                             <div class="btn btn-outline-primary btn-sm ship-btn" data-id="<?= $v['order_id'] ?>">
                                 <i class="glyphicon glyphicon-send"></i> 订单发货
                             </div>
-                        <?php elseif ($v['status'] == \admin\extend\Constant::ORDER_STATUS_SHIP): ?>
+                        <?php elseif ($v['status'] == \admin\extend\Constant::ORDER_STATUS_SHIPPED): ?>
                             <?php if ($v['order_type'] == \admin\extend\Constant::ORDER_TYPE_VIRTUAL): ?>
                                 <div class="btn btn-outline-danger btn-sm confirm-virtual-btn"
                                      data-id="<?= $v['order_id'] ?>">
