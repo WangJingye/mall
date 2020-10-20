@@ -122,6 +122,16 @@
                         <?php endif; ?>
                     </div>
                     <div style="margin-top: 0.5rem">
+                        <div class="btn btn-warning btn-sm set-groupon" data-id="<?= $v['product_id'] ?>"
+                             data-url="<?= \App::$urlManager->createUrl('erp/product/set-groupon') ?>">
+                            <i class="glyphicon glyphicon-star"></i> 设置团购
+                        </div>
+                        <div class="btn btn-danger btn-sm set-flash-sale" data-id="<?= $v['product_id'] ?>"
+                             data-url="<?= \App::$urlManager->createUrl('erp/product/set-flash-sale') ?>">
+                            <i class="glyphicon glyphicon glyphicon-fire"></i> 设置秒杀
+                        </div>
+                    </div>
+                    <div style="margin-top: 0.5rem">
                         <div class="btn btn-info btn-sm set-sort-btn" data-id="<?= $v['product_id'] ?>">
                             <i class="glyphicon glyphicon-sort"></i> 设置排序
                         </div>

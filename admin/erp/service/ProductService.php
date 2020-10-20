@@ -159,6 +159,8 @@ class ProductService extends BaseService
         $data['category_name'] = implode(',', $categoryNames);
         $data['pic'] = explode(',', $data['pic'])[0];
         $variations = json_decode($data['variations'], true);
+        //商品价格取第一个variation的价格
+        $data['price'] = $variations[0]['price'];
         $variations = array_column($variations, null, 'product_variation');
         $data['extra'] = json_encode($extra);
         unset($data['product_params'], $data['rules'], $data['variations']);
@@ -227,12 +229,15 @@ class ProductService extends BaseService
     {
         $selector = \Db::table('ProductVariation')->rename('a')
             ->join(['b' => 'Product'], 'b.product_id = a.product_id')
-            ->field(['b.product_name', 'b.product_code', 'b.product_id', 'a.variation_id',
-                'a.rules_value', 'a.price', 'a.stock', 'b.status', 'a.create_time', 'b.freight_id', 'b.product_weight'])
+            ->field(['b.product_name', 'b.product_code','a.variation_code', 'b.product_id', 'a.variation_id',
+                'a.rules_value', 'a.price','a.market_price', 'a.stock', 'b.status', 'a.create_time', 'b.freight_id', 'b.product_weight'])
             ->where(['a.status' => 1])
             ->where(['b.status' => ['!=', 0]]);
         if (isset($params['product_name']) && $params['product_name'] != '') {
             $selector->where(['b.product_name' => ['like', '%' . $params['product_name'] . '%']]);
+        }
+        if (!empty($params['product_id'])) {
+            $selector->where(['a.product_id' => $params['product_id']]);
         }
         if (isset($params['product_type']) && $params['product_type'] != '') {
             $selector->where(['b.product_type' => $params['product_type']]);

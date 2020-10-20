@@ -87,7 +87,6 @@ function getProductSearchWithPage(page) {
     }, 'json');
 }
 
-
 function getProductVariationSearch(option) {
     var mustProperties = [
         'callback'

@@ -1,6 +1,6 @@
 <div class="modal-event-body">
     <div class="table-responsive">
-        <div class="search-form">
+        <div class="search-form" <?= !empty($this->params['search']) && $this->params['search'] === 'false' ? 'style="display:none"' : ''?>>
             <input type="hidden" name="page" value="<?= $this->params['page'] ?>">
             <input type="hidden" name="multiple" value="<?= $this->params['multiple'] ?>">
             <div class="form-content">
@@ -43,7 +43,7 @@
                     <?php endif; ?>
                 </th>
                 <th>商品名称</th>
-                <th>商品SPU</th>
+                <th>SKU</th>
                 <th>规格</th>
                 <th>销售价格</th>
                 <th>库存</th>
@@ -57,7 +57,7 @@
                                data-info='<?= json_encode($v, JSON_HEX_APOS) ?>'></td>
                     <td><?= $v['product_name'] ?></td>
                     <td><?= $v['product_code'] ?></td>
-                    <td><?= $v['rules_value'] ?></td>
+                    <td><?= $v['rules_value'] !== '' ? $v['rules_value'] : '<i style="color: #666">无规格</i>' ?></td>
                     <td><?= $v['price'] ?></td>
                     <td><?= $v['stock'] ?></td>
                     <td class="status"><?= $this->statusList[$v['status']] ?></td>

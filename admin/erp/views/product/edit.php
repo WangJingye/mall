@@ -130,7 +130,7 @@
                             </td>
                         </tr>
                     <?php endforeach; ?>
-                    <tr class="last-tr sr-only"></tr>
+                    <tr class="last-tr sr-only" style="display: none"></tr>
                 </table>
             </div>
         </div>
