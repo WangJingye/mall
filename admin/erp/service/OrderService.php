@@ -579,4 +579,29 @@ class OrderService extends BaseService
         }
         \Db::table('CouponUser')->where(['id' => $coupon_id])->update(['status' => 2]);
     }
+
+    //整单退款
+    public function refundByOrder($orders)
+    {
+        $payMethodList = \Db::table('PayMethod')->findAll();
+        $payMethodList = array_column($payMethodList, null, 'method_id');
+        foreach ($orders as $order) {
+            $payMethod = $payMethodList[$order['pay_method']];
+            //在线付款
+            if ($payMethod['is_online'] == 1) {
+                switch ($payMethod['keywords']) {
+                    case 'alipay':
+                        break;
+                    case 'wechatpay':
+                        break;
+                    case 'wallet':
+                    case 'cardpay':
+                        \Db::table('UserWallet')->where(['user_id' => $order['user_id']])->increase(['balance' => $order['pay_money']]);
+                        break;
+                }
+            } else {
+                \Db::table('UserWallet')->where(['user_id' => $order['user_id']])->increase(['balance' => $order['pay_money']]);
+            }
+        }
+    }
 }

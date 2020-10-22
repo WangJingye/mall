@@ -2,6 +2,7 @@
 
 namespace console\home\controller;
 
+use admin\erp\service\OrderService;
 use admin\extend\Constant;
 use component\ConsoleController;
 
@@ -13,7 +14,7 @@ class OrderController extends ConsoleController
     }
 
     /**
-     * 订单超时未支付取消
+     * 订单取消
      * @throws \Exception
      */
     public function cancelAction()
@@ -53,25 +54,74 @@ class OrderController extends ConsoleController
     }
 
     /**
+     * 团购订单未成团取消
      * @throws \Exception
      */
-    public function finishAction()
+    public function closeGrouponPendingAction()
     {
         $orderList = \Db::table('Order')->where([
-            'status' => Constant::ORDER_STATUS_SHIP,
-            'create_time' => ['<=', time() + \App::$config['site_info']['expire_order_finish'] * 24 * 3600]
+            'status' => Constant::ORDER_STATUS_PENDING,
+            'order_group' => Constant::ORDER_GROUP_GROUPON,
+            'pay_time' => ['<=', time() + \App::$config['site_info']['expire_order_pending'] * 60]
         ])->findAll();
         try {
             \Db::startTrans();
             \Db::table('Order')
                 ->where(['order_id' => ['in', array_column($orderList, 'order_id')]])
-                ->update(['status' => Constant::ORDER_STATUS_COMPLETE]);
+                ->update(['status' => Constant::ORDER_STATUS_CLOSE]);
+            $orderService = new OrderService();
+            $orderService->refundByOrder($orderList);
+            $variations = \Db::table('OrderVariation')
+                ->field(['variation_id', 'number'])
+                ->where(['order_id' => ['in', array_column($orderList, 'order_id')]])
+                ->where(['status' => 1])->findAll();
+            foreach ($variations as $v) {
+                \Db::table('ProductVariation')->where(['variation_id' => $v['variation_id']])->increase('stock', $v['number']);
+            }
             $insertList = [];
             foreach ($orderList as $v) {
                 $insert = [
                     'order_id' => $v['order_id'],
                     'user_type' => 1,
-                    'detail' => '超时自动确认收货',
+                    'detail' => '超时关闭',
+                    'create_userid' => 1,
+                ];
+                $insertList[] = $insert;
+            }
+            \Db::table('OrderTrace')->multiInsert($insertList);
+            \Db::commit();
+        } catch (\Exception $e) {
+            \Db::rollback();
+            echo $e->getMessage() . PHP_EOL;
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function finishAction()
+    {
+        $orderList = \Db::table('Order')->where([
+            'status' => Constant::ORDER_STATUS_SHIPPED,
+            'deliver_time' => ['<=', time() + \App::$config['site_info']['expire_order_finish'] * 24 * 3600]
+        ])->findAll();
+        try {
+            \Db::startTrans();
+            \Db::table('Order')
+                ->where(['order_id' => ['in', array_column($orderList, 'order_id')]])
+                ->update(['status' => Constant::ORDER_STATUS_RECEIVED]);
+            $orderService = new OrderService();
+            $orderService->refundByOrder($orderList);
+            $insertList = [];
+            foreach ($orderList as $v) {
+                $detail = '超时自动确认收货';
+                if ($v['order_type'] == Constant::ORDER_TYPE_VIRTUAL) {
+                    $detail = '电子券超时过期';
+                }
+                $insert = [
+                    'order_id' => $v['order_id'],
+                    'user_type' => 1,
+                    'detail' => $detail,
                     'create_userid' => 1,
                 ];
                 $insertList[] = $insert;
@@ -90,16 +140,14 @@ class OrderController extends ConsoleController
     public function autoCommentAction()
     {
         $orderList = \Db::table('Order')->where([
-            'status' => Constant::ORDER_STATUS_COMPLETE,
-            'is_commented' => 0,
-            'create_time' => ['<=', time() + \App::$config['site_info']['expire_order_comment'] * 24 * 3600]
+            'status' => Constant::ORDER_STATUS_RECEIVED,
+            'receive_time' => ['<=', time() + \App::$config['site_info']['expire_order_comment'] * 24 * 3600]
         ])->findAll();
         $orderIdList = array_column($orderList, 'order_id');
         try {
             \Db::startTrans();
-            \Db::table('Order')
-                ->where(['order_id' => ['in', $orderIdList]])
-                ->update(['is_commented' => 1]);
+            \Db::table('Order')->where(['order_id' => ['in', $orderIdList]])
+                ->update(['status' => Constant::ORDER_STATUS_COMPLETE]);
             $insertList = [];
             foreach ($orderList as $v) {
                 $insert = [
