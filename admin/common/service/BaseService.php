@@ -223,7 +223,7 @@ class BaseService extends WebService
         }
         return [
             1 => $this->getDataList('Admin', 'admin_id', 'realname', ['admin_id' => ['in', $adminIdList]]),
-            2 => $this->getDataList('User', 'user_id', 'nickname', ['user_id' => ['in', $adminIdList]])
+            2 => $this->getDataList('User', 'user_id', 'nickname', ['user_id' => ['in', $userIdList]])
         ];
     }
 }
