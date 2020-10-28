@@ -501,7 +501,22 @@ class Db extends ObjectAccess
             }
             $field = $fields[$key];
             if (strpos($field['Type'], 'int') !== false) {
-                $data[$key] = (int)$value;
+                $data[$key] = intval($value);
+            }
+            if (strpos($field['Type'], 'decimal') !== false) {
+                $data[$key] = floatval($value);
+            }
+            if (strpos($field['Type'], 'date') !== false) {
+                if (strtotime($value) == false) {
+                    $value = null;
+                }
+                $data[$key] = $value;
+            }
+            if (strpos($field['Type'], 'char') !== false || strpos($field['Type'], 'text') !== false) {
+                if (is_array($value)) {
+                    $value = json_encode($value);
+                }
+                $data[$key] = (string)$value;
             }
         }
         return $data;
@@ -692,14 +707,22 @@ class Db extends ObjectAccess
             return '';
         }
         if ($type == 'insert') {
-            foreach ($data as $k => $v) {
-                $data[$k] = str_replace('"', '\\"', str_replace('\\', '\\\\', $v));
+            foreach ($data as $key => $value) {
+                if ($value === null) {
+                    $data[$key] = '`' . $key . '`=null';
+                } else {
+                    $data[$key] = str_replace('"', '\\"', str_replace('\\', '\\\\', $value));
+                }
             }
             $sql = 'insert into ' . $tableName . ' (`' . implode('`,`', array_keys($data)) . '`) values ("' . implode('","', array_values($data)) . '")';
         } else {
             $fields = [];
             foreach ($data as $key => $value) {
-                $fields[] = '`' . $key . '`="' . str_replace('"', '\\"', str_replace('\\', '\\\\', $value)) . '"';
+                if ($value === null) {
+                    $fields[] = '`' . $key . '`=null';
+                } else {
+                    $fields[] = '`' . $key . '`="' . str_replace('"', '\\"', str_replace('\\', '\\\\', $value)) . '"';
+                }
             }
             if ($condition) {
                 $condition = ' where ' . $condition;
