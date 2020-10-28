@@ -42,7 +42,7 @@ function submitForm() {
         if (res.code == 200) {
             $.success(res.message);
             setTimeout(function () {
-                location.href = '/';
+                location.href =$('input[type=submit]').data('url');
             }, 2000)
         } else {
             $('.captcha-box').find('img').click();

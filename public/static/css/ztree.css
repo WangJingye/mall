@@ -26,7 +26,7 @@
 }
 
 .ztree li ul.line {
-    background: url('/static/images/line_conn.png') 0 0 repeat-y
+    background: url(../images/line_conn.png) 0 0 repeat-y
 }
 
 .ztree li a {
@@ -107,7 +107,7 @@
     background-color: transparent;
     background-repeat: no-repeat;
     background-attachment: scroll;
-    background-image: url('/static/images/ztree.png');
+    background-image: url(../images/ztree.png);
 }
 
 .ztree li span.button.chk {
@@ -321,7 +321,7 @@
 
 .ztree li span.button.ico_loading {
     margin-right: 2px;
-    background: url('/static/images/loading.gif') no-repeat scroll 0 0 transparent;
+    background: url(../images/loading.gif) no-repeat scroll 0 0 transparent;
     vertical-align: top;
     *vertical-align: middle
 }
@@ -344,7 +344,7 @@ span.tmpzTreeMove_arrow {
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-position: -168px -84px;
-    background-image: url('/static/images/ztree.png');
+    background-image: url(../images/ztree.png);
 
 }
 

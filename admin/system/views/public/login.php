@@ -1,6 +1,6 @@
 <div class="container">
     <div class="login-head">
-        <h3><?= \App::$config['site_info']['web_name']?></h3>
+        <h3><?= \App::$config['site_info']['web_name'] ?></h3>
     </div>
     <div class="login-box">
         <div class="login-title">用户登录</div>
@@ -28,7 +28,8 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" style="width: 100%" value="登录"/>
+                <input type="submit" class="btn btn-primary" style="width: 100%" value="登录"
+                       data-url="<?= \App::$urlManager->createUrl('/') ?>"/>
             </div>
         </form>
     </div>

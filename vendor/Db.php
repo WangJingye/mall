@@ -358,6 +358,7 @@ class Db extends ObjectAccess
     }
 
     /**
+     * 更新
      * @param $data
      * @throws Exception
      */
@@ -369,7 +370,6 @@ class Db extends ObjectAccess
                 $data['update_time'] = time();
             }
         }
-        $data = $this->parseData($data);
         $sql = $this->array2sql($this->table_name, $data, 'update', $this->condition);
         if ($this->db->exec($sql) === false) {
             $error = $this->db->errorInfo();
@@ -378,6 +378,7 @@ class Db extends ObjectAccess
     }
 
     /**
+     * 增加
      * @param $field
      * @param int $number
      * @throws Exception
@@ -404,6 +405,7 @@ class Db extends ObjectAccess
     }
 
     /**
+     * 减少
      * @param $field
      * @param $number
      * @throws Exception
@@ -481,8 +483,6 @@ class Db extends ObjectAccess
                 break;
             }
         }
-        //处理字段
-        $data = $this->parseData($data);
         $sql = $this->array2sql($this->table_name, $data);
         if ($this->db->exec($sql) === false) {
             $error = $this->db->errorInfo();
@@ -701,11 +701,12 @@ class Db extends ObjectAccess
      * @param string $condition
      * @return string
      */
-    public static function array2sql($tableName, $data, $type = 'insert', $condition = '')
+    public function array2sql($tableName, $data, $type = 'insert', $condition = '')
     {
         if (empty($data)) {
             return '';
         }
+        $data = $this->parseData($data);
         if ($type == 'insert') {
             foreach ($data as $key => $value) {
                 if ($value === null) {

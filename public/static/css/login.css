@@ -38,9 +38,7 @@
 }
 
 .custom-bg {
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)), url('/static/images/login-background.jpg');
     opacity: 1;
-
     background-repeat: no-repeat;
     background-size: cover;
     height: 100%;

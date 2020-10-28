@@ -44,6 +44,7 @@ class PublicController extends BaseController
                 return $this->error($e->getMessage());
             }
         }
+        $this->appendCss('/static/css/login.css');
         $this->layout('login');
     }
 

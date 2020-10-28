@@ -4,18 +4,40 @@ namespace component;
 
 class UrlManager extends \ObjectAccess
 {
-    public function createUrl($uri, $option = [])
+    private $_hostInfo;
+
+    public function createUrl($url, $option = [])
     {
-        if ($uri == '/') {
-            $url = '/' . trim(\App::$request->defaultUri, '/');
-        } else {
-            $res = \App::$request->parseUri($uri);
-            $option = array_merge($res['params'], $option);
-            $url = '/' . $res['module'] . '/' . $res['controller'] . '/' . $res['action'];
+        $route = trim($url, '/');
+
+        $baseUrl = $this->showScriptName || !$this->enablePrettyUrl ? \App::$request->getScriptUrl() : \App::$request->getBaseUrl();
+        $p = [];
+        foreach ($option as $key => $value) {
+            $p[] = $key . '=' . $value;
         }
-        if (count($option)) {
-            $url .= '?' . http_build_query($option);
+        //可以确认前面是host
+        if ($baseUrl == '/index.php') {
+            return '/' . trim($route . '?' . implode('&', $p), '?');
         }
-        return $url;
+        $route = trim($route . '&' . implode('&', $p), '&');
+        $route = $route !== '' ? '?s=' . $route : '';
+        return $baseUrl . $route;
     }
+
+    public function staticUrl($url)
+    {
+        $route = trim($url, '/');
+        $baseUrl = $this->showScriptName || !$this->enablePrettyUrl ? \App::$request->getScriptUrl() : \App::$request->getBaseUrl();
+        return str_replace('/index.php', '/' . $route, $baseUrl);
+    }
+
+    public function getHostInfo()
+    {
+        if ($this->_hostInfo === null) {
+            $request = \App::$request;
+            $this->_hostInfo = $request->getHostInfo();
+        }
+        return $this->_hostInfo;
+    }
+
 }

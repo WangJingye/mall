@@ -16,6 +16,9 @@ class Request extends ObjectAccess
     public $uri;
     public $defaultUri;
 
+    private $_port;
+    private $_scriptUrl;
+    private $_baseUrl;
     public static $instance;
 
     /**
@@ -92,7 +95,7 @@ class Request extends ObjectAccess
             $controller = null;
             $module = null;
         } else if (count($route) < 3) {
-            throw new Exception('Page not found',404);
+            throw new Exception('Page not found', 404);
         } else {
             $module = $route[0];
             $controller = $route[1];
@@ -263,4 +266,101 @@ class Request extends ObjectAccess
         $controller = implode('', $arr) . 'Controller';
         return (APP . '\\' . $module . '\\controller' . '\\' . $controller);
     }
+
+
+    public function getIsSecureConnection()
+    {
+        if (isset($_SERVER['HTTPS']) && (strcasecmp($_SERVER['HTTPS'], 'on') === 0 || $_SERVER['HTTPS'] == 1)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getHostInfo()
+    {
+        if ($this->_hostInfo === null) {
+            $secure = $this->getIsSecureConnection();
+            $http = $secure ? 'https' : 'http';
+            if (isset($_SERVER['SERVER_NAME'])) {
+                $this->_hostInfo = $http . '://' . $_SERVER['SERVER_NAME'];
+                $port = $secure ? $this->getSecurePort() : $this->getPort();
+                if (($port !== 80 && !$secure) || ($port !== 443 && $secure)) {
+                    $this->_hostInfo .= ':' . $port;
+                }
+            }
+        }
+
+        return $this->_hostInfo;
+    }
+
+    public function getSecurePort()
+    {
+        if ($this->_securePort === null) {
+            $serverPort = $this->getServerPort();
+            $this->_securePort = $this->getIsSecureConnection() && $serverPort !== null ? $serverPort : 443;
+        }
+
+        return $this->_securePort;
+    }
+
+    public function getPort()
+    {
+        if ($this->_port === null) {
+            $serverPort = $this->getServerPort();
+            $this->_port = !$this->getIsSecureConnection() && $serverPort !== null ? $serverPort : 80;
+        }
+
+        return $this->_port;
+    }
+
+    public function getServerPort()
+    {
+        return isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : null;
+    }
+
+    public function getScriptFile()
+    {
+        if (isset($this->_scriptFile)) {
+            return $this->_scriptFile;
+        }
+
+        if (isset($_SERVER['SCRIPT_FILENAME'])) {
+            return $_SERVER['SCRIPT_FILENAME'];
+        }
+
+        throw new \Exception('Unable to determine the entry script file path.');
+    }
+
+    public function getScriptUrl()
+    {
+        if ($this->_scriptUrl === null) {
+            $scriptFile = $this->getScriptFile();
+            $scriptName = basename($scriptFile);
+            if (isset($_SERVER['SCRIPT_NAME']) && basename($_SERVER['SCRIPT_NAME']) === $scriptName) {
+                $this->_scriptUrl = $_SERVER['SCRIPT_NAME'];
+            } elseif (isset($_SERVER['PHP_SELF']) && basename($_SERVER['PHP_SELF']) === $scriptName) {
+                $this->_scriptUrl = $_SERVER['PHP_SELF'];
+            } elseif (isset($_SERVER['ORIG_SCRIPT_NAME']) && basename($_SERVER['ORIG_SCRIPT_NAME']) === $scriptName) {
+                $this->_scriptUrl = $_SERVER['ORIG_SCRIPT_NAME'];
+            } elseif (isset($_SERVER['PHP_SELF']) && ($pos = strpos($_SERVER['PHP_SELF'], '/' . $scriptName)) !== false) {
+                $this->_scriptUrl = substr($_SERVER['SCRIPT_NAME'], 0, $pos) . '/' . $scriptName;
+            } elseif (!empty($_SERVER['DOCUMENT_ROOT']) && strpos($scriptFile, $_SERVER['DOCUMENT_ROOT']) === 0) {
+                $this->_scriptUrl = str_replace([$_SERVER['DOCUMENT_ROOT'], '\\'], ['', '/'], $scriptFile);
+            } else {
+                throw new \Exception('Unable to determine the entry script URL.');
+            }
+        }
+
+        return $this->_scriptUrl;
+    }
+
+    public function getBaseUrl()
+    {
+        if ($this->_baseUrl === null) {
+            $this->_baseUrl = rtrim(dirname($this->getScriptUrl()), '\\/');
+        }
+
+        return $this->_baseUrl;
+    }
+
 }

@@ -10,7 +10,7 @@
         </p>
     </div>
     <div id="img">
-        <img src="/static/images/error_page.gif">
+        <img src="<?= \App::$urlManager->staticUrl('/static/images/error_page.gif') ?>">">
     </div>
 </div>
 

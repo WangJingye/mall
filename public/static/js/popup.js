@@ -62,8 +62,8 @@ jQuery.extend({
             if (!$('#loadingModel').get(0)) {
                 var html = '<div id="loadingModel" class="modal">' +
                     '<div class="modal-body">' +
-                    '<span><img src="/static/images/load.gif"/></span>' +
-                    '<span style="color:red;font-size:15px;">' + msg + '</span>' +
+                    '<div class="loading-img"></div>' +
+                    '<span style="color: red;font-size: 1rem;margin-left: 0.5rem">' + msg + '</span>' +
                     '</div></div>';
                 $('body').append(html);
                 var width = document.documentElement.clientWidth || document.body.clientWidth,
@@ -91,8 +91,8 @@ jQuery.extend({
             if ($('#modal-event-show').get(0)) {
                 $('#modal-event-show > div').css('display', 'none');
                 $('#modal-event-show').append('<div id="loadingBar" style="text-align: center;height:50px;line-height: 50px;">' +
-                    '<span><img src="/images/common/load.gif"/></span>' +
-                    '<span style="color:red;font-size:15px;margin-left:10px;">数据处理中</span></div>');
+                    '<div class="loading-img"></div>' +
+                    '<span style="color:red;1rem;margin-left:0.5rem;">数据处理中</span></div>');
             }
             return;
         } else if (options === 'recover') {

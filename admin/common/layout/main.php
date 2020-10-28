@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,maximum-scale=1.0, initial-scale=1, user-scalable=0">
     <title><?= \App::$config['site_info']['web_name'] ?></title>
     <?php foreach ($this->cssList as $css): ?>
-        <link rel="stylesheet" href="<?= $css ?>">
+        <link rel="stylesheet" href="<?= \App::$urlManager->staticUrl($css) ?>">
     <?php endforeach; ?>
 </head>
 <body style="background-color: #f7f7f9;">
@@ -110,7 +110,7 @@ foreach ($arr as $v) {
 </div>
 </body>
 <?php foreach ($this->scriptList as $script): ?>
-    <script src="<?= $script ?>"></script>
+    <script src="<?= \App::$urlManager->staticUrl($script) ?>"></script>
 <?php endforeach; ?>
 <script>
     document.documentElement.addEventListener('touchstart', function (event) {

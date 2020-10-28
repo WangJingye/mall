@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,maximum-scale=1.0, initial-scale=1, user-scalable=0">
     <title>Generate</title>
-    <link rel="stylesheet" href="/static/plugin/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="/static/plugin/bootstrap/css/fonts.css">
+    <link rel="stylesheet" href="<?= \App::$urlManager->staticUrl('/static/plugin/bootstrap/css/bootstrap.css')?>">
+    <link rel="stylesheet" href="<?= \App::$urlManager->staticUrl('/static/plugin/bootstrap/css/fonts.css')?>">
 </head>
 <body>
 <form style="width: 80%;margin: auto" method="post">
@@ -176,16 +176,16 @@
     </table>
 </div>
 </body>
-<script src="/static/js/jquery.js"></script>
-<script src="/static/plugin/bootstrap/js/popper.min.js"></script>
-<script src="/static/plugin/bootstrap/js/bootstrap.js"></script>
-<script src="/static/js/jquery.validate.js"></script>
-<script src="/static/js/popup.js"></script>
+<script src="<?= \App::$urlManager->staticUrl('/static/js/jquery.js')?>"></script>
+<script src="<?= \App::$urlManager->staticUrl('/static/plugin/bootstrap/js/popper.min.js')?>"></script>
+<script src="<?= \App::$urlManager->staticUrl('/static/plugin/bootstrap/js/bootstrap.js')?>"></script>
+<script src="<?= \App::$urlManager->staticUrl('/static/js/jquery.validate.js')?>"></script>
+<script src="<?= \App::$urlManager->staticUrl('/static/js/popup.js')?>"></script>
 <script>
     $(function () {
         $('.show-table').click(function () {
             var $this = $(this);
-            $.post('/generate', {type: 'show-table', table: $('input[name=table]').val()}, function (res) {
+            $.post('<?= \App::$urlManager->createUrl("/generate")?>', {type: 'show-table', table: $('input[name=table]').val()}, function (res) {
                 if (res.code == 200) {
                     var html = ' <div>选项输入格式variable,key:value，数据库格式table:key:value:variable:where</div><table class="table table-bordered">';
                     html += $('#table-header').clone().html();

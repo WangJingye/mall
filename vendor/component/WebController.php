@@ -323,7 +323,7 @@ class WebController extends \Controller
     public function appendCss($css)
     {
         if (strpos($css, '/') !== 0) {
-            $css = '/static/' . $css;
+            $css = 'static/' . $css;
         }
         if (!in_array($css, $this->cssList)) {
             $this->cssList[] = $css;
