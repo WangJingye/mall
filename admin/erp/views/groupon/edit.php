@@ -58,7 +58,7 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-2 text-nowrap col-form-label form-label">sku</label>
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>sku</label>
         <div class="col-sm-10">
             <div>
                 <div class="btn btn-success add-sku-btn"><i

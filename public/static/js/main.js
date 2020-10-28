@@ -30,6 +30,9 @@ $(function () {
             }
         }
     });
+    jQuery.validator.addMethod("datetime", function (value, element) {
+        return this.optional(element) || !/Invalid|NaN/.test(new Date(value).toString());
+    }, "Please enter a valid time.");
     $('.fileinput-box-list').on('change', '.fileinput-input', function () {
         var $this = $(this);
         var box = $this.parents('.fileinput-box');

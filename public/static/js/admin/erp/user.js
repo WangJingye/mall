@@ -7,11 +7,18 @@ $(function () {
             nickname: {
                 required: true
             },
+            city:{
+                required: true
+            },
             telephone: {
                 required: true
             },
             gender: {
                 required: true
+            },
+            birthday:{
+                required: true,
+                dateISO:true
             }
         },
         messages: {
@@ -21,11 +28,18 @@ $(function () {
             nickname: {
                 required: '请输入昵称'
             },
+            city:{
+                required: '请输入城市'
+            },
             telephone: {
                 required: '请输入手机号'
             },
             gender: {
                 required: '请输入性别'
+            },
+            birthday:{
+                required: '请选择出生日期',
+                dateISO:'出生日期格式有误'
             }
         },
         submitHandler: function (e) {

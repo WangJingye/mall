@@ -8,16 +8,23 @@ $(function () {
                 required: true
             },
             price: {
-                required: true
+                required: true,
+                number: true,
+                min: 0
             },
             points: {
-                required: true
+                required: true,
+                digits: true,
+                min: 0,
             },
             min_price: {
-                required: true
+                required: true,
+                number: true,
+                min: 0,
             },
             expire: {
-                required: true
+                required: true,
+                digits: true,
             },
         },
         messages: {
@@ -28,16 +35,22 @@ $(function () {
                 required: '请选择优惠券类型'
             },
             price: {
-                required: '请输入面值'
+                required: '请输入面值',
+                number: '面值只能是数字',
+                min: '面值不能小于0'
             },
             points: {
-                required: '请输入所需积分'
+                required: '请输入所需积分',
+                digits: '积分只能是正整数',
             },
             min_price: {
-                required: '请输入最小使用价格'
+                required: '请输入最小使用价格',
+                number: '最小使用价格只能是数字',
+                min: '最小金额不能小于0'
             },
             expire: {
-                required: '请输入有效期'
+                required: '请输入有时间',
+                digits: '有效时间只能是正整数',
             },
         },
         submitHandler: function (e) {

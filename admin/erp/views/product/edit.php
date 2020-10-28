@@ -136,7 +136,7 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-2 text-nowrap col-form-label form-label">商品规格</label>
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>商品规格</label>
         <div class="col-sm-10">
             <div>
                 <small class="text-muted">最多添加3个相同的规格名，区分大小写</small>
@@ -240,9 +240,9 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-2 text-nowrap col-form-label form-label">排序</label>
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>排序</label>
         <div class="col-sm-10">
-            <input type="text" name="sort" class="form-control"
+            <input type="number" name="sort" class="form-control"
                    value="<?= $this->model['sort'] ? $this->model['sort'] : 0 ?>" placeholder="请输入排序">
         </div>
     </div>

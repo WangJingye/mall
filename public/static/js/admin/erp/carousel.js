@@ -12,6 +12,10 @@ $(function () {
             },
             is_show: {
                 required: true
+            },
+            sort: {
+                required: true,
+                digits:true
             }
         },
         messages: {
@@ -26,6 +30,10 @@ $(function () {
             },
             is_show: {
                 required: '请选择是否展示'
+            },
+            sort: {
+                required: '请输入排序值',
+                digits: '排序值只能是正整数',
             }
         },
         submitHandler: function (e) {

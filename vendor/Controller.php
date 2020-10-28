@@ -7,6 +7,7 @@ class Controller extends ObjectAccess
     public function init()
     {
         $siteInfo = Db::table('SiteInfo')->find();
+        $siteInfo['wechat'] = json_decode($siteInfo['wechat'], true);
         \App::$config['site_info'] = $siteInfo ? $siteInfo : new ObjectAccess();
     }
 
@@ -107,7 +108,7 @@ class Controller extends ObjectAccess
                     throw new \Exception('文件保存失败');
                 }
             }
-            $res[$i] = App::$config['site_info']['web_host'] . '/' . $filename;
+            $res[$i] = '/' . $filename;
         }
         return $res;
     }
@@ -126,10 +127,10 @@ class Controller extends ObjectAccess
             if (!is_array($urlList)) {
                 $urlList = explode(',', $urlList);
             }
-            $baseUrl = \App::$config['site_info']['web_host'];
+//            $baseUrl = \App::$config['site_info']['web_host'];
             foreach ($urlList as $i => $url) {
-                if (strpos($url, $baseUrl . '/upload/common') === 0) {
-                    $filename = str_replace($baseUrl . '/upload/common/', '', $url);
+                if (strpos($url, '/upload/common') === 0) {
+                    $filename = str_replace('/upload/common/', '', $url);
                     $oldFilePath = PUBLIC_PATH . 'upload/common/';
                     $oldFilename = $oldFilePath . $filename;
                     $newFilePath = PUBLIC_PATH . 'upload/' . $path;
@@ -141,7 +142,7 @@ class Controller extends ObjectAccess
                         copy($oldFilename, $newFilename);
                         unlink($oldFilename);
                     }
-                    $res[$i] = $baseUrl . '/upload/' . $path . $filename;
+                    $res[$i] = '/upload/' . $path . $filename;
                 } else {
                     $res[$i] = $url;
                 }

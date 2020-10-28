@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-4 text-nowrap col-form-label form-label">优惠券</label>
+        <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>优惠券</label>
         <div class="col-sm-8">
             <?= \admin\extend\input\SelectInput::instance($this->couponList, $this->model['coupon_id'], 'coupon_id','select2')->show(); ?>
         </div>

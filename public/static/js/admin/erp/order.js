@@ -10,6 +10,14 @@ $(function () {
             user_id: {
                 required: true
             },
+            money: {
+                required: true,
+                min: 0
+            },
+            freight_money: {
+                required: true,
+                min: 0
+            },
             rate_money: {
                 required: true
             }
@@ -23,6 +31,14 @@ $(function () {
             },
             user_id: {
                 required: '请选择用户'
+            },
+            money: {
+                required: '货品金额不能为空',
+                min: '货品金额不能小于0'
+            },
+            freight_money: {
+                required: '运费不能为空',
+                min: '运费不能小于0'
             },
             rate_money: {
                 required: '请输入优惠金额'

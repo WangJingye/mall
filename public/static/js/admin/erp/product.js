@@ -15,6 +15,14 @@ $(function () {
             },
             status: {
                 required: true
+            },
+            product_weight: {
+                required: true,
+                number: true,
+            },
+            sort: {
+                required: true,
+                number: true,
             }
         },
         messages: {
@@ -32,6 +40,14 @@ $(function () {
             },
             status: {
                 required: '请选择商品状态'
+            },
+            product_weight: {
+                required: '请输入商品重量',
+                number: '商品重量只能是数字',
+            },
+            sort: {
+                required: '请输入排序值',
+                number: '排序值只能是数字',
             }
         },
         submitHandler: function () {
@@ -396,7 +412,7 @@ function saveForm() {
         }
         for (i in map) {
             if (!variation[i].length) {
-                $.error('请输入' + map[i]);
+                $.error('请确认无规格商品信息完整');
                 return false;
             }
         }
@@ -424,8 +440,10 @@ function saveForm() {
                     if (!variation[i].length) {
                         tr.find('.' + i).removeClass('is-valid').addClass('is-invalid');
                     }
+                }
+                for (i in map) {
                     if (!variation[i].length) {
-                        $.error('请输入' + map[i]);
+                        $.error('请确认SKU信息完整');
                         return false;
                     }
                 }

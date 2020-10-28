@@ -2,14 +2,14 @@
       action="<?= \App::$urlManager->createUrl('erp/coupon/edit') ?>" method="post">
     <input type="hidden" name="coupon_id" value="<?= $this->model['coupon_id'] ?>">
     <div class="form-group row">
-        <label class="col-sm-4 text-nowrap col-form-label form-label">优惠券标题</label>
+        <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>优惠券标题</label>
         <div class="col-sm-8">
             <input type="text" name="title" class="form-control" value="<?= $this->model['title'] ?>"
                    placeholder="请输入优惠券标题">
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-4 text-nowrap col-form-label form-label">优惠券类型</label>
+        <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>优惠券类型</label>
         <div class="col-sm-8">
             <?= \admin\extend\input\SelectInput::instance($this->typeList, isset($this->model['type']) ? $this->model['type'] : 1, 'type')->show(); ?>
         </div>
@@ -30,30 +30,30 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-4 text-nowrap col-form-label form-label">面值</label>
+        <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>面值</label>
         <div class="col-sm-8">
-            <input type="text" name="price" class="form-control" value="<?= $this->model['price'] ?>"
+            <input type="number" name="price" class="form-control" value="<?= $this->model['price'] ?>"
                    placeholder="请输入面值">
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-4 text-nowrap col-form-label form-label">所需积分</label>
+        <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>所需积分</label>
         <div class="col-sm-8">
-            <input type="text" name="points" class="form-control" value="<?= $this->model['points'] ?>"
+            <input type="number" name="points" class="form-control" value="<?= $this->model['points'] ?>"
                    placeholder="请输入所需积分">
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-4 text-nowrap col-form-label form-label">最小使用价格</label>
+        <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>最小使用价格</label>
         <div class="col-sm-8">
-            <input type="text" name="min_price" class="form-control" value="<?= $this->model['min_price'] ?>"
+            <input type="number" name="min_price" class="form-control" value="<?= $this->model['min_price'] ?>"
                    placeholder="请输入最小使用价格">
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-4 text-nowrap col-form-label form-label">有效期</label>
+        <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>有效期</label>
         <div class="col-sm-8">
-            <input type="text" name="expire" class="form-control" value="<?= $this->model['expire'] ?>"
+            <input type="number" name="expire" class="form-control" value="<?= $this->model['expire'] ?>"
                    placeholder="请输入有效期">
             <small class="text-muted">单位 分钟</small>
         </div>

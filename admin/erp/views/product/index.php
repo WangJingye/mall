@@ -99,7 +99,6 @@
                 <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
                 <td>
                     <div>
-
                         <a class="btn btn-primary btn-sm"
                            href="<?= \App::$urlManager->createUrl('erp/product/edit', ['product_id' => $v['product_id']]) ?>">
                             <i class="glyphicon glyphicon-pencil"></i> 编辑

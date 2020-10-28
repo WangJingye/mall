@@ -8,16 +8,22 @@ $(function () {
                 required: true
             },
             number: {
-                required: true
+                required: true,
+                digits:true,
+                min:1
             },
             start_price: {
-                required: true
+                required: true,
+                min:0,
             },
             step_number: {
-                required: true
+                required: true,
+                digits:true,
+                min:1
             },
             step_price: {
-                required: true
+                required: true,
+                min:0
             }
         },
         messages: {
@@ -25,19 +31,25 @@ $(function () {
                 required: '请输入模版名称'
             },
             freight_type: {
-                required: '请输入计价方式'
+                required: '请选择计价方式'
             },
             number: {
-                required: '请输入数量'
+                required: '请输入起步数量',
+                digits:'起步数量必须是正整数',
+                min:'起步数量不能小于1',
             },
             start_price: {
-                required: '请输入起步价'
+                required: '请输入起步价',
+                min:'起步价不能小于0'
             },
             step_number: {
-                required: '请输入增加数量'
+                required: '请输入增加数量',
+                digits:'增加数量必须是正整数',
+                min:'增加数量不能小于1',
             },
             step_price: {
-                required: '请输入增加费用'
+                required: '请输入增加费用',
+                min:'增加费用不能小于0'
             }
         },
         submitHandler: function (e) {

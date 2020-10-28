@@ -25,7 +25,11 @@ class Db extends ObjectAccess
     public function __construct($database = [])
     {
         if (empty($database)) {
-            $database = require COMMON_PATH . 'config/db.php';
+            $cf = COMMON_PATH . 'config/db.php';
+            if (!file_exists($cf)) {
+                throw new \Exception('数据库配置文件db.php不存在');
+            }
+            $database = require $cf;
         }
         if (empty($database)) {
             throw new \Exception('database config is missing！', 500);
@@ -365,12 +369,7 @@ class Db extends ObjectAccess
                 $data['update_time'] = time();
             }
         }
-        //删除不存在字段
-        foreach ($data as $key => $value) {
-            if (!isset($fields[$key])) {
-                unset($data[$key]);
-            }
-        }
+        $data = $this->parseData($data);
         $sql = $this->array2sql($this->table_name, $data, 'update', $this->condition);
         if ($this->db->exec($sql) === false) {
             $error = $this->db->errorInfo();
@@ -482,18 +481,30 @@ class Db extends ObjectAccess
                 break;
             }
         }
-        //删除不存在字段
-        foreach ($data as $key => $value) {
-            if (!isset($fields[$key])) {
-                unset($data[$key]);
-            }
-        }
+        //处理字段
+        $data = $this->parseData($data);
         $sql = $this->array2sql($this->table_name, $data);
         if ($this->db->exec($sql) === false) {
             $error = $this->db->errorInfo();
             throw new \Exception($error[2]);
         }
         return $this->db->lastInsertId();
+    }
+
+    protected function parseData($data)
+    {
+        $fields = $this->getFields();
+        foreach ($data as $key => $value) {
+            if (!isset($fields[$key])) {
+                unset($data[$key]);
+                continue;
+            }
+            $field = $fields[$key];
+            if (strpos($field['Type'], 'int') !== false) {
+                $data[$key] = (int)$value;
+            }
+        }
+        return $data;
     }
 
     /**
@@ -529,11 +540,9 @@ class Db extends ObjectAccess
                 break;
             }
         }
-        //删除不存在字段
-        foreach ($data as $key => $value) {
-            if (!isset($fields[$key])) {
-                unset($data[$key]);
-            }
+        //处理字段
+        foreach ($list as $f => $data) {
+            $list[$f] = $this->parseData($data);
         }
         $dataSql = [];
         foreach ($list as $data) {

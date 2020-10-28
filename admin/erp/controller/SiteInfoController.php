@@ -21,11 +21,12 @@ class SiteInfoController extends BaseController
         $params = \App::$request->params->toArray();
         if (\App::$request->isAjax() && \App::$request->isPost()) {
             try {
+                $info['wechat'] = json_encode($params);
                 $siteInfo = \Db::table('SiteInfo')->find();
                 if ($siteInfo) {
-                    \Db::table('SiteInfo')->update($params);
+                    \Db::table('SiteInfo')->update($info);
                 } else {
-                    \Db::table('SiteInfo')->insert($params);
+                    \Db::table('SiteInfo')->insert($info);
                 }
                 return $this->success('保存成功');
             } catch (\Exception $e) {
@@ -33,6 +34,7 @@ class SiteInfoController extends BaseController
             }
         }
         $model = \Db::table('SiteInfo')->find();
+        $model = json_decode($model['wechat'], true);
         $this->assign('model', $model);
     }
 

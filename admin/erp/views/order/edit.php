@@ -12,7 +12,7 @@
     <input type="hidden" name="order_id" value="<?= $this->model['order_id'] ?>">
     <div class="form-group row">
         <div class="col-sm-6 row form-col-inline">
-            <label class="col-sm-4 text-nowrap col-form-label form-label">订单标题</label>
+            <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>订单标题</label>
             <div class="col-sm-8">
                 <input type="text" name="order_title" class="form-control" value="<?= $this->model['order_title'] ?>"
                        placeholder="请输入订单标题">
@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="col-sm-6 row form-col-inline">
-            <label class="col-sm-4 text-nowrap col-form-label form-label">订单类型</label>
+            <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>订单类型</label>
             <div class="col-sm-8">
                 <?= \admin\extend\input\SelectInput::instance($this->orderTypeList, $this->model['order_type'], 'order_type', 'select')->show(); ?>
             </div>
@@ -34,7 +34,7 @@
     </div>
     <div class="form-group row">
         <div class="col-sm-6 row form-col-inline">
-            <label class="col-sm-4 text-nowrap col-form-label form-label">用户</label>
+            <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>用户</label>
             <div class="col-sm-8">
                 <input type="text" class="form-control search-user"
                        value="<?= $this->user['nickname'] ?>"
@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="col-sm-6 row form-col-inline receiver-group">
-            <label class="col-sm-4 text-nowrap col-form-label form-label">收件人姓名</label>
+            <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>收件人姓名</label>
             <div class="col-sm-8">
                 <input type="text" name="receiver_name" class="form-control"
                        value="<?= $this->model['receiver_name'] ?>"
@@ -52,21 +52,22 @@
             </div>
         </div>
         <div class="col-sm-6 row form-col-inline receiver-group">
-            <label class="col-sm-4 text-nowrap col-form-label form-label">收件人手机号</label>
+            <label class="col-sm-4 text-nowrap col-form-label form-label"><span
+                        style="color: red">*</span>收件人手机号</label>
             <div class="col-sm-8">
                 <input type="text" name="receiver_mobile" class="form-control"
                        value="<?= $this->model['receiver_mobile'] ?>" placeholder="请输入收件人手机号">
             </div>
         </div>
         <div class="col-sm-6 row form-col-inline receiver-group">
-            <label class="col-sm-4 text-nowrap col-form-label form-label">收件人地址</label>
+            <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>收件人地址</label>
             <div class="col-sm-8">
                 <input type="text" name="receiver_address" class="form-control"
                        value="<?= $this->model['receiver_address'] ?>" placeholder="请输入收件人地址">
             </div>
         </div>
         <div class="col-sm-6 row form-col-inline receiver-group">
-            <label class="col-sm-4 text-nowrap col-form-label form-label">收件人邮编</label>
+            <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>收件人邮编</label>
             <div class="col-sm-8">
                 <input type="text" name="receiver_postal" class="form-control"
                        value="<?= $this->model['receiver_postal'] ?>" placeholder="请输入收件人邮编">
@@ -92,15 +93,17 @@
         </div>
         <div class="col-sm-6 row form-col-inline">
             <label class="col-sm-4 text-nowrap col-form-label form-label">优惠券</label>
-            <div class="col-sm-8" style="display: inline-flex">
-                <input type="text" class="form-control search-coupon"
-                       value="<?= $this->model['coupon_id'] ? $this->coupon['coupon_name'] : '' ?>" readonly
-                       placeholder="点击选择优惠券">
-                <?php if ($this->model['coupon_id']): ?>
-                    <span class="search-clear-btn"><i class="glyphicon glyphicon-remove-circle"></i></span>
-                <?php endif; ?>
-                <input type="hidden" name="coupon_id"
-                       value="<?= $this->model['coupon_id'] ? $this->model['coupon_id'] : 0 ?>">
+            <div class="col-sm-8">
+                <div style="display: inline-flex;width: 100%">
+                    <input type="text" class="form-control search-coupon"
+                           value="<?= $this->model['coupon_id'] ? $this->coupon['coupon_name'] : '' ?>" readonly
+                           placeholder="点击选择优惠券">
+                    <?php if ($this->model['coupon_id']): ?>
+                        <span class="search-clear-btn"><i class="glyphicon glyphicon-remove-circle"></i></span>
+                    <?php endif; ?>
+                    <input type="hidden" name="coupon_id"
+                           value="<?= $this->model['coupon_id'] ? $this->model['coupon_id'] : 0 ?>">
+                </div>
             </div>
         </div>
         <div class="col-sm-6 row form-col-inline">
@@ -181,6 +184,6 @@
     </div>
 </form>
 <script>
-    var freightList =<?=json_encode($this->freightList)?>;
+    var freightList = <?=json_encode($this->freightList)?>;
 </script>
 <?php $this->appendScript('coupon-search.js')->appendScript('user-search.js')->appendScript('product-search.js')->appendScript('order.js') ?>

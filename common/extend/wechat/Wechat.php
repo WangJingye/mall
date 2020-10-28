@@ -19,9 +19,9 @@ class Wechat
     {
         if (static::$instance == null) {
             $instance = new static();
-            $config = \App::$config['site_info'];
+            $config = \App::$config['site_info']['wechat'];
             $keyList = [
-                'wechat_app_id', 'wechat_app_secret',
+                'app_id', 'app_secret',
             ];
             foreach ($keyList as $key) {
                 if (!isset($config[$key]) || !$config[$key]) {
@@ -43,7 +43,7 @@ class Wechat
     public function getOpenIdByCode($code)
     {
         $t_url = 'https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code';
-        $url = sprintf($t_url, $this->config['wechat_app_id'], $this->config['wechat_app_id'], $code);
+        $url = sprintf($t_url, $this->config['app_id'], $this->config['app_secret'], $code);
         $apiData = \component\Util::sendRequest($url, [], 'GET');
         if ($apiData) {
             $apiData = json_decode($apiData, true);

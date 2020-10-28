@@ -26,23 +26,23 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-2 text-nowrap col-form-label form-label">原价</label>
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>原价</label>
         <div class="col-sm-10">
-            <input type="text" name="product_price" class="form-control" placeholder="原价"
+            <input type="number" name="product_price" class="form-control" placeholder="原价"
                    value="<?= $this->model['product_price'] ?>">
         </div>
     </div>
     <div class="form-group row">
         <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>秒杀价</label>
         <div class="col-sm-10">
-            <input type="text" name="price" class="form-control" value="<?= $this->model['price'] ?>"
+            <input type="number" name="price" class="form-control" value="<?= $this->model['price'] ?>"
                    placeholder="请输入秒杀价">
         </div>
     </div>
     <div class="form-group row">
         <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>库存</label>
         <div class="col-sm-10">
-            <input type="text" name="stock" class="form-control" value="<?= $this->model['stock'] ?>"
+            <input type="number" name="stock" class="form-control" value="<?= $this->model['stock'] ?>"
                    placeholder="请输入库存">
         </div>
     </div>

@@ -3,11 +3,19 @@ $(function () {
         rules: {
             brand_name: {
                 required: true
+            },
+            sort: {
+                required: true,
+                digits:true
             }
         },
         messages: {
             brand_name: {
                 required: '请输入品牌名称'
+            },
+            sort: {
+                required: '请输入排序值',
+                digits: '排序值只能是正整数',
             }
         },
         submitHandler: function (e) {
@@ -76,7 +84,7 @@ function saveForm() {
         formData.append(data[i].name, data[i].value);
     }
     form.find('input[type=file]').each(function () {
-        if($(this).val().length) {
+        if ($(this).val().length) {
             formData.append($(this).attr('name'), $(this)[0].files[0]);
         }
     });

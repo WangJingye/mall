@@ -13,7 +13,7 @@ $(function () {
                 required: '请输入用户'
             },
             coupon_id: {
-                required: '请输入优惠券ID'
+                required: '请选择优惠券'
             }
         },
         submitHandler: function (e) {

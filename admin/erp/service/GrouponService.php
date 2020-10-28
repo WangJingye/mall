@@ -95,8 +95,7 @@ class GrouponService extends BaseService
                 'rules_name' => $pv['rules_name'],
                 'rules_value' => $pv['rules_value'],
                 'price' => $v['price'],
-                'product_price' => $pv['price'],
-                'market_price' => $pv['market_price'],
+                'product_price' => $v['product_price'],
                 'stock' => $v['stock'],
                 'status' => 1
             ];

@@ -4,23 +4,33 @@ $(function () {
             title: {
                 required: true
             },
-            product_id: {
+            product_name: {
                 required: true
             },
             variation_code: {
                 required: true
             },
             product_price: {
-                required: '请输入原价'
+                required: true,
+                number: true,
+                min: 0
+            },
+            stock: {
+                required: true,
+                digits: true
             },
             price: {
-                required: true
+                required: true,
+                number: true,
+                min: 0
             },
             start_time: {
-                required: true
+                required: true,
+                datetime:true
             },
             end_time: {
-                required: true
+                required: true,
+                datetime:true
             }
         },
         messages: {
@@ -33,16 +43,27 @@ $(function () {
             variation_code: {
                 required: '请选择sku'
             },
+            stock: {
+                required: '请输入库存',
+                digits: '库存只能是正数字',
+            },
             price: {
-                required: '请输入秒杀价'
-            }, product_price: {
-                required: '请输入原价'
+                required: '请输入秒杀价',
+                number: '秒杀价只能是数字',
+                min: '秒杀价不能小于0'
+            },
+            product_price: {
+                required: '请输入原价',
+                number: '原价只能是数字',
+                min: '秒杀价不能小于0'
             },
             start_time: {
-                required: '请输入开始时间'
+                required: '请输入开始时间',
+                datetime:'开始时间格式有误'
             },
             end_time: {
-                required: '请输入结束时间'
+                required: '请输入结束时间',
+                datetime:'结束时间格式有误'
             }
         },
         submitHandler: function (e) {

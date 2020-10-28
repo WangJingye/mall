@@ -13,7 +13,7 @@ $(function () {
                 required: '请输入分类名称'
             },
             parent_id: {
-                required: '请输入父级ID'
+                required: '请选择父级分类'
             }
         },
         submitHandler: function (e) {

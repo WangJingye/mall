@@ -1,8 +1,7 @@
 <?php
+$runtimeConfig = [];
 if (file_exists(COMMON_PATH . 'config/config.php')) {
-    $runtimeConfig = include COMMON_PATH . "config/config.php";
-} else {
-    $runtimeConfig = [];
+    $runtimeConfig = include COMMON_PATH . 'config/config.php';
 }
 $configs = [
     'actionNoLoginList' => [
@@ -12,9 +11,9 @@ $configs = [
         'system/admin' => ['profile', 'change-password', 'change-profile'],
         'system/upload' => ['*'],
         'erp/site-info' => ['index'],
-        'erp/user' => ['search','get-order-list'],
+        'erp/user' => ['search', 'get-order-list'],
         'erp/coupon-user' => ['search'],
-        'erp/product' => ['search','variation-search'],
+        'erp/product' => ['search', 'variation-search'],
         'erp/category' => ['get-child-list'],
     ]
 ];

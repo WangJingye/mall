@@ -81,10 +81,16 @@
                            href="<?= \App::$urlManager->createUrl('erp/order/detail', ['order_id' => $v['order_id']]) ?>">
                             <i class="glyphicon glyphicon-eye-open"></i> 查看
                         </a>
-                        <a class="btn btn-primary btn-sm"
-                           href="<?= \App::$urlManager->createUrl('erp/order/edit', ['order_id' => $v['order_id']]) ?>">
-                            <i class="glyphicon glyphicon-pencil"></i> 编辑
-                        </a>
+                        <?php if ($v['status'] != \admin\extend\Constant::ORDER_STATUS_CLOSE): ?>
+                            <a class="btn btn-primary btn-sm"
+                               href="<?= \App::$urlManager->createUrl('erp/order/edit', ['order_id' => $v['order_id']]) ?>">
+                                <i class="glyphicon glyphicon-pencil"></i> 编辑
+                            </a>
+                        <?php else: ?>
+                            <div class="btn btn-danger btn-sm remove-btn" data-id="<?= $v['order_id'] ?>">
+                                <i class="glyphicon glyphicon-trash"></i> 删除
+                            </div>
+                        <?php endif; ?>
                     </div>
                     <div style="margin-top: 0.2rem">
                         <?php if ($v['status'] == \admin\extend\Constant::ORDER_STATUS_CREATED): ?>
@@ -111,15 +117,6 @@
                             <?php endif; ?>
                         <?php endif; ?>
                     </div>
-                    <div>
-                        <?php if ($v['status'] == \admin\extend\Constant::ORDER_STATUS_COMPLETE): ?>
-
-                        <?php elseif ($v['status'] == \admin\extend\Constant::ORDER_STATUS_CLOSE): ?>
-                            <div class="btn btn-danger btn-sm remove-btn" data-id="<?= $v['order_id'] ?>">
-                                <i class="glyphicon glyphicon-trash"></i> 删除
-                            </div>
-                        <?php endif; ?>
-                    </div>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -133,7 +130,7 @@
 </div>
 <?= $this->pagination ?>
 <script>
-    var transportList =<?=json_encode($this->transportList)?>;
-    var payMethodList =<?=json_encode($this->payMethodList)?>;
+    var transportList = <?=json_encode($this->transportList)?>;
+    var payMethodList = <?=json_encode($this->payMethodList)?>;
 </script>
 <?php $this->appendScript('order.js') ?>

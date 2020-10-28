@@ -189,8 +189,10 @@ class OrderService extends BaseService
         $variationList = \Db::table('ProductVariation')->rename('a')
             ->join(['b' => 'Product'], 'a.product_id = b.product_id')
             ->where(['a.variation_id' => ['in', array_column($variations, 'variation_id')]])
-            ->field(['a.variation_id', 'b.product_id', 'a.variation_code', 'b.pic', 'b.product_name', 'b.category_id',
-                'a.rules_name', 'a.rules_value', 'b.product_weight', 'b.freight_id', 'a.stock'])
+            ->field([
+                'a.variation_id', 'b.product_id', 'a.variation_code', 'b.pic',
+                'b.product_name', 'b.category_id', 'a.rules_name', 'a.rules_value',
+                'b.product_weight', 'b.freight_id', 'a.stock'])
             ->findAll();
         $variationList = array_column($variationList, null, 'variation_id');
         $pList = [];
@@ -216,6 +218,9 @@ class OrderService extends BaseService
         }
         $data['freight_money'] = $this->getFreightFee($pList);
         $data['money'] = $data['product_money'] + $data['freight_money'] - $data['rate_money'];
+        if ($data['money'] < 0) {
+            throw new \Exception('订单金额小于0，订单创建失败～');
+        }
         $orderVariationList = [];
         if (isset($data['order_id']) && $data['order_id']) {
             \Db::table('Order')->where(['order_id' => $data['order_id']])->update($data);
@@ -572,7 +577,14 @@ class OrderService extends BaseService
                 throw new \Exception('优惠券不满足使用条件，请重新选择');
             }
         } else {
-            $used = 1;
+            $total = 0;
+            foreach ($variationList as $v) {
+                $total += $v['price'] * $v['number'];
+                $used = 1;
+            }
+            if ($total < $coupon['min_price']) {
+                throw new \Exception('优惠券不满足使用条件，请重新选择');
+            }
         }
         if ($used == 0) {
             throw new \Exception('优惠券不满足使用条件，请重新选择');

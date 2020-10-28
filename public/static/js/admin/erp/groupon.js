@@ -5,16 +5,19 @@ $(function () {
                 required: true
             },
             group_user_number: {
-                required: true
+                required: true,
+                number: true
             },
             title: {
                 required: true
             },
             start_time: {
-                required: true
+                required: true,
+                datetime:true
             },
             end_time: {
-                required: true
+                required: true,
+                datetime:true
             }
         },
         messages: {
@@ -22,16 +25,19 @@ $(function () {
                 required: '请选择所属商品'
             },
             group_user_number: {
-                required: '请输入成团人数'
+                required: '请输入成团人数',
+                number: '成团人数必须是数字'
             },
             title: {
                 required: '请输入标题'
             },
             start_time: {
-                required: '请输入开始时间'
+                required: '请输入开始时间',
+                datetime:'开始时间格式有误'
             },
             end_time: {
-                required: '请输入结束时间'
+                required: '请输入结束时间',
+                datetime:'结束时间格式有误'
             }
         },
         submitHandler: function (e) {
@@ -162,25 +168,30 @@ function saveForm() {
     });
     var max = $('.groupon-variation-box').find('.data-tr').length;
     var vList = [];
+    var map = {'product_price': 'variation-product-price', 'price': 'variation-price', 'stock': 'variation-stock'};
+    var flag = 0;
     for (var i = 0; i < max; i++) {
         var tr = $('.groupon-variation-box').find('.data-tr').eq(i);
         var variation = {
             'variation_id': tr.find('input.variation-id').val(),
+            'product_price': tr.find('input.variation-product-price').val(),
             'price': tr.find('input.variation-price').val(),
             'stock': tr.find('input.variation-stock').val(),
         };
-        if (!variation['price'].length) {
-            $.error('SKU价格有误');
-            return false;
-        }
-        if (!variation['stock'].length) {
-            $.error('SKU库存有误');
-            return false;
+        for (var m in map) {
+            if (!variation[m].length) {
+                flag = 1;
+                tr.find('input.' + map[m]).removeClass('is-valid').addClass('is-invalid');
+            }
         }
         vList.push(variation);
     }
     if (!vList.length) {
         $.error('请至少选择一个SKU');
+        return false;
+    }
+    if(flag==1){
+        $.error('请确认SKU信息完整');
         return false;
     }
     formData.append('variation', JSON.stringify(vList))

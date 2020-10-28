@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-4 text-nowrap col-form-label form-label">分销深度</label>
+        <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>分销深度</label>
         <div class="col-sm-8">
             <input type="number" name="depth" class="form-control"
                    value="<?= isset($this->model['depth']) ? $this->model['depth'] : '' ?>"
