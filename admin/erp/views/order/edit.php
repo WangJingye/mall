@@ -136,7 +136,7 @@
             <div class="offset-2 col-sm-10">
                 <table class="table table-bordered text-nowrap list-table product-list text-center">
                     <tr>
-                        <td>商品SPU</td>
+                        <td>商品ID</td>
                         <td>商品名称</td>
                         <td>规格</td>
                         <td class="input-td">销售数量</td>
@@ -152,7 +152,7 @@
                                        value="<?= $product['product_weight'] ?>">
                                 <input type="hidden" class="freight_id"
                                        value="<?= $product['freight_id'] ?>">
-                                <?= $product['product_code'] ?>
+                                <?= $v['product_id'] ?>
                             </td>
                             <td><?= $v['product_name'] ?></td>
                             <td><?= $v['rules_value'] ?></td>

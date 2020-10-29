@@ -28,7 +28,7 @@ $(function () {
             status: $(this).data('status')
         };
         $.loading('show');
-        $.post('/system/menu/set-status', args, function (res) {
+        POST('/system/menu/set-status', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message, function () {
@@ -52,7 +52,7 @@ function saveForm() {
         return false;
     }
     $.loading('show');
-    $.post(form.attr('action'), data, function (res) {
+    POST(form.attr('action'), data, function (res) {
         $.loading('hide');
         if (res.code == 200) {
             $.success(res.message);

@@ -31,7 +31,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/coupon-user/delete', args, function (res) {
+        POST('/erp/coupon-user/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);

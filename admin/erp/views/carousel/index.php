@@ -72,7 +72,7 @@
                 <td><?= $v['title'] ?></td>
                 <td>
                     <?php if ($v['pic']): ?>
-                        <img src="<?= $v['pic'] ?>" style="width: 60px;height: 60px;">
+                        <img src="<?= \App::$urlManager->staticUrl($v['pic']) ?>" style="width: 60px;height: 60px;">
                     <?php endif; ?>
                 </td>
                 <td class="sort"><?= $v['sort'] ?></td>

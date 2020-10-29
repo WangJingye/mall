@@ -32,7 +32,7 @@
                     <?php endforeach; ?>
                 </select>
             </div>
-            <?php $searchList = ['product_id' => '商品ID', 'product_code' => '商品SPU']; ?>
+            <?php $searchList = ['product_id' => '商品ID']; ?>
             <div class="form-content">
                 <span class="col-form-label search-label">查询条件</span>
                 <div class="clearfix" style="display: inline-flex;">
@@ -50,48 +50,48 @@
                 </div>
             </div>
         </div>
-        <table class="table table-bordered list-table text-nowrap text-center">
-            <tbody>
-            <tr>
-                <th><?php if ($this->params['multiple']): ?>
-                        <input type="checkbox" class="check-all">
-                    <?php endif; ?>
-                </th>
-                <th>商品ID</th>
-                <th>商品名称</th>
-                <th>商品SPU</th>
-                <th>分类名称</th>
-                <th>品牌</th>
-                <th>主图</th>
-                <th>状态</th>
-                <th>创建时间</th>
-            </tr>
-
-            <?php foreach ($this->list as $v): ?>
-                <tr class="product-search-tr" style="cursor: pointer">
-                    <td><input type="checkbox" class="check-one" name="ids" value="<?= $v['product_id'] ?>"
-                               data-info='<?= json_encode($v, JSON_HEX_APOS) ?>'></td>
-                    <td class="product_id"><?= $v['product_id'] ?></td>
-                    <td class="product_name"><?= $v['product_name'] ?></td>
-                    <td class="spu"><?= $v['product_code'] ?></td>
-                    <td><?= $v['category_name'] ?></td>
-                    <td><?= $this->brandList[$v['brand_id']] ?></td>
-                    <td class="pic" data-value="<?= $v['pic'] ?>">
-                        <?php if ($v['pic']): ?>
-                            <img src="<?= $v['pic'] ?>" style="width: 40px;height:40px;">
-                        <?php endif; ?>
-                    </td>
-                    <td class="status"><?= $this->statusList[$v['status']] ?></td>
-                    <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
-                </tr>
-            <?php endforeach; ?>
-            <?php if (!count($this->list)): ?>
+        <div class="table-responsive">
+            <table class="table table-bordered list-table text-nowrap text-center">
+                <tbody>
                 <tr>
-                    <td colspan="18" class="list-table-nodata">暂无相关数据</td>
+                    <th><?php if ($this->params['multiple']): ?>
+                            <input type="checkbox" class="check-all">
+                        <?php endif; ?>
+                    </th>
+                    <th>商品ID</th>
+                    <th>商品名称</th>
+                    <th>分类名称</th>
+                    <th>品牌</th>
+                    <th>主图</th>
+                    <th>状态</th>
+                    <th>创建时间</th>
                 </tr>
-            <?php endif; ?>
-            </tbody>
-        </table>
+
+                <?php foreach ($this->list as $v): ?>
+                    <tr class="product-search-tr" style="cursor: pointer">
+                        <td><input type="checkbox" class="check-one" name="ids" value="<?= $v['product_id'] ?>"
+                                   data-info='<?= json_encode($v, JSON_HEX_APOS) ?>'></td>
+                        <td class="product_id"><?= $v['product_id'] ?></td>
+                        <td class="product_name"><?= $v['product_name'] ?></td>
+                        <td><?= $v['category_name'] ?></td>
+                        <td><?= $this->brandList[$v['brand_id']] ?></td>
+                        <td class="pic" data-value="<?= $v['pic'] ?>">
+                            <?php if ($v['pic']): ?>
+                                <img src="<?= \App::$urlManager->staticUrl($v['pic']) ?>" style="width: 40px;height:40px;">
+                            <?php endif; ?>
+                        </td>
+                        <td class="status"><?= $this->statusList[$v['status']] ?></td>
+                        <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                <?php if (!count($this->list)): ?>
+                    <tr>
+                        <td colspan="18" class="list-table-nodata">暂无相关数据</td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <?php if (count($this->list)): ?>

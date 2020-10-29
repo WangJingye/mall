@@ -17,7 +17,7 @@ $(function () {
             comment_id: $(this).data('comment_id'),
         };
         $.loading('show');
-        $.post('/erp/product-comment/delete', args, function (res) {
+        POST('/erp/product-comment/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -33,7 +33,7 @@ $(function () {
             is_show: $(this).prop('checked') ? 1 : 0
         };
         $.loading('show');
-        $.post('/erp/product-comment/set-show', args, function (res) {
+        POST('/erp/product-comment/set-show', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -62,7 +62,7 @@ $(function () {
                     return false;
                 }
                 $.loading('show');
-                $.post('/erp/product-comment/reply', args, function (res) {
+                POST('/erp/product-comment/reply', args, function (res) {
                     $.loading('hide');
                     if (res.code == 200) {
                         $.success(res.message);
@@ -103,7 +103,7 @@ $(function () {
                     return false;
                 }
                 $.loading('show');
-                $.post('/erp/product-comment/reply', args, function (res) {
+                POST('/erp/product-comment/reply', args, function (res) {
                     $.loading('hide');
                     if (res.code == 200) {
                         $.success(res.message);

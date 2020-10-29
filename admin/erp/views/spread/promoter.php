@@ -60,7 +60,7 @@
                 <td><?= $v['user_id'] ?></td>
                 <td>
                     <?php if ($v['avatar']): ?>
-                        <img src="<?= $v['avatar'] ?>" style="width: 40px;height: 40px;">
+                        <img src="<?= \App::$urlManager->staticUrl($v['avatar']) ?>" style="width: 40px;height: 40px;">
                     <?php endif; ?>
                 </td>
                 <td><?= $v['nickname'] ?></td>

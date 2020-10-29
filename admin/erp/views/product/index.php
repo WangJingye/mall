@@ -46,7 +46,7 @@
             <?php endforeach; ?>
         </select>
     </div>
-    <?php $searchList = ['product_id' => '商品ID', 'product_code' => '商品SPU']; ?>
+    <?php $searchList = ['product_id' => '商品ID']; ?>
     <div class="form-content">
         <span class="col-form-label search-label">查询条件</span>
         <div class="clearfix" style="display: inline-flex;">
@@ -72,7 +72,6 @@
             <th><input type="checkbox" class="check-all"></th>
             <th>商品ID</th>
             <th>商品名称</th>
-            <th>商品SPU</th>
             <th>分类名称</th>
             <th>品牌</th>
             <th>主图</th>
@@ -86,12 +85,11 @@
                 <td><input type="checkbox" class="check-one" value="<?= $v['product_id'] ?>"></td>
                 <td><?= $v['product_id'] ?></td>
                 <td><?= $v['product_name'] ?></td>
-                <td><?= $v['product_code'] ?></td>
                 <td><?= $v['category_name'] ?></td>
                 <td><?= $this->brandList[$v['brand_id']] ?></td>
                 <td>
                     <?php if ($v['pic']): ?>
-                        <img src="<?= $v['pic'] ?>" style="width: 60px;height: 60px;">
+                        <img src="<?= \App::$urlManager->staticUrl($v['pic']) ?>" style="width: 60px;height: 60px;">
                     <?php endif; ?>
                 </td>
                 <td class="sort"><?= $v['sort'] ?></td>

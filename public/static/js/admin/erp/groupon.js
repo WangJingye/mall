@@ -55,7 +55,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/groupon/delete', args, function (res) {
+        POST('/erp/groupon/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -142,7 +142,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/groupon/stop', args, function (res) {
+        POST('/erp/groupon/stop', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);

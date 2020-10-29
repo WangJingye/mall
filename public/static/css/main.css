@@ -665,3 +665,8 @@ input[type="number"] {
     margin-top: 0.5rem;
     width: 1rem;
 }
+
+.input-group .input-group-append .btn {
+    display: flex;
+    align-items: center
+}

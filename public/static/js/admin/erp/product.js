@@ -7,9 +7,6 @@ $(function () {
             product_type: {
                 required: true
             },
-            product_code: {
-                required: true
-            },
             brand_id: {
                 required: true
             },
@@ -31,9 +28,6 @@ $(function () {
             },
             product_type: {
                 required: '请选择商品类型'
-            },
-            product_code: {
-                required: '请输入商品SPU'
             },
             brand_id: {
                 required: '请选择品牌'
@@ -70,7 +64,7 @@ $(function () {
             product_id: $(this).data('product_id'),
         };
         $.loading('show');
-        $.post('/erp/product/delete', args, function (res) {
+        POST('/erp/product/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -88,7 +82,7 @@ $(function () {
             status: $this.data('status')
         };
         $.loading('show');
-        $.post($this.data('url'), args, function (res) {
+        POST($this.data('url'), args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -164,7 +158,7 @@ $(function () {
     $('.variation-custom').on('click', '.add-rule-btn', function () {
         var html = ' <div class="variation-box">' +
             '<input type="text" class="form-control variation-name" placeholder="规格名">' +
-            '<input type="text" class="form-control variation-value" placeholder="规格值">' +
+            '<input type="text" class="form-control variation-value" oninput="checkRules(this)" placeholder="规格值">' +
             '<span class="add-rule-btn">+</span>' +
             '<span class="remove-rule-btn">-</span>' +
             '</div>';
@@ -226,7 +220,7 @@ $(function () {
             return false;
         }
         $.loading('show');
-        $.post($this.data('url'), args, function (res) {
+        POST($this.data('url'), args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $('.ajaxDropDownView').remove();
@@ -255,7 +249,7 @@ $(function () {
                     return false;
                 }
                 $.loading('show');
-                $.post('/erp/product/set-sort', args, function (res) {
+                POST('/erp/product/set-sort', args, function (res) {
                     $.loading('hide');
                     if (res.code == 200) {
                         $.success(res.message);
@@ -315,7 +309,7 @@ function showSku() {
             '<input type="hidden" class="rules-name" value="' + ruleNames + '">' +
             '<input type="hidden" class="rules-value" value="' + ruleValues[i] + '">' + ruleValues[i] +
             '</td>' +
-            '<td><input type="text" class="form-control product_variation" placeholder="SKU编码"></td>' +
+            '<td><input type="hidden" name="variation_code" value=""></td>' +
             '<td><input type="number" class="form-control price" placeholder="销售价"></td>' +
             '<td><input type="number" class="form-control market_price" placeholder="划线价"></td>' +
             '<td><input type="number" class="form-control stock" placeholder="stock"></td>' +
@@ -398,10 +392,11 @@ function saveForm() {
     rules = r;
     formData.append('rules', JSON.stringify(rules));
     var variations = [];
-    var map = {'product_variation': 'SKU', 'price': '销售价', 'market_price': '划线价', 'stock': '库存'};
+    var map = {'price': '销售价', 'market_price': '划线价', 'stock': '库存'};
     if (rules.length == 0) {
         let tr = $('.product_variation_list').find('.empty-rule-sku');
         let variation = {};
+        variation['variation_code'] = tr.find('input[name=variation_code]').val();
         variation['rules_name'] = '';
         variation['rules_value'] = '';
         for (i in map) {
@@ -422,6 +417,7 @@ function saveForm() {
         for (j = 0; j < max; j++) {
             let tr = $('.product_variation_list').find('.has-rule-sku').eq(j);
             let variation = {};
+            variation['variation_code'] = tr.find('input[name=variation_code]').val();
             variation['rules_name'] = tr.find('.rules-name').val().trim();
             variation['rules_value'] = tr.find('.rules-value').val().trim();
             var tag = 0;
@@ -433,7 +429,8 @@ function saveForm() {
             }
             if (tag == 0) {
                 continue;
-            } else if (tag == 4) {
+            }
+            if (tag == 3) {
                 variations.push(variation);
             } else {
                 for (i in map) {
@@ -488,5 +485,11 @@ function getSpec(arr1, arr2) {
         }
     }
     return res;
+}
+
+function checkRules(obj) {
+    if ($(obj).val().indexOf(',') != -1) {
+        $(obj).val($(obj).val().replace(',', ''))
+    }
 }
 

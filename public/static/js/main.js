@@ -313,3 +313,36 @@ function time2date(time, format) {
     }
     return format.replace('Y', Y).replace('m', m).replace('d', d).replace('H', H).replace('i', i).replace('s', s);
 }
+
+function POST(url, args, callback, format) {
+    if (location.pathname.indexOf('index.php') !== -1) {
+        url = location.pathname + '?s=' + trim(url,'/');
+    }
+    if (format === undefined) {
+        format = 'json';
+    }
+    $.post(url, args, callback, format);
+}
+
+function trim(str, glue) {
+    var start = 0;
+    var end = 0;
+    for (i = 0; i < str.length; i++) {
+        if (str[i] != glue) {
+            start = i;
+            break;
+        }
+    }
+    for (i = str.length - 1; i >= 0; i--) {
+        if (str[i] != glue) {
+            end = i;
+            break;
+        }
+    }
+    str= str.substring(start, end + 1);
+    if(str==glue){
+        return '';
+    }
+    return str;
+}
+

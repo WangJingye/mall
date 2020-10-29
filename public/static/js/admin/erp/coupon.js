@@ -68,7 +68,7 @@ $(function () {
             coupon_id: $(this).data('coupon_id'),
         };
         $.loading('show');
-        $.post('/erp/coupon/delete', args, function (res) {
+        POST('/erp/coupon/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -86,7 +86,7 @@ $(function () {
             status: $this.data('status')
         };
         $.loading('show');
-        $.post($this.data('url'), args, function (res) {
+        POST($this.data('url'), args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);

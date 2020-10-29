@@ -32,40 +32,43 @@
                 </div>
             </div>
         </div>
-        <table class="table table-bordered list-table text-nowrap text-center">
-            <tbody>
-            <tr>
-                <th><?php if ($this->params['multiple']): ?>
-                        <input type="checkbox" class="check-all">
-                    <?php endif; ?>
-                </th>
-                <th>会员ID</th>
-                <th>昵称</th>
-                <th>头像</th>
-                <th>手机号</th>
-            </tr>
-
-            <?php foreach ($this->list as $v): ?>
-                <tr class="user-search-tr" style="cursor: pointer">
-                    <td><input type="checkbox" class="check-one" name="ids" value="<?= $v['user_id'] ?>"
-                               data-info='<?= json_encode($v, JSON_HEX_APOS) ?>'></td>
-                    <td><?= $v['user_id'] ?></td>
-                    <td class="nickname"><?= $v['nickname'] ?></td>
-                    <td>
-                        <?php if ($v['avatar']): ?>
-                            <img src="<?= $v['avatar'] ?>" style="width: 40px;height: 40px;">
-                        <?php endif; ?>
-                    </td>
-                    <td><?= $v['telephone'] ?></td>
-                </tr>
-            <?php endforeach; ?>
-            <?php if (!count($this->list)): ?>
+        <div class="table-responsive">
+            <table class="table table-bordered list-table text-nowrap text-center">
+                <tbody>
                 <tr>
-                    <td colspan="18" class="list-table-nodata">暂无相关数据</td>
+                    <th><?php if ($this->params['multiple']): ?>
+                            <input type="checkbox" class="check-all">
+                        <?php endif; ?>
+                    </th>
+                    <th>会员ID</th>
+                    <th>昵称</th>
+                    <th>头像</th>
+                    <th>手机号</th>
                 </tr>
-            <?php endif; ?>
-            </tbody>
-        </table>
+
+                <?php foreach ($this->list as $v): ?>
+                    <tr class="user-search-tr" style="cursor: pointer">
+                        <td><input type="checkbox" class="check-one" name="ids" value="<?= $v['user_id'] ?>"
+                                   data-info='<?= json_encode($v, JSON_HEX_APOS) ?>'></td>
+                        <td><?= $v['user_id'] ?></td>
+                        <td class="nickname"><?= $v['nickname'] ?></td>
+                        <td>
+                            <?php if ($v['avatar']): ?>
+                                <img src="<?= \App::$urlManager->staticUrl($v['avatar']) ?>"
+                                     style="width: 40px;height: 40px;">
+                            <?php endif; ?>
+                        </td>
+                        <td><?= $v['telephone'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                <?php if (!count($this->list)): ?>
+                    <tr>
+                        <td colspan="18" class="list-table-nodata">暂无相关数据</td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <?php if (count($this->list)): ?>

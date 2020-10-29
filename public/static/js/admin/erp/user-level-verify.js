@@ -17,7 +17,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/user-level-verify/delete', args, function (res) {
+        POST('/erp/user-level-verify/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -79,7 +79,7 @@ $(function () {
                     return false;
                 }
                 $.loading('show');
-                $.post('/erp/user-level-verify/verify', args, function (res) {
+                POST('/erp/user-level-verify/verify', args, function (res) {
                     $.loading('hide');
                     if (res.code == 200) {
                         $.success(res.message);

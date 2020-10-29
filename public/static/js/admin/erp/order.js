@@ -59,7 +59,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/order/delete', args, function (res) {
+        POST('/erp/order/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -80,7 +80,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/order/close', args, function (res) {
+        POST('/erp/order/close', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -126,7 +126,7 @@ $(function () {
                     return false;
                 }
                 $.loading('show');
-                $.post('/erp/order/ship', args, function (res) {
+                POST('/erp/order/ship', args, function (res) {
                     $.loading('hide');
                     if (res.code == 200) {
                         $.success(res.message);
@@ -148,7 +148,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/order/receive', args, function (res) {
+        POST('/erp/order/receive', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success('已收货');
@@ -168,7 +168,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/order/receive', args, function (res) {
+        POST('/erp/order/receive', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success('已使用');
@@ -222,7 +222,7 @@ $(function () {
                     return false;
                 }
                 $.loading('show');
-                $.post('/erp/order/pay', args, function (res) {
+                POST('/erp/order/pay', args, function (res) {
                     $.loading('hide');
                     if (res.code == 200) {
                         $.success(res.message);
@@ -295,7 +295,7 @@ $(function () {
                             '<td>' +
                             '<input type="hidden" class="product_weight" value="' + info['product_weight'] + '">' +
                             '<input type="hidden" class="freight_id" value="' + info['freight_id'] + '">' +
-                            info['product_code'] + '</td>' +
+                            info['product_id'] + '</td>' +
                             '<td>' + info['product_name'] + '</td>' +
                             '<td>' + info['rules_value'] + '</td>' +
                             '<td><input type="number" class="form-control number calc-price"></td>' +

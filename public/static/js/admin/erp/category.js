@@ -64,7 +64,7 @@ $(function () {
             category_id: $(this).data('category_id'),
         };
         $.loading('show');
-        $.post('/erp/category/delete', args, function (res) {
+        POST('/erp/category/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);

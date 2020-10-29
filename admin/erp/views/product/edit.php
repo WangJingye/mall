@@ -64,13 +64,6 @@
                    value="<?= $this->model['product_sub_name'] ?>" placeholder="请输入副标题">
         </div>
     </div>
-    <div class="form-group row">
-        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>商品SPU</label>
-        <div class="col-sm-10">
-            <input type="text" name="product_code" class="form-control" value="<?= $this->model['product_code'] ?>"
-                   placeholder="请输入商品SPU">
-        </div>
-    </div>
     <div class="form-group row product-category-select-group">
         <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>商品分类</label>
         <div class="col-sm-8" style="display: inline-flex">
@@ -147,7 +140,8 @@
                             <div class="variation-box">
                                 <input type="text" class="form-control variation-name" value="<?= $vs['name'] ?>"
                                        placeholder="规格名"><input type="text" class="form-control variation-value"
-                                                                value="<?= $v ?>" placeholder="规格值"><span
+                                                                oninput="checkRules(this)" value="<?= $v ?>"
+                                                                placeholder="规格值"><span
                                         class="add-rule-btn">+</span><span class="remove-rule-btn">-</span>
                             </div>
                         <?php endforeach; ?>
@@ -156,6 +150,7 @@
                         <div class="variation-box">
                             <input type="text" class="form-control variation-name" placeholder="规格名"><input type="text"
                                                                                                             class="form-control variation-value"
+                                                                                                            oninput="checkRules(this)"
                                                                                                             placeholder="规格值"><span
                                     class="add-rule-btn">+</span><span class="remove-rule-btn">-</span>
                         </div>
@@ -174,14 +169,15 @@
                         <?php $noSkuProduct = empty($productRules) ? $this->variationList[0] : [] ?>
                         <tr class="empty-rule-sku" <?= empty($productRules) ? '' : 'style="display:none"' ?>>
                             <td><i style="color: #666">无规格</i></td>
-                            <td><input type="text" class="form-control product_variation"
-                                       value="<?= $noSkuProduct['variation_code'] ?>"
-                                       placeholder="SKU编码"></td>
-                            <td><input type="number" class="form-control price" value="<?= $noSkuProduct['price'] ?>"
+                            <td><?= isset($noSkuProduct['variation_code']) ? $noSkuProduct['variation_code'] : '' ?></td>
+                            <td><input type="number" class="form-control price"
+                                       value="<?= isset($noSkuProduct['price']) ? $noSkuProduct['price'] : '' ?>"
                                        placeholder="销售价"></td>
                             <td><input type="number" class="form-control market_price"
-                                       value="<?= $noSkuProduct['market_price'] ?>" placeholder="划线价"></td>
-                            <td><input type="number" class="form-control stock" value="<?= $noSkuProduct['stock'] ?>"
+                                       value="<?= isset($noSkuProduct['market_price']) ? $noSkuProduct['market_price'] : '' ?>"
+                                       placeholder="划线价"></td>
+                            <td><input type="number" class="form-control stock"
+                                       value="<?= isset($noSkuProduct['stock']) ? $noSkuProduct['stock'] : '' ?>"
                                        placeholder="stock"></td>
                         </tr>
                         <?php if (!empty($productRules)): ?>
@@ -191,9 +187,8 @@
                                         <input type="hidden" class="rules-value" value="<?= $v['rules_value'] ?>">
                                         <?= $v['rules_value'] ?>
                                     </td>
-                                    <td><input type="text" class="form-control product_variation"
-                                               value="<?= $v['variation_code'] ?>"
-                                               placeholder="SKU编码"></td>
+                                    <td><input type="hidden" name="variation_code" value="<?= $v['variation_code'] ?>">
+                                        <?= $v['variation_code'] ?></td>
                                     <td><input type="number" class="form-control price" value="<?= $v['price'] ?>"
                                                placeholder="销售价"></td>
                                     <td><input type="number" class="form-control market_price"

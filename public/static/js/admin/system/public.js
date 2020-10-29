@@ -37,7 +37,7 @@ function submitForm() {
     var form = $('#login-form');
     var data = form.serialize();
     $.loading('show');
-    $.post(form.attr('action'), data, function (res) {
+    POST(form.attr('action'), data, function (res) {
         $.loading('hide');
         if (res.code == 200) {
             $.success(res.message);

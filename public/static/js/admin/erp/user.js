@@ -56,7 +56,7 @@ $(function () {
             status: $this.data('status')
         };
         $.loading('show');
-        $.post($this.data('url'), args, function (res) {
+        POST($this.data('url'), args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -93,7 +93,7 @@ $(function () {
             user_id: $('#user_id').val()
         };
         $.loading('show');
-        $.post('/erp/user/set-default-address', args, function (res) {
+        POST('/erp/user/set-default-address', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -110,7 +110,7 @@ $(function () {
             is_show: $(this).prop('checked') ? 1 : 0
         };
         $.loading('show');
-        $.post('/erp/user/set-show', args, function (res) {
+        POST('/erp/user/set-show', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -138,7 +138,7 @@ $(function () {
                     return false;
                 }
                 $.loading('show');
-                $.post('/erp/user/set-sort', args, function (res) {
+                POST('/erp/user/set-sort', args, function (res) {
                     $.loading('hide');
                     if (res.code == 200) {
                         $.success(res.message);
@@ -158,7 +158,7 @@ $(function () {
             id: $this.data('id'),
             page: $this.data('page')
         };
-        $.post($this.data('url'), args, function (res) {
+        POST($this.data('url'), args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 var html = '';

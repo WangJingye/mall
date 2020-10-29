@@ -18,7 +18,7 @@ function getCouponSearch(option) {
     }
     searchObj.args['multiple'] = searchObj.multiple ? 1 : 0;
     $.loading('show');
-    $.post('/erp/coupon-user/search', searchObj.args, function (res) {
+    POST('/erp/coupon-user/search', searchObj.args, function (res) {
         $.loading('hide');
         if (res.code == 200) {
             if ($('.coupon-modal-event').get(0)) {
@@ -76,7 +76,7 @@ function getCouponSearchWithPage(page) {
     var form = $('.coupon-search-event').find('.search-coupon-form');
     form.find('input[name=page]').val(page);
     var args = form.serialize();
-    $.post('/erp/coupon/search', args, function (result) {
+    POST('/erp/coupon/search', args, function (result) {
         if (result.code == 200) {
             form.html(result.data.html);
         } else {

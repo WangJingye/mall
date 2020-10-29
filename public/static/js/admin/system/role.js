@@ -62,7 +62,7 @@ function saveRoleAdminForm() {
     var form = $('#save-role-admin-form');
     var data = form.serialize();
     $.loading('show');
-    $.post(form.attr('action'), data, function (res) {
+    POST(form.attr('action'), data, function (res) {
         $.loading('hide');
         if (res.code == 200) {
             $.success(res.message);
@@ -80,7 +80,7 @@ function saveRoleMenuForm() {
     $('input[name=menu_ids]').val(nodesArr.join(','));
     var data = form.serialize();
     $.loading('show');
-    $.post(form.attr('action'), data, function (res) {
+    POST(form.attr('action'), data, function (res) {
         $.loading('hide');
         if (res.code == 200) {
             $.success(res.message);
@@ -94,7 +94,7 @@ function saveForm() {
     var form = $('#save-form');
     var data = form.serialize();
     $.loading('show');
-    $.post(form.attr('action'), data, function (res) {
+    POST(form.attr('action'), data, function (res) {
         $.loading('hide');
         if (res.code == 200) {
             $.success(res.message);

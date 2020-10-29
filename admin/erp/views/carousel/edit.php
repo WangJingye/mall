@@ -42,18 +42,18 @@
             </div>
             <table class="table table-bordered text-nowrap search-product-box" style="margin-top: 0.5rem">
                 <tr class="search-product-title">
+                    <td>商品ID</td>
                     <td>商品名称</td>
-                    <td>SPU</td>
                     <td>主图</td>
                     <td>操作</td>
                 </tr>
                 <?php if ($this->product): ?>
                     <tr class="search-product-data">
+                        <td><?= $this->product['product_id'] ?></td>
                         <td><input type="hidden" class="link_id" value="<?=$this->product['product_id']?>"><?= $this->product['product_name'] ?></td>
-                        <td><?= $this->product['product_code'] ?></td>
                         <td>
                             <?php if ($this->product['pic']): ?>
-                                <img src="<?= $this->product['pic'] ?>" style="width: 40px;height: 40px;">
+                                <img src="<?= \App::$urlManager->staticUrl($this->product['pic']) ?>" style="width: 40px;height: 40px;">
                             <?php endif; ?>
                         </td>
                         <td>

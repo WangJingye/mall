@@ -18,7 +18,7 @@ function getUserSearch(option) {
     }
     searchObj.args['multiple'] = searchObj.multiple ? 1 : 0;
     $.loading('show');
-    $.post('/erp/user/search', searchObj.args, function (res) {
+    POST('/erp/user/search', searchObj.args, function (res) {
         $.loading('hide');
         if (res.code == 200) {
             if ($('.user-modal-event').get(0)) {
@@ -78,7 +78,7 @@ function getUserSearchWithPage(page) {
     var form = $('.user-search-event').find('.search-user-form');
     form.find('input[name=page]').val(page);
     var args = form.serialize();
-    $.post('/erp/user/search', args, function (result) {
+    POST('/erp/user/search', args, function (result) {
         if (result.code == 200) {
             form.html(result.data.html);
         } else {

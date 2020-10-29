@@ -31,7 +31,7 @@ $(function () {
             transport_id: $(this).data('transport_id'),
         };
         $.loading('show');
-        $.post('/erp/transport/delete', args, function (res) {
+        POST('/erp/transport/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -49,7 +49,7 @@ $(function () {
             status: $this.data('status')
         };
         $.loading('show');
-        $.post($this.data('url'), args, function (res) {
+        POST($this.data('url'), args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);

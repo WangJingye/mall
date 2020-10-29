@@ -246,4 +246,8 @@ class ProductController extends BaseController
             return $this->error($e->getMessage());
         }
     }
+
+    public function generateSpuAction(){
+        return $this->productService->generateCode();
+    }
 }

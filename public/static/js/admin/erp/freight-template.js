@@ -67,7 +67,7 @@ $(function () {
             freight_id: $(this).data('freight_id'),
         };
         $.loading('show');
-        $.post('/erp/freight-template/delete', args, function (res) {
+        POST('/erp/freight-template/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);

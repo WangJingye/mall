@@ -40,7 +40,7 @@
                 <td><?= $v['brand_name'] ?></td>
                 <td>
                     <?php if ($v['logo']): ?>
-                        <img src="<?= $v['logo'] ?>" style="width: 60px;height: 60px;">
+                        <img src="<?= \App::$urlManager->staticUrl($v['logo']) ?>" style="width: 60px;height: 60px;">
                     <?php endif; ?>
                 </td>
                 <td class="sort"><?= $v['sort'] ?></td>

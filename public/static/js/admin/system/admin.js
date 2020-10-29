@@ -111,7 +111,7 @@ $(function () {
             status: $(this).data('status')
         };
         $.loading('show');
-        $.post('/system/admin/set-status', args, function (res) {
+        POST('/system/admin/set-status', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message, function () {
@@ -127,7 +127,7 @@ $(function () {
             return false;
         }
         $.loading('show');
-        $.post('/system/admin/reset-password', {admin_id: $(this).data('id')}, function (res) {
+        POST('/system/admin/reset-password', {admin_id: $(this).data('id')}, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -213,7 +213,7 @@ function changeUserForm() {
 
 function changePasswordForm() {
     let form = $('#change-password-form');
-    $.post(form.attr('action'), form.serialize(), function (res) {
+    POST(form.attr('action'), form.serialize(), function (res) {
         $.loading('hide');
         if (res.code == 200) {
             $.success(res.message, function () {

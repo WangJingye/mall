@@ -98,7 +98,7 @@
             <?php foreach ($this->variationList as $v): ?>
                 <tr>
                     <td> <?php if ($v['pic']): ?>
-                            <img src="<?= $v['pic'] ?>" style="width: 40px;height: 40px;">
+                            <img src="<?= \App::$urlManager->staticUrl($v['pic']) ?>" style="width: 40px;height: 40px;">
                         <?php endif; ?>
                     </td>
                     <td><?= $v['product_name'] ?></td>

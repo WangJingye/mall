@@ -18,7 +18,7 @@ function getProductSearch(option) {
     }
     searchObj.args['multiple'] = searchObj.multiple ? 1 : 0;
     $.loading('show');
-    $.post('/erp/product/search', searchObj.args, function (res) {
+    POST('/erp/product/search', searchObj.args, function (res) {
         $.loading('hide');
         if (res.code == 200) {
             if ($('.product-modal-event').get(0)) {
@@ -78,7 +78,7 @@ function getProductSearchWithPage(page) {
     var form = $('.product-search-event').find('.search-product-form');
     form.find('input[name=page]').val(page);
     var args = form.serialize();
-    $.post('/erp/product/search', args, function (result) {
+    POST('/erp/product/search', args, function (result) {
         if (result.code == 200) {
             form.html(result.data.html);
         } else {
@@ -101,7 +101,7 @@ function getProductVariationSearch(option) {
     }
     searchObj.args['multiple'] = searchObj.multiple ? 1 : 0;
     $.loading('show');
-    $.post('/erp/product/variation-search', searchObj.args, function (res) {
+    POST('/erp/product/variation-search', searchObj.args, function (res) {
         $.loading('hide');
         if (res.code == 200) {
             if ($('.product-variation-modal-event').get(0)) {
@@ -157,7 +157,7 @@ function getProductVariationSearchWithPage(page) {
     var form = $('.product-variation-search-event').find('.search-product-variation-form');
     form.find('input[name=page]').val(page);
     var args = form.serialize();
-    $.post('/erp/product/variation-search', args, function (result) {
+    POST('/erp/product/variation-search', args, function (result) {
         if (result.code == 200) {
             form.html(result.data.html);
         } else {

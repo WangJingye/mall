@@ -33,7 +33,7 @@ $(function () {
             brand_id: $(this).data('brand_id'),
         };
         $.loading('show');
-        $.post('/erp/brand/delete', args, function (res) {
+        POST('/erp/brand/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -62,7 +62,7 @@ $(function () {
                     return false;
                 }
                 $.loading('show');
-                $.post('/erp/brand/set-sort', args, function (res) {
+                POST('/erp/brand/set-sort', args, function (res) {
                     $.loading('hide');
                     if (res.code == 200) {
                         $.success(res.message);

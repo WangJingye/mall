@@ -498,7 +498,6 @@ CREATE TABLE `tbl_product` (
   `product_name` varchar(255) NOT NULL COMMENT '商品名称',
   `product_type` tinyint(4) DEFAULT '1' COMMENT '1实物 2虚拟物品',
   `product_sub_name` varchar(255) DEFAULT '' COMMENT '商品副标题',
-  `product_code` varchar(255) NOT NULL DEFAULT '' COMMENT '商品SPU',
   `category_id` int(11) NOT NULL COMMENT '分类ID',
   `category_name` varchar(255) DEFAULT '' COMMENT '分类全路径',
   `brand_id` int(11) NOT NULL COMMENT '品牌ID',

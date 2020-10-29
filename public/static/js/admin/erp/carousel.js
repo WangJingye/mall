@@ -51,7 +51,7 @@ $(function () {
             carousel_id: $(this).data('carousel_id'),
         };
         $.loading('show');
-        $.post('/erp/carousel/delete', args, function (res) {
+        POST('/erp/carousel/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -89,7 +89,7 @@ $(function () {
             is_show: $(this).prop('checked') ? 1 : 0
         };
         $.loading('show');
-        $.post('/erp/carousel/set-show', args, function (res) {
+        POST('/erp/carousel/set-show', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -118,7 +118,7 @@ $(function () {
                     return false;
                 }
                 $.loading('show');
-                $.post('/erp/carousel/set-sort', args, function (res) {
+                POST('/erp/carousel/set-sort', args, function (res) {
                     $.loading('hide');
                     if (res.code == 200) {
                         $.success(res.message);

@@ -35,7 +35,7 @@
         <div class="base-info-left">
             <div>
                 <?php if ($this->model['avatar']): ?>
-                    <img src="<?= $this->model['avatar'] ?>" style="width: 5rem;height:5rem">
+                    <img src="<?= \App::$urlManager->staticUrl($this->model['avatar']) ?>" style="width: 5rem;height:5rem">
                 <?php endif; ?>
             </div>
             <div class="text-center" style="margin-top: 0.5rem"><?= $this->model['nickname'] ?></div>

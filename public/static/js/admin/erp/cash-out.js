@@ -8,7 +8,7 @@ $(function () {
             id: $(this).data('id'),
         };
         $.loading('show');
-        $.post('/erp/cash-out/delete', args, function (res) {
+        POST('/erp/cash-out/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -70,7 +70,7 @@ $(function () {
                     return false;
                 }
                 $.loading('show');
-                $.post('/erp/cash-out/verify', args, function (res) {
+                POST('/erp/cash-out/verify', args, function (res) {
                     $.loading('hide');
                     if (res.code == 200) {
                         $.success(res.message);

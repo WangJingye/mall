@@ -10,7 +10,7 @@ class UrlManager extends \ObjectAccess
     {
         $route = trim($url, '/');
 
-        $baseUrl = $this->showScriptName || !$this->enablePrettyUrl ? \App::$request->getScriptUrl() : \App::$request->getBaseUrl();
+        $baseUrl = \App::$request->getScriptUrl();
         $p = [];
         foreach ($option as $key => $value) {
             $p[] = $key . '=' . $value;
@@ -26,8 +26,11 @@ class UrlManager extends \ObjectAccess
 
     public function staticUrl($url)
     {
+        if (strpos($url, 'http') !== false) {
+            return $url;
+        }
         $route = trim($url, '/');
-        $baseUrl = $this->showScriptName || !$this->enablePrettyUrl ? \App::$request->getScriptUrl() : \App::$request->getBaseUrl();
+        $baseUrl = \App::$request->getScriptUrl();
         return str_replace('/index.php', '/' . $route, $baseUrl);
     }
 
