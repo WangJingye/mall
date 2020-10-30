@@ -38,6 +38,7 @@
     <table class="table table-bordered list-table text-nowrap text-center">
         <tbody>
         <tr>
+            <th>分类ID</th>
             <th>分类名称</th>
             <th>图片</th>
             <th>分类级别</th>
@@ -46,6 +47,7 @@
         </tr>
         <?php foreach ($this->list as $v): ?>
             <tr>
+                <td><?= $v['category_id'] ?></td>
                 <td class="category-name <?= $v['has_child'] ? 'can-click' : '' ?>" data-id="<?= $v['category_id'] ?>">
                     <?php if ($v['has_child']): ?><span class="has-child-icon"><i
                                 class="glyphicon glyphicon-triangle-right"></i></span><?php endif; ?>

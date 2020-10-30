@@ -50,5 +50,6 @@ class PublicController extends BaseController
         $res = [
             'carousels' => $carousels
         ];
+        return $this->success('success', $res);
     }
 }
