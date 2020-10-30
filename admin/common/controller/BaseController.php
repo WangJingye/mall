@@ -50,7 +50,7 @@ class BaseController extends WebController
             if (!\App::$request->isAjax() && $e->getCode() == 999) {
                 $now = trim($_SERVER['QUERY_STRING'], 's=');
                 $option = [];
-                if ($now != 'system/public/login') {
+                if ($now && $now != 'system/public/login') {
                     $option['redirect_url'] = $now;
                 }
                 return $this->redirect('system/public/login', $option);
