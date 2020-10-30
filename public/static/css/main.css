@@ -112,7 +112,19 @@
 }
 
 .list-group-item {
+
     cursor: pointer;
+}
+
+.list-sub-item .list-group-item {
+    padding: 0 !important;
+}
+
+.list-group-item a {
+    padding: 0.75rem 1.25rem 0.75rem 2.5rem;
+    color: white;
+    display: block;
+    text-decoration: none;
 }
 
 .main-item {

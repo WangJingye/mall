@@ -72,8 +72,8 @@ foreach ($arr as $v) {
                         style="border-top: 0">
                         <ul class="list-sub-item">
                             <?php foreach ($v['list'] as $child): ?>
-                                <li class="list-group-item <?= isset($activeMenuList[$child['id']]) ? 'active' : '' ?>"
-                                    data-url="<?= \App::$urlManager->createUrl($child['url']) ?>"><?= $child['name'] ?></li>
+                                <li class="list-group-item <?= isset($activeMenuList[$child['id']]) ? 'active' : '' ?>">
+                                    <a href="<?= \App::$urlManager->createUrl($child['url']) ?>"><?= $child['name'] ?></a></li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
