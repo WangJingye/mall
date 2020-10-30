@@ -11,7 +11,7 @@ $(function () {
             depth: {
                 required: '请输入分销深度',
                 digits: '分销深度必须是正整数',
-                min: '分销深度不能小于1',
+                // min: '分销深度不能小于1',
             }
         },
         submitHandler: function (e) {
