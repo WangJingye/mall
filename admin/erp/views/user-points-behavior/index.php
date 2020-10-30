@@ -58,13 +58,11 @@
                     </div>
                     <?php if ($v['status'] == 1): ?>
                         <div class="btn btn-danger btn-sm set-status-btn" data-id="<?= $v['behavior_id'] ?>"
-                             data-url="<?= \App::$urlManager->createUrl('erp/user-points-behavior/set-status') ?>"
                              data-status="2">
                             <i class="glyphicon glyphicon-remove-circle"></i> <span>禁用</span>
                         </div>
                     <?php else: ?>
                         <div class="btn btn-success btn-sm set-status-btn" data-id="<?= $v['behavior_id'] ?>"
-                             data-url="<?= \App::$urlManager->createUrl('erp/user-points-behavior/set-status') ?>"
                              data-status="1">
                             <i class="glyphicon glyphicon-ok-circle"></i> <span>启用</span>
                         </div>

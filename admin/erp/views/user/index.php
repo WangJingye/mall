@@ -66,13 +66,11 @@
                     </a>
                     <?php if ($v['status'] == 1): ?>
                         <div class="btn btn-danger btn-sm set-status-btn" data-id="<?= $v['user_id'] ?>"
-                             data-url="<?= \App::$urlManager->createUrl('erp/user/set-status') ?>"
                              data-status="0">
                             <i class="glyphicon glyphicon-remove-circle"></i> <span>禁用</span>
                         </div>
                     <?php else: ?>
                         <div class="btn btn-success btn-sm set-status-btn" data-id="<?= $v['user_id'] ?>"
-                             data-url="<?= \App::$urlManager->createUrl('erp/user/set-status') ?>"
                              data-status="1">
                             <i class="glyphicon glyphicon-ok-circle"></i> <span>解禁</span>
                         </div>

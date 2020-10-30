@@ -328,13 +328,11 @@ class Generate extends \ObjectAccess
         if (isset($this->option['fcomment']['status']) && $this->option['fchoice']['status'] == 1 && count(($statusList = $this->getChooseList('status')['list'])) == 2) {
             $statusIndex = PHP_EOL . '                    <?php if ($v[\'status\'] == 1): ?>
                         <div class="btn btn-danger btn-sm set-status-btn" data-id="<?= $v[\'' . $this->primaryKey . '\'] ?>"
-                             data-url="<?= \App::$urlManager->createUrl(\'' . $this->module . '/' . $this->controllerUrl . '/set-status\') ?>"
                              data-status="0">
                             <i class="glyphicon glyphicon-remove-circle"></i> <span>禁用</span>
                         </div>
                     <?php else: ?>
                         <div class="btn btn-success btn-sm set-status-btn" data-id="<?= $v[\'' . $this->primaryKey . '\'] ?>"
-                             data-url="<?= \App::$urlManager->createUrl(\'' . $this->module . '/' . $this->controllerUrl . '/set-status\') ?>"
                              data-status="1">
                             <i class="glyphicon glyphicon-ok-circle"></i> <span>启用</span>
                         </div>
@@ -343,7 +341,7 @@ class Generate extends \ObjectAccess
         $sortIndex = '';
         if (isset($this->option['fcomment']['sort'])) {
             $sortIndex = PHP_EOL . '                    <div class="btn btn-info btn-sm set-sort-btn" data-id="<?= $v[\'' . $this->primaryKey . '\'] ?>"
-                         data-url="<?= \App::$urlManager->createUrl(\'' . $this->module . '/' . $this->controllerUrl . '/set-sort\') ?>">
+                         >
                         <i class="glyphicon glyphicon-sort"></i> 设置排序
                     </div>';
         }

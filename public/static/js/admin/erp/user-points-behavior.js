@@ -67,7 +67,7 @@ $(function () {
             status: $this.data('status')
         };
         $.loading('show');
-        POST($this.data('url'), args, function (res) {
+        POST('/erp/user-points-behavior/set-status', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);

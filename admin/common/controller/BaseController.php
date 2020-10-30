@@ -48,7 +48,12 @@ class BaseController extends WebController
             }
         } catch (\Exception $e) {
             if (!\App::$request->isAjax() && $e->getCode() == 999) {
-                return $this->redirect('system/public/login');
+                $now = trim($_SERVER['QUERY_STRING'], 's=');
+                $option = [];
+                if ($now != 'system/public/login') {
+                    $option['redirect_url'] = $now;
+                }
+                return $this->redirect('system/public/login', $option);
             }
             throw $e;
         }

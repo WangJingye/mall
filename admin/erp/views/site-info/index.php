@@ -206,19 +206,19 @@
         <div class="detail-title">用户总览</div>
         <div class="detail-info">
             <div class="detail-info-one">
-                <div class="detail-info-number"><?= $this->data['today_user_normal'] ?></div>
+                <div class="detail-info-number"><?= $this->data['today_user'] ?></div>
                 <div>今日新增会员</div>
             </div>
             <div class="detail-info-one">
-                <div class="detail-info-number"><?= $this->data['yesterday_user_normal'] ?></div>
+                <div class="detail-info-number"><?= $this->data['yesterday_user'] ?></div>
                 <div>昨日新增会员</div>
             </div>
             <div class="detail-info-one">
-                <div class="detail-info-number"><?= $this->data['month_user_normal'] ?></div>
+                <div class="detail-info-number"><?= $this->data['month_user'] ?></div>
                 <div>本月新增会员</div>
             </div>
             <div class="detail-info-one">
-                <div class="detail-info-number"><?= $this->data['user_total_normal'] ?></div>
+                <div class="detail-info-number"><?= $this->data['user_total'] ?></div>
                 <div>会员总数</div>
             </div>
         </div>

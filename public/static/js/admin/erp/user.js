@@ -56,7 +56,7 @@ $(function () {
             status: $this.data('status')
         };
         $.loading('show');
-        POST($this.data('url'), args, function (res) {
+        POST('/erp/user/set-status', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -158,7 +158,7 @@ $(function () {
             id: $this.data('id'),
             page: $this.data('page')
         };
-        POST($this.data('url'), args, function (res) {
+        POST('/erp/user/get-order-list', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 var html = '';

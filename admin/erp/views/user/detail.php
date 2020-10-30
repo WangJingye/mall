@@ -128,8 +128,7 @@
                 </tr>
             <?php elseif (count($this->orderList) == 5): ?>
                 <tr>
-                    <td colspan="18" class="show-more" data-id="<?= $this->model['user_id'] ?>"
-                        data-url="<?= \App::$urlManager->createUrl('erp/user/get-order-list') ?>"
+                    <td colspan="18" class="show-more" data-id="<?= $this->model['user_id'] ?>"`
                         data-page="2">
                         点击显示更多
                     </td>

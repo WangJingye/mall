@@ -29,7 +29,7 @@
 
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" style="width: 100%" value="登录"
-                       data-url="<?= \App::$urlManager->createUrl('/') ?>"/>
+                       data-url="<?= \App::$urlManager->createUrl($this->redirectUrl) ?>"/>
             </div>
         </form>
     </div>

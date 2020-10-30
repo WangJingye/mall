@@ -41,7 +41,7 @@ $(function () {
                 return false;
             }
             $.loading('show');
-            $.get($this.data('url'), args, function (res) {
+            POST('/erp/category/get-child-list', args, function (res) {
                 $.loading('hide');
                 if (res.code == 200) {
                     if (res.data.is_empty == 1) {

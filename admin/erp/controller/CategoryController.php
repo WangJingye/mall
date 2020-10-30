@@ -97,7 +97,7 @@ class CategoryController extends BaseController
     public function getChildListAction()
     {
         $params = \App::$request->params->toArray();
-        if (\App::$request->isAjax() && \App::$request->isGet()) {
+        if (\App::$request->isAjax() && \App::$request->isPost()) {
             try {
                 if (!isset($params['id']) || $params['id'] == '') {
                     throw new \Exception('非法请求');

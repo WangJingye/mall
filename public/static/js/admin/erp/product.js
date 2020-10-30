@@ -82,7 +82,7 @@ $(function () {
             status: $this.data('status')
         };
         $.loading('show');
-        POST($this.data('url'), args, function (res) {
+        POST('/erp/product/set-status', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -220,7 +220,7 @@ $(function () {
             return false;
         }
         $.loading('show');
-        POST($this.data('url'), args, function (res) {
+        POST('/erp/product/show-log', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $('.ajaxDropDownView').remove();

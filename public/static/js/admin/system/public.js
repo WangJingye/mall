@@ -28,8 +28,14 @@ $(function () {
         }
     });
 
-    $('.captcha-box').on('click','img',function () {
-        $(this).attr('src', $(this).data('src') + '?' + new Date().getTime());
+    $('.captcha-box').on('click', 'img', function () {
+        var src = $(this).data('src');
+        if (src.indexOf('?') !== -1) {
+            src += '&';
+        } else {
+            src += '?';
+        }
+        $(this).attr('src', src + new Date().getTime());
     });
 });
 
@@ -37,12 +43,12 @@ function submitForm() {
     var form = $('#login-form');
     var data = form.serialize();
     $.loading('show');
-    POST(form.attr('action'), data, function (res) {
+    POST('/system/public/login', data, function (res) {
         $.loading('hide');
         if (res.code == 200) {
             $.success(res.message);
             setTimeout(function () {
-                location.href =$('input[type=submit]').data('url');
+                location.href = $('input[type=submit]').data('url');
             }, 2000)
         } else {
             $('.captcha-box').find('img').click();

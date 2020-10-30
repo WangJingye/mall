@@ -109,38 +109,17 @@ class SiteInfoController extends BaseController
         $data['product_offline'] = \Db::table('Product')->where(['status' => 2])->count();
         $data['product_total'] = $data['product_online'] + $data['product_offline'];
 
-        $data['today_user_normal'] = \Db::table('User')
-            ->where(['level' => 1])
+        $data['today_user'] = \Db::table('User')
             ->where(['create_time' => ['>=', $today]])
             ->count();
-        $data['yesterday_user_normal'] = \Db::table('User')
-            ->where(['level' => 1])
+        $data['yesterday_user'] = \Db::table('User')
             ->where(['create_time' => ['>=', $today - 24 * 3600]])
             ->where(['create_time' => ['<', $today]])
             ->count();
-        $data['month_user_normal'] = \Db::table('User')
-            ->where(['level' => 1])
+        $data['month_user'] = \Db::table('User')
             ->where(['create_time' => ['>=', strtotime(date('Y-m-01'))]])
             ->count();
-        $data['user_total_normal'] = \Db::table('User')
-            ->where(['level' => 1])
-            ->count();
-        $data['today_user_profession'] = \Db::table('User')
-            ->where(['level' => 2])
-            ->where(['create_time' => ['>=', $today]])
-            ->count();
-        $data['yesterday_user_profession'] = \Db::table('User')
-            ->where(['level' => 2])
-            ->where(['create_time' => ['>=', $today - 24 * 3600]])
-            ->where(['create_time' => ['<', $today]])
-            ->count();
-        $data['month_user_profession'] = \Db::table('User')
-            ->where(['level' => 2])
-            ->where(['create_time' => ['>=', strtotime(date('Y-m-01'))]])
-            ->count();
-        $data['user_total_profession'] = \Db::table('User')
-            ->where(['level' => 2])
-            ->count();
+        $data['user_total'] = \Db::table('User')->count();
 
         $data['order_real_unpaid'] = \Db::table('Order')
             ->where(['order_type' => Constant::ORDER_TYPE_REAL])

@@ -1,7 +1,6 @@
 <?php foreach ($this->list as $v): ?>
     <tr class="ajaxDropDownView" data-id="<?= $this->pid ?>">
-        <td class="category-name <?= $v['has_child'] ? 'can-click' : '' ?>" data-id="<?= $v['category_id'] ?>"
-            data-url="<?= \App::$urlManager->createUrl('erp/category/get-child-list') ?>">
+        <td class="category-name <?= $v['has_child'] ? 'can-click' : '' ?>" data-id="<?= $v['category_id'] ?>">
             <?php if ($v['has_child']): ?><span class="has-child-icon"><i
                         class="glyphicon glyphicon-triangle-right"></i></span><?php endif; ?>
             <span style="color: #CCC"><?= str_pad('', ($v['level'] - 1) * 2, '-') ?></span>

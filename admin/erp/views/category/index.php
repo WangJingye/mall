@@ -6,7 +6,8 @@
 <form class="search-form" action="<?= \App::$urlManager->createUrl('erp/category/index') ?>" method="get">
     <div class="form-content">
         <span class="col-form-label search-label">分类名称</span>
-        <input type="text" class="form-control search-input" name="category_name" value="<?= $this->params['category_name'] ?>">
+        <input type="text" class="form-control search-input" name="category_name"
+               value="<?= $this->params['category_name'] ?>">
     </div>
     <div class="form-content">
         <span class="col-form-label search-label">是否有下级</span>
@@ -45,9 +46,9 @@
         </tr>
         <?php foreach ($this->list as $v): ?>
             <tr>
-                <td class="category-name <?= $v['has_child'] ? 'can-click' : '' ?>" data-id="<?= $v['category_id'] ?>"
-                    data-url="<?= \App::$urlManager->createUrl('erp/category/get-child-list') ?>">
-                    <?php if($v['has_child']):?><span class="has-child-icon"><i class="glyphicon glyphicon-triangle-right"></i></span><?php endif;?>
+                <td class="category-name <?= $v['has_child'] ? 'can-click' : '' ?>" data-id="<?= $v['category_id'] ?>">
+                    <?php if ($v['has_child']): ?><span class="has-child-icon"><i
+                                class="glyphicon glyphicon-triangle-right"></i></span><?php endif; ?>
                     <span style="color: #CCC"><?= str_pad('', ($v['level'] - 1) * 2, '-') ?></span>
                     <?= $v['category_name'] ?>
                 </td>
