@@ -42,6 +42,7 @@ class CouponController extends BaseController
         $this->assign('list', $res->list);
         $this->assign('statusList', $this->statusList);
         $this->assign('typeList', $this->couponService->typeList);
+        $this->assign('boolList', $this->typeList);
     }
 
     /**
@@ -70,6 +71,7 @@ class CouponController extends BaseController
         $this->assign('typeList', $this->couponService->typeList);
         $this->assign('categoryList', $this->categoryService->getAllCategory());
         $this->assign('statusList', $this->statusList);
+        $this->assign('boolList', $this->typeList);
     }
 
     /**

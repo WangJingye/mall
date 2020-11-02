@@ -52,7 +52,7 @@ function saveForm() {
         return false;
     }
     $.loading('show');
-    POST(form.attr('action'), data, function (res) {
+    $.post(form.attr('action'), data, function (res) {
         $.loading('hide');
         if (res.code == 200) {
             $.success(res.message);

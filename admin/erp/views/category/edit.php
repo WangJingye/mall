@@ -28,7 +28,13 @@
     <div class="form-group row">
         <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>是否有下级</label>
         <div class="col-sm-8">
-            <?= \admin\extend\input\SelectInput::instance($this->hasChildList, $this->model['has_child'], 'has_child', 'radio')->show(); ?>
+            <?= \admin\extend\input\SelectInput::instance($this->boolList, $this->model['has_child'], 'has_child', 'radio')->show(); ?>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>显示到首页</label>
+        <div class="col-sm-8">
+            <?= \admin\extend\input\SelectInput::instance($this->boolList, $this->model['show_home'], 'show_home', 'radio')->show(); ?>
         </div>
     </div>
     <div class="form-group row">

@@ -63,6 +63,19 @@
         </div>
     </div>
     <div class="form-group row">
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>显示到首页</label>
+        <div class="col-sm-10">
+            <?= \admin\extend\input\SelectInput::instance($this->boolList, $this->model['show_home'], 'show_home', 'radio')->show(); ?>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>排序</label>
+        <div class="col-sm-10">
+            <input type="number" name="sort" class="form-control"
+                   value="<?= $this->model['sort'] ? $this->model['sort'] : '0' ?>" placeholder="请输入排序">
+        </div>
+    </div>
+    <div class="form-group row">
         <div class="offset-2 col-sm-10">
             <input class="btn btn-primary btn-lg" type="submit" value="保存"/>
         </div>

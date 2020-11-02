@@ -58,6 +58,19 @@
         </div>
     </div>
     <div class="form-group row">
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>显示到首页</label>
+        <div class="col-sm-10">
+            <?= \admin\extend\input\SelectInput::instance($this->boolList, $this->model['show_home'], 'show_home', 'radio')->show(); ?>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>排序</label>
+        <div class="col-sm-10">
+            <input type="number" name="sort" class="form-control"
+                   value="<?= $this->model['sort'] ? $this->model['sort'] : '0' ?>" placeholder="请输入排序">
+        </div>
+    </div>
+    <div class="form-group row">
         <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>sku</label>
         <div class="col-sm-10">
             <div>
@@ -71,7 +84,7 @@
                     <tr>
                         <td>SKU</td>
                         <td>规格</td>
-                        <td>原价</td>
+                        <td>单独成团价</td>
                         <td>价格</td>
                         <td>库存</td>
                         <td>操作</td>

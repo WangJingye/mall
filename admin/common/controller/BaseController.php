@@ -6,6 +6,10 @@ use component\WebController;
 
 class BaseController extends WebController
 {
+    public $boolList = [
+        '0' => '否',
+        '1' => '是',
+    ];
     public function init()
     {
         $this->layout('main');

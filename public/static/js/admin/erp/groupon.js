@@ -13,11 +13,15 @@ $(function () {
             },
             start_time: {
                 required: true,
-                datetime:true
+                datetime: true
             },
             end_time: {
                 required: true,
-                datetime:true
+                datetime: true
+            },
+            sort: {
+                required: true,
+                digits: true
             }
         },
         messages: {
@@ -33,11 +37,15 @@ $(function () {
             },
             start_time: {
                 required: '请输入开始时间',
-                datetime:'开始时间格式有误'
+                datetime: '开始时间格式有误'
             },
             end_time: {
                 required: '请输入结束时间',
-                datetime:'结束时间格式有误'
+                datetime: '结束时间格式有误'
+            },
+            sort:{
+                required: '请输入排序值',
+                digits: '库存只能是正整数',
             }
         },
         submitHandler: function (e) {
@@ -190,7 +198,7 @@ function saveForm() {
         $.error('请至少选择一个SKU');
         return false;
     }
-    if(flag==1){
+    if (flag == 1) {
         $.error('请确认SKU信息完整');
         return false;
     }

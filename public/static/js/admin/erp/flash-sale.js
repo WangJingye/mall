@@ -19,6 +19,10 @@ $(function () {
                 required: true,
                 digits: true
             },
+            sort: {
+                required: true,
+                digits: true
+            },
             price: {
                 required: true,
                 number: true,
@@ -64,6 +68,10 @@ $(function () {
             end_time: {
                 required: '请输入结束时间',
                 datetime:'结束时间格式有误'
+            },
+            sort:{
+                required: '请输入排序值',
+                digits: '库存只能是整数',
             }
         },
         submitHandler: function (e) {

@@ -9,10 +9,6 @@ class CategoryController extends BaseController
 {
     /** @var CategoryService */
     public $categoryService;
-    public $hasChildList = [
-        '0' => '否',
-        '1' => '是',
-    ];
 
     public function init()
     {
@@ -35,7 +31,7 @@ class CategoryController extends BaseController
         $list = $this->categoryService->getList($params, false);
         $this->assign('params', $params);
         $this->assign('list', $list);
-        $this->assign('hasChildList', $this->hasChildList);
+        $this->assign('boolList', $this->boolList);
     }
 
     /**
@@ -72,7 +68,7 @@ class CategoryController extends BaseController
             $id = $params['category_id'];
         }
         $this->assign('childList', array_column($this->categoryService->getChild($id), 'name', 'id'));
-        $this->assign('hasChildList', $this->hasChildList);
+        $this->assign('boolList', $this->boolList);
     }
 
     /**

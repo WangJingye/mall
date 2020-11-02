@@ -43,6 +43,7 @@ class FlashSaleController extends BaseController
         $this->assign('pagination', $this->pagination($res));
         $this->assign('list', $list);
         $this->assign('statusList', $this->statusList);
+        $this->assign('boolList', $this->boolList);
         if (!empty($params['product_id'])) {
             $product = \Db::table('Product')->where(['product_id' => $params['product_id']])->find();
             $this->assign('product', $product);
@@ -80,6 +81,7 @@ class FlashSaleController extends BaseController
             $this->title = '编辑秒杀 - ' . $model['flash_id'];
         }
         $this->assign('statusList', $this->statusList);
+        $this->assign('boolList', $this->boolList);
     }
 
     /**

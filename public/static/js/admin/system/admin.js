@@ -213,7 +213,7 @@ function changeUserForm() {
 
 function changePasswordForm() {
     let form = $('#change-password-form');
-    POST(form.attr('action'), form.serialize(), function (res) {
+    $.post(form.attr('action'), form.serialize(), function (res) {
         $.loading('hide');
         if (res.code == 200) {
             $.success(res.message, function () {

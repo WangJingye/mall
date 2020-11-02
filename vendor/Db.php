@@ -66,7 +66,7 @@ class Db extends ObjectAccess
         if (is_array($fields)) {
             foreach ($fields as $key => $field) {
                 $field = trim(str_replace('`', '', $field));
-                $search = ['as', ' '];//有空格或者as代表有别名
+                $search = [' as ', ' '];//有空格或者as代表有别名
                 $tag = 0;
                 foreach ($search as $s) {
                     if (strpos($field, $s) !== false) {

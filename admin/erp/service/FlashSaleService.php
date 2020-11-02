@@ -90,6 +90,8 @@ class FlashSaleService extends BaseService
         if ($data['end_time'] < time()) {
             $data['status'] = 3;
         }
+        $product = \Db::table('Product')->where(['product_id' => $data['product_id']])->find();
+        $data['pic'] = $product['pic'];
         if (isset($data['flash_id']) && $data['flash_id']) {
             \Db::table('FlashSale')->where(['flash_id' => $data['flash_id']])->update($data);
         } else {

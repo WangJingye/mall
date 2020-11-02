@@ -55,6 +55,7 @@
             <th>结束时间</th>
             <th>状态</th>
             <th>创建人</th>
+            <th>显示到首页</th>
             <th>创建时间</th>
             <th>操作</th>
         </tr>
@@ -67,6 +68,7 @@
                 <td><?= date('Y-m-d H:i:s', $v['end_time']) ?></td>
                 <td class="status"><?= $this->statusList[$v['status']] ?></td>
                 <td><?= $this->userList[$v['create_userid']] ?></td>
+                <td><?= $this->boolList[$v['show_home']] ?></td>
                 <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
                 <td>
                     <a class="btn btn-primary btn-sm"

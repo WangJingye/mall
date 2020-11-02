@@ -75,6 +75,8 @@ class GrouponService extends BaseService
         }
         //商品价格取第一个variation的价格
         $data['price'] = $variations[0]['price'];
+        $product = \Db::table('Product')->where(['product_id' => $data['product_id']])->find();
+        $data['pic'] = $product['pic'];
         unset($data['variation']);
         if (isset($data['id']) && $data['id']) {
             \Db::table('Groupon')->where(['id' => $data['id']])->update($data);

@@ -43,6 +43,7 @@
             <th>图片</th>
             <th>分类级别</th>
             <th>是否有下级</th>
+            <th>显示到首页</th>
             <th>操作</th>
         </tr>
         <?php foreach ($this->list as $v): ?>
@@ -60,7 +61,8 @@
                     <?php endif; ?>
                 </td>
                 <td><?= $v['level'] ?></td>
-                <td><?= $this->hasChildList[$v['has_child']] ?></td>
+                <td><?= $this->boolList[$v['has_child']] ?></td>
+                <td><?= $this->boolList[$v['show_home']] ?></td>
                 <td>
                     <a class="btn btn-primary btn-sm"
                        href="<?= \App::$urlManager->createUrl('erp/category/edit', ['category_id' => $v['category_id']]) ?>">

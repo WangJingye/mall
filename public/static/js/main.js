@@ -110,9 +110,6 @@ $(function () {
         $('.sub-item').collapse('hide');
         $(this).next('.sub-item').collapse('toggle')
     });
-    // $('.list-sub-item .list-group-item').click(function () {
-    //     location.href = $(this).data('url');
-    // });
     $('.search-form').on('click', '.search-btn,.search-with-export-btn', function () {
         var form = $(this).parents('form');
         if ($('#page-size').get(0)) {

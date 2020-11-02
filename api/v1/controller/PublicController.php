@@ -47,9 +47,39 @@ class PublicController extends BaseController
             ->where(['is_show' => 1])
             ->order('sort desc')
             ->findAll();
-        $res = [
-            'carousels' => $carousels
-        ];
+        $res['carousels'] = $carousels;
+        $categories = \Db::table('ProductCategory')
+            ->field(['category_id', 'category_name', 'pic'])
+            ->where(['level' => 1])
+            ->where(['show_home' => 1])
+            ->order('sort desc')
+            ->limit(8)
+            ->findAll();
+        $res['categories'] = $categories;
+        $flashSales = \Db::table('FlashSale')
+            ->field(['flash_id', 'title', 'price', 'product_price', 'status', 'start_time', 'end_time', 'pic'])
+            ->where(['status' => ['in', [1, 2]]])
+            ->where(['show_home' => 1])
+            ->order('sort desc,flash_id desc')
+            ->limit(8)
+            ->findAll();
+        foreach ($flashSales as $k => $v) {
+            if ($v['status'] == 2) {
+                $flashSales[$k]['left_time'] = $v['end_time'] - time();
+            } else {
+                $flashSales[$k]['left_time'] = $v['start_time'] - time();
+            }
+        }
+        $res['flashsales'] = $flashSales;
+        $groupons = \Db::table('Groupon')
+            ->field(['id', 'title', 'price', 'end_time', 'group_user_number', 'pic', 'status'])
+            ->where(['show_home' => 1])
+            ->where(['status' => 2])
+            ->findAll();
+        foreach ($groupons as $k => $v) {
+            $groupons[$k]['left_time'] = $v['end_time'] - time();
+        }
+        $res['groupons'] = $groupons;
         return $this->success('success', $res);
     }
 }
