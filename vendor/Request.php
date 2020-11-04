@@ -55,6 +55,8 @@ class Request extends ObjectAccess
         }
         $params = new \Params();
         $params->load($_REQUEST);
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $params->load($payload);
         $this->params = $this->trimString($params);
     }
 
@@ -77,9 +79,8 @@ class Request extends ObjectAccess
      */
     public function parseUri($uri)
     {
-        $route = $uri ? explode('/', $uri) : [];
+        $route = $uri ? explode('/', trim($uri, '/')) : [];
         $config = $this->config;
-
         if (!$config) {
             $config = \App::$config->instance;
             $this->defaultUri = $config['default_module'] . '/' . $config['default_controller'] . '/' . $config['default_action'];

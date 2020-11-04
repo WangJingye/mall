@@ -38,7 +38,7 @@ class BaseController extends RestController
         $header = \App::$request->header;
         $user = null;
         if (isset($header['identity']) && $header['identity'] != '') {
-            $user = \Db::table('User')->where(['identity' => $header['identity']])->find();
+            $user = \Db::table('User')->where(['openid' => $header['identity']])->find();
         }
         if (!in_array($url, $actionWhiteList) && !in_array($moduleController, $actionWhiteList) && !$user) {
             throw new \Exception('未登录', 999);
