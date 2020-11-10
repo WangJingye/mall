@@ -66,13 +66,6 @@
                        value="<?= $this->model['receiver_address'] ?>" placeholder="请输入收件人地址">
             </div>
         </div>
-        <div class="col-sm-6 row form-col-inline receiver-group">
-            <label class="col-sm-4 text-nowrap col-form-label form-label"><span style="color: red">*</span>收件人邮编</label>
-            <div class="col-sm-8">
-                <input type="text" name="receiver_postal" class="form-control"
-                       value="<?= $this->model['receiver_postal'] ?>" placeholder="请输入收件人邮编">
-            </div>
-        </div>
     </div>
 
     <div class="form-group row">

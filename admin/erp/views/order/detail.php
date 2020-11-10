@@ -76,7 +76,6 @@
                             <div><span>姓名:</span><span><?= $this->order['receiver_name'] ?></span></div>
                             <div><span>手机号:</span><span><?= $this->order['receiver_mobile'] ?></span></div>
                             <div><span>收货地址:</span><span><?= $this->order['receiver_address'] ?></span></div>
-                            <div><span>邮编:</span><span><?= $this->order['receiver_postal'] ?></span></div>
                         </div>
                     </td>
                 <?php endif; ?>

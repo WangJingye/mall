@@ -56,9 +56,6 @@ class OrderService extends \common\service\OrderService
         if (isset($params['receiver_address']) && $params['receiver_address'] != '') {
             $selector->where(['receiver_address' => ['like', '%' . $params['receiver_address'] . '%']]);
         }
-        if (isset($params['receiver_postal']) && $params['receiver_postal'] != '') {
-            $selector->where(['receiver_postal' => ['like', '%' . $params['receiver_postal'] . '%']]);
-        }
         if (isset($params['transport_id']) && $params['transport_id'] != '') {
             $selector->where(['transport_id' => $params['transport_id']]);
         }

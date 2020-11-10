@@ -39,6 +39,11 @@ class CartController extends BaseController
             ->find();
         $res['status'] = $variation['status'] == 1 && $product['status'] == 1 ? 1 : 0;
         $res['stock'] = $variation['stock'];
+        $number = min($variation['stock'], $params['number']);
+        \Db::table('Cart')
+            ->where(['user_id' => \App::$user['user_id']])
+            ->where(['variation_code' => $params['variation_code']])
+            ->update(['number' => $number]);
         if ($variation['stock'] < $params['number']) {
             return $this->success('超出最大库存数量', $res);
         }

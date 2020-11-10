@@ -337,7 +337,6 @@ CREATE TABLE `tbl_order` (
   `receiver_name` varchar(255) DEFAULT '' COMMENT '收货人',
   `receiver_mobile` varchar(16) DEFAULT '' COMMENT '收货人联系方式',
   `receiver_address` varchar(255) DEFAULT '' COMMENT '收货地址',
-  `receiver_postal` varchar(16) DEFAULT '' COMMENT '邮编',
   `transport_id` int(11) DEFAULT '0' COMMENT '物流方式ID',
   `transport_order` varchar(255) DEFAULT '' COMMENT '物流单号',
   `pay_method` tinyint(4) DEFAULT '0' COMMENT '支付方式',

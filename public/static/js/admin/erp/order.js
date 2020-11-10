@@ -30,9 +30,6 @@ $(function () {
             receiver_address: {
                 required: '[name=order_type] option:selected[value=1]'
             },
-            receiver_postal: {
-                required: '[name=order_type] option:selected[value=1]'
-            }
         },
         messages: {
             order_title: {
@@ -64,9 +61,6 @@ $(function () {
             receiver_address: {
                 required: '请输入收件人地址'
             },
-            receiver_postal: {
-                required: '请输入收件人邮编'
-            }
         },
         submitHandler: function (e) {
             saveForm();
@@ -362,16 +356,8 @@ $(function () {
     });
     $('select[name=order_type]').change(function () {
         if ($(this).val() == 1) {
-            // $('input[name=receiver_name]').rules('add', {required: true, messages: {required: '请输入收件人'}});
-            // $('input[name=receiver_mobile]').rules('add', {required: true, messages: {required: '请输入收件人联系电话'}});
-            // $('input[name=receiver_address]').rules('add', {required: true, messages: {required: '请输入收件地址'}});
-            // $('input[name=receiver_postal]').rules('add', {required: true, messages: {required: '请输入收件邮编'}});
             $('.receiver-group').show();
         } else if ($(this).val() == 2) {
-            // $('input[name=receiver_name]').rules('remove', 'required');
-            // $('input[name=receiver_mobile]').rules('remove', 'required');
-            // $('input[name=receiver_address]').rules('remove', 'required');
-            // $('input[name=receiver_postal]').rules('remove', 'required');
             $('.receiver-group').hide();
         }
         $('tr.order-detail-variation').remove();
