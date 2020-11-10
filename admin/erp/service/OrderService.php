@@ -188,20 +188,19 @@ class OrderService extends BaseService
         }
         $variationList = \Db::table('ProductVariation')->rename('a')
             ->join(['b' => 'Product'], 'a.product_id = b.product_id')
-            ->where(['a.variation_id' => ['in', array_column($variations, 'variation_id')]])
-            ->field([
-                'a.variation_id', 'b.product_id', 'a.variation_code', 'b.pic',
+            ->where(['a.variation_code' => ['in', array_column($variations, 'variation_code')]])
+            ->field(['b.product_id', 'a.variation_code', 'b.pic',
                 'b.product_name', 'b.category_id', 'a.rules_name', 'a.rules_value',
                 'b.product_weight', 'b.freight_id', 'a.stock'])
             ->findAll();
-        $variationList = array_column($variationList, null, 'variation_id');
+        $variationList = array_column($variationList, null, 'variation_code');
         $pList = [];
         $data['product_money'] = 0;
         foreach ($variations as $v) {
-            if (!isset($variationList[$v['variation_id']])) {
+            if (!isset($variationList[$v['variation_code']])) {
                 throw new \Exception('商品信息有误');
             }
-            $item = $variationList[$v['variation_id']];
+            $item = $variationList[$v['variation_code']];
             if ($item['stock'] < $v['number']) {
                 throw new \Exception('商品库存不足，请确认');
             }
@@ -211,7 +210,7 @@ class OrderService extends BaseService
             }
             $item['price'] = $v['price'];
             $data['product_money'] += $item['number'] * $item['price'];
-            $pList[$v['variation_id']] = $item;
+            $pList[$v['variation_code']] = $item;
         }
         if (!empty($data['coupon_id'])) {
             $this->useCoupon($data['coupon_id'], $pList);
@@ -324,11 +323,11 @@ class OrderService extends BaseService
         }
         \Db::table('Order')->where(['order_id' => $order['order_id']])->update(['status' => Constant::ORDER_STATUS_CLOSE]);
         $variations = \Db::table('OrderVariation')
-            ->field(['variation_id', 'number'])
+            ->field(['variation_code', 'number'])
             ->where(['order_id' => $order['order_id']])
             ->where(['status' => 1])->findAll();
         foreach ($variations as $v) {
-            \Db::table('ProductVariation')->where(['variation_id' => $v['variation_id']])->increase('stock', $v['number']);
+            \Db::table('ProductVariation')->where(['variation_code' => $v['variation_code']])->increase('stock', $v['number']);
         }
         $this->orderTrace('关闭', $order['order_id']);
     }

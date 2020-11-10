@@ -29,11 +29,11 @@ class OrderController extends ConsoleController
                 ->where(['order_id' => ['in', array_column($orderList, 'order_id')]])
                 ->update(['status' => Constant::ORDER_STATUS_CLOSE]);
             $variations = \Db::table('OrderVariation')
-                ->field(['variation_id', 'number'])
+                ->field(['variation_code', 'number'])
                 ->where(['order_id' => ['in', array_column($orderList, 'order_id')]])
                 ->where(['status' => 1])->findAll();
             foreach ($variations as $v) {
-                \Db::table('ProductVariation')->where(['variation_id' => $v['variation_id']])->increase('stock', $v['number']);
+                \Db::table('ProductVariation')->where(['variation_code' => $v['variation_code']])->increase('stock', $v['number']);
             }
             $insertList = [];
             foreach ($orderList as $v) {

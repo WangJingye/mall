@@ -146,7 +146,7 @@
                     </tr>
                     <?php foreach ($this->variationList as $v): ?>
                         <?php $product = $this->productList[$v['product_id']]; ?>
-                        <tr class="order-detail-variation" data-id="<?= $v['variation_id'] ?>">
+                        <tr class="order-detail-variation" data-id="<?= $v['id'] ?>">
                             <td>
                                 <input type="hidden" class="product_weight"
                                        value="<?= $product['product_weight'] ?>">

@@ -143,7 +143,7 @@ function chooseProductVariation(callback, multiple) {
     var argsList = [];
     checkBox.each(function () {
         argsList.push({
-            'variation_id': $(this).val(),
+            'id': $(this).val(),
             'info': $(this).data('info')
         });
     });

@@ -119,11 +119,11 @@ $(function () {
                 });
                 for (var i in data) {
                     var info = data[i]['info'];
-                    if (existList.indexOf(info['variation_id'].toString()) != -1) {
+                    if (existList.indexOf(info['id'].toString()) != -1) {
                         continue;
                     }
                     html += '<tr class="data-tr">' +
-                        '<td><input type="hidden" class="variation-id" value="' + info['variation_id'] + '">' + info['variation_code'] + '</td>' +
+                        '<td><input type="hidden" class="variation-id" value="' + info['id'] + '">' + info['variation_code'] + '</td>' +
                         '<td>' + (info['rules_value'] !== '' ? info['rules_value'] : '<i style="color: #666">无规格</i>') + '</td>' +
                         '<td><input type="number" class="form-control variation-product-price" value="' + info['price'] + '"></td>' +
                         '<td><input type="number" class="form-control variation-price"></td>' +

@@ -199,13 +199,13 @@ class ProductService extends BaseService
                     'market_price' => $v['market_price'],
                     'status' => 1
                 ];
-                \Db::table('ProductVariation')->where(['variation_id' => $variation['variation_id']])->update($update);
+                \Db::table('ProductVariation')->where(['id' => $variation['id']])->update($update);
             }
         }
         $codes = array_column($variations, 'variation_code');
         foreach ($variationList as $key => $v) {
             if (!in_array($key, $codes)) {
-                \Db::table('ProductVariation')->where(['variation_id' => $v['variation_id']])->update(['status' => 0]);
+                \Db::table('ProductVariation')->where(['id' => $v['id']])->update(['status' => 0]);
             }
         }
     }
@@ -230,7 +230,7 @@ class ProductService extends BaseService
     {
         $selector = \Db::table('ProductVariation')->rename('a')
             ->join(['b' => 'Product'], 'b.product_id = a.product_id')
-            ->field(['b.product_name', 'a.variation_code', 'b.product_id', 'a.variation_id',
+            ->field(['b.product_name', 'a.variation_code', 'b.product_id', 'a.id',
                 'a.rules_value', 'a.price', 'a.market_price', 'a.stock', 'b.status', 'a.create_time', 'b.freight_id', 'b.product_weight'])
             ->where(['a.status' => 1])
             ->where(['b.status' => ['!=', 0]]);
@@ -243,7 +243,7 @@ class ProductService extends BaseService
         if (isset($params['product_type']) && $params['product_type'] != '') {
             $selector->where(['b.product_type' => $params['product_type']]);
         }
-        $selector->order('variation_id desc');
+        $selector->order('id desc');
         if ($ispage) {
             return $this->pagination($selector, $params);
         }
@@ -252,7 +252,7 @@ class ProductService extends BaseService
 
     public static function getVariationCode()
     {
-        $variation = \Db::table('ProductVariation')->order('variation_id desc')->limit(1)->find();
+        $variation = \Db::table('ProductVariation')->order('id desc')->limit(1)->find();
         if (!empty($variation)) {
             $code = (int)substr($variation['variation_code'], 0, 12) + 1;
         } else {

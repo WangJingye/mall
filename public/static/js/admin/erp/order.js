@@ -314,8 +314,8 @@ $(function () {
                 var html = '';
                 for (var i in data) {
                     var info = data[i]['info'];
-                    if (!$('.order-detail-variation[data-id="' + info['variation_id'] + '"]').length) {
-                        html += '<tr class="order-detail-variation" data-id="' + info['variation_id'] + '">' +
+                    if (!$('.order-detail-variation[data-id="' + info['id'] + '"]').length) {
+                        html += '<tr class="order-detail-variation" data-id="' + info['id'] + '">' +
                             '<td>' +
                             '<input type="hidden" class="product_weight" value="' + info['product_weight'] + '">' +
                             '<input type="hidden" class="freight_id" value="' + info['freight_id'] + '">' +

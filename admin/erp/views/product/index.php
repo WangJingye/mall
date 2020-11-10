@@ -84,7 +84,7 @@
             <tr>
                 <td><input type="checkbox" class="check-one" value="<?= $v['product_id'] ?>"></td>
                 <td><?= $v['product_id'] ?></td>
-                <td><?= $v['product_name'] ?></td>
+                <td class="text-break text-wrap" style="min-width: 200px"><?= $v['product_name'] ?></td>
                 <td><?= $v['category_name'] ?></td>
                 <td><?= $this->brandList[$v['brand_id']] ?></td>
                 <td>

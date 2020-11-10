@@ -83,16 +83,15 @@ class GrouponService extends BaseService
         } else {
             $data['id'] = \Db::table('Groupon')->insert($data);
         }
-        $vIds = array_column($variations, 'variation_id');
-        $pvList = \Db::table('ProductVariation')->where(['variation_id' => ['in', $vIds]])->findAll();
-        $pvList = array_column($pvList, null, 'variation_id');
-        $existList = \Db::table('GrouponVariation')->where(['go_id' => $data['id']])->where(['variation_id' => ['in', $vIds]])->findAll();
-        $existList = array_column($existList, null, 'variation_id');
+        $codes = array_column($variations, 'variation_code');
+        $pvList = \Db::table('ProductVariation')->where(['variation_code' => ['in', $codes]])->findAll();
+        $pvList = array_column($pvList, null, 'variation_code');
+        $existList = \Db::table('GrouponVariation')->where(['go_id' => $data['id']])->where(['variation_code' => ['in', $codes]])->findAll();
+        $existList = array_column($existList, null, 'variation_code');
         foreach ($variations as $v) {
-            $pv = $pvList[$v['variation_id']];
+            $pv = $pvList[$v['variation_code']];
             $variation = [
                 'go_id' => $data['id'],
-                'variation_id' => $pv['variation_id'],
                 'variation_code' => $pv['variation_code'],
                 'rules_name' => $pv['rules_name'],
                 'rules_value' => $pv['rules_value'],
@@ -101,15 +100,15 @@ class GrouponService extends BaseService
                 'stock' => $v['stock'],
                 'status' => 1
             ];
-            if (isset($existList[$v['variation_id']])) {
-                \Db::table('GrouponVariation')->where(['id' => $existList[$v['variation_id']]['id']])->update($variation);
+            if (isset($existList[$v['variation_code']])) {
+                \Db::table('GrouponVariation')->where(['id' => $existList[$v['variation_code']]['id']])->update($variation);
             } else {
                 \Db::table('GrouponVariation')->insert($variation);
             }
         }
-        foreach ($existList as $vId => $v) {
-            if (!in_array($vId, $vIds)) {
-                \Db::table('GrouponVariation')->delete(['id' => $vId]);
+        foreach ($existList as $code => $v) {
+            if (!in_array($code, $codes)) {
+                \Db::table('GrouponVariation')->delete(['id' => $code]);
             }
         }
     }
