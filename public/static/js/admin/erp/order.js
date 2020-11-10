@@ -314,13 +314,14 @@ $(function () {
                 var html = '';
                 for (var i in data) {
                     var info = data[i]['info'];
-                    if (!$('.order-detail-variation[data-id="' + info['id'] + '"]').length) {
-                        html += '<tr class="order-detail-variation" data-id="' + info['id'] + '">' +
+                    if (!$('.order-detail-variation[data-id="' + info['variation_code'] + '"]').length) {
+                        html += '<tr class="order-detail-variation" data-id="' + info['variation_code'] + '">' +
                             '<td>' +
                             '<input type="hidden" class="product_weight" value="' + info['product_weight'] + '">' +
                             '<input type="hidden" class="freight_id" value="' + info['freight_id'] + '">' +
                             info['product_id'] + '</td>' +
                             '<td>' + info['product_name'] + '</td>' +
+                            '<td>' + info['variation_code'] + '</td>' +
                             '<td>' + info['rules_value'] + '</td>' +
                             '<td><input type="number" class="form-control number calc-price"></td>' +
                             '<td><input type="number" class="form-control price calc-price" value="' + info['price'] + '"></td>' +
@@ -377,6 +378,13 @@ $(function () {
         $('.empty-variation-tr').show();
         showMoney();
     });
+    $('#save-form').on('click', '.search-clear-btn', function (event) {
+        event.preventDefault();
+        $(this).parent().find('input').val('');
+        $(this).remove();
+        $('input[name=rate_money]').val('0.00');
+        showMoney();
+    });
 });
 
 function showMoney() {
@@ -421,7 +429,7 @@ function saveForm() {
     for (i = 0; i < max; i++) {
         var tr = $('.order-detail-variation').eq(i);
         var variation = {
-            variation_id: tr.attr('data-id'),
+            variation_code: tr.attr('data-id'),
             number: tr.find('.number').val(),
             price: tr.find('.price').val()
         };
@@ -439,7 +447,7 @@ function saveForm() {
         $.error('商品信息填写有误，请确认');
         return false;
     }
-    formData.append('variations', JSON.stringify(variations));
+    formData.append('list', JSON.stringify(variations));
     $.loading('show');
     $.ajax({
         url: form.attr('action'),

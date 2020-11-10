@@ -3,8 +3,8 @@
 namespace api\v1\controller;
 
 use admin\erp\service\CouponService;
-use admin\erp\service\OrderService;
 use api\v1\service\CartService;
+use common\service\OrderService;
 
 class OrderController extends BaseController
 {
@@ -13,11 +13,14 @@ class OrderController extends BaseController
 
     /** @var CartService */
     private $cartService;
+    /** @var OrderService */
+    private $orderService;
 
     public function init()
     {
         $this->couponService = new  CouponService();
         $this->cartService = new  CartService();
+        $this->orderService = new  OrderService();
         parent::init();
     }
 
@@ -128,176 +131,8 @@ class OrderController extends BaseController
     public function saveAction()
     {
         $params = \App::$request->params->toArray();
-        $list = $params['list'];
-        if (empty($list)) {
-            throw new \Exception('商品不能为空');
-        }
-        $address = \Db::table('UserAddress')
-            ->where(['User_id' => \App::$user['user_id']])
-            ->where(['address_id' => $params['address_id']])
-            ->find();
-        if (!$address) {
-            throw new \Exception('地址信息有误');
-        }
-        $data = [
-            'user_id' => \App::$user['user_id'],
-            'product_money' => 0,
-            'rate_money' => 0,
-            'freight_money' => 0,
-            'receiver_name' => $address['receiver_name'],
-            'receiver_mobile' => $address['receiver_mobile'],
-            'receiver_address' => $address['address_area'] . ' ' . $address['detail_address'],
-            'remark' => $params['remark']
-        ];
-        if ($params['order_group'] == 'product') {
-            $data['order_group'] = 1;
-            $variationList = \Db::table('ProductVariation')
-                ->field(['product_id', 'variation_code', 'pic', 'stock', 'price', 'status', 'rules_name', 'rules_value'])
-                ->where(['variation_code' => ['in', array_column($list, 'variation_code')]])
-                ->findAll();
-        } else if ($params['order_group'] == 'groupon') {
-            $data['order_group'] = 2;
-            $obj = \Db::table('Groupon')->where(['id' => $params['go_id']])->find();
-            if (!$obj) {
-                throw new \Exception('团购商品信息有误，请联系客服');
-            }
-            if ($obj['status'] == 1) {
-                throw new \Exception('团购未开始，请确认');
-            }
-            if ($obj['status'] == 3) {
-                throw new \Exception('团购已结束，请确认');
-            }
-            $v = \Db::table('GrouponVariation')
-                ->field(['variation_code', 'price', 'stock', 'product_price', 'status', 'rules_name', 'rules_value'])
-                ->where(['go_id' => $obj['id']])
-                ->where(['variation_code' => ['in', array_column($list, 'variation_code')]])
-                ->find();
-            if (!$v) {
-                throw new \Exception('团购信息有误，请联系客服');
-            }
-            $v['product_id'] = $obj['product_id'];
-            $variationList[] = $v;
-            $data['extra'] = json_encode(['go_id' => $obj['go_id']]);
-        } else if ($params['order_group'] == 'flashsale') {
-            $data['order_group'] = 3;
-            $v = \Db::table('FlashSale')
-                ->field(['product_id', 'variation_code', 'pic', 'stock', 'price', 'status', 'rules_name', 'rules_value'])
-                ->where(['flash_id' => $params['flash_id']])
-                ->where(['variation_code' => ['in', array_column($list, 'variation_code')]])
-                ->find();
-            if (!$v) {
-                throw new \Exception('秒杀商品信息有误，请联系客服');
-            }
-            if ($v['variation_code'] == 1) {
-                throw new \Exception('秒杀未开始，请确认');
-            }
-            if ($v['status'] == 1) {
-                throw new \Exception('秒杀未开始，请确认');
-            }
-            if ($v['status'] == 3) {
-                throw new \Exception('秒杀已结束，请确认');
-            }
-            $variationList[] = $v;
-            $data['extra'] = json_encode(['flash_id' => $params['flash_id']]);
-        }
-        $data['order_title'] = $this->generateTitle($data['order_group']);
-        $variationList = array_column($variationList, null, 'variation_code');
-        $productList = \Db::table('Product')
-            ->field(['product_id', 'product_name', 'category_id', 'pic', 'status', 'product_type', 'product_weight'])
-            ->where(['product_id' => ['in', array_column($variationList, 'product_id')]])
-            ->findAll();
-        $productList = array_column($productList, null, 'product_id');
-
-        $dataList = [];
-        foreach ($list as $v) {
-            if (!isset($variationList[$v['variation_code']])) {
-                throw new \Exception('商品信息已变更，请确认～');
-            }
-            $item = $variationList[$v['variation_code']];
-            if ($item['price'] != $v['price']) {
-                throw new \Exception('商品信息已变更，请确认～');
-            }
-            $product = $productList[$item['product_id']];
-            if ($item['status'] == 0) {
-                throw new \Exception('【' . $product['product_name'] . '】商品信息已变更，请确认～');
-            }
-            if ($v['number'] > $item['stock']) {
-                throw new \Exception('【' . $product['product_name'] . '】商品库存不足，请确认～');
-            }
-            $data['order_type'] = $product['product_type'];
-            $data['product_money'] += $item['price'] * $v['number'];
-            $arr = [];
-            $arr['variation_code'] = $v['variation_code'];
-            $arr['category_id'] = $product['category_id'];
-            $arr['price'] = $item['price'];
-            $arr['product_id'] = $item['product_id'];
-            $arr['pic'] = $item['pic'] ? $item['pic'] : $product['pic'];
-            $arr['product_name'] = $product['product_name'];
-            $arr['rules_name'] = $item['rules_name'];
-            $arr['rules_value'] = $item['rules_value'];
-            $arr['number'] = $v['number'];
-            $dataList[] = $arr;
-        }
-        if (!empty($params['coupon_id'])) {
-            $coupon = \Db::table('CouponUser')
-                ->where(['user_id' => \App::$user['user_id']])
-                ->where(['id' => $params['coupon_id']])
-                ->find();
-            if (!$coupon) {
-                throw new \Exception('优惠券信息有误，请确认～');
-            }
-            if ($coupon['status'] == 2) {
-                throw new \Exception('优惠券已使用，请确认～');
-            }
-            if (!$this->couponService->checkCouponAvailable($coupon, $dataList)) {
-                throw new \Exception('优惠券未达到使用条件');
-            }
-            $data['rate_money'] = $coupon['price'];
-            $data['coupon_id'] = $params['coupon_id'];
-        }
-        $data['money'] = $data['product_money'] + $data['freight_money'] - $data['rate_money'];
-        if ($data['money'] != $params['money']) {
-            throw new \Exception('商品信息已变更，请确认～');
-        }
-        $data['order_code'] = $this->generateCode();
-        try {
-            \Db::startTrans();
-            $data['order_id'] = \Db::table('Order')->insert($data);
-            $orderService = new OrderService();
-            $orderService->orderTrace('创建', $data['order_id'], 2);
-            $orderService->saveVariations($data, $dataList);
-            if ($params['from_type'] == 'cart') {
-                $this->cartService->deleteCart(array_column($dataList, 'variation_code'));
-            }
-            \Db::commit();
-        } catch (\Exception $e) {
-            \Db::rollback();
-            return $this->error($e->getMessage());
-        }
-        return $this->success('success');
-    }
-
-    /**
-     * 生成单号
-     * @param string $prefix
-     * @return string
-     */
-    public function generateCode($prefix = '')
-    {
-        return $prefix . date('YmdHis') . str_pad(rand(000000, 999999), 6, '0', STR_PAD_LEFT);
-    }
-
-    public function generateTitle($group)
-    {
-        switch ($group) {
-            case 1:
-                return date('Y-m-d ') . '商品订单';
-            case 2:
-                return date('Y-m-d ') . '团购订单';
-            case 3:
-                return date('Y-m-d ') . '秒杀订单';
-            default:
-                return date('Y-m-d ') . '商品订单';
-        }
+        $params['add_type'] = 2;
+        $params['user_id'] = \App::$user['user_id'];
+        return $this->orderService->saveOrder($params);
     }
 }

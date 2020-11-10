@@ -138,6 +138,7 @@
                     <tr>
                         <td>商品ID</td>
                         <td>商品名称</td>
+                        <td>SKU</td>
                         <td>规格</td>
                         <td class="input-td">销售数量</td>
                         <td class="input-td">销售单价</td>
@@ -146,7 +147,7 @@
                     </tr>
                     <?php foreach ($this->variationList as $v): ?>
                         <?php $product = $this->productList[$v['product_id']]; ?>
-                        <tr class="order-detail-variation" data-id="<?= $v['id'] ?>">
+                        <tr class="order-detail-variation" data-id="<?= $v['variation_code'] ?>">
                             <td>
                                 <input type="hidden" class="product_weight"
                                        value="<?= $product['product_weight'] ?>">
@@ -155,6 +156,7 @@
                                 <?= $v['product_id'] ?>
                             </td>
                             <td><?= $v['product_name'] ?></td>
+                            <td><?= $v['variation_code'] ?></td>
                             <td><?= $v['rules_value'] ?></td>
                             <td><input type="number" class="form-control number calc-price" value="<?= $v['number'] ?>">
                             </td>

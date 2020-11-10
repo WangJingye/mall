@@ -2,88 +2,15 @@
 
 namespace admin\erp\service;
 
-use admin\common\service\BaseService;
 use admin\extend\Constant;
 use common\extend\excel\SpreadExcel;
 
-class OrderService extends BaseService
+class OrderService extends \common\service\OrderService
 {
-
-    public $statusList = [
-        '1' => [//实物订单
-            '1' => [//普通订单
-                Constant::ORDER_STATUS_CREATED => '待付款',
-                Constant::ORDER_STATUS_PAID => '已付款',
-                Constant::ORDER_STATUS_PENDING => '待发货',
-                Constant::ORDER_STATUS_SHIPPED => '已发货',
-                Constant::ORDER_STATUS_RECEIVED => '已收货',
-                Constant::ORDER_STATUS_COMPLETE => '已完成',
-                Constant::ORDER_STATUS_CLOSE => '已关闭',
-            ],
-            '2' => [//团购订单
-                Constant::ORDER_STATUS_CREATED => '待付款',
-                Constant::ORDER_STATUS_PAID => '待成团',
-                Constant::ORDER_STATUS_PENDING => '待发货',
-                Constant::ORDER_STATUS_SHIPPED => '已发货',
-                Constant::ORDER_STATUS_RECEIVED => '已收货',
-                Constant::ORDER_STATUS_COMPLETE => '已完成',
-                Constant::ORDER_STATUS_CLOSE => '已关闭',
-            ],
-            '3' => [//团购订单
-                Constant::ORDER_STATUS_CREATED => '待付款',
-                Constant::ORDER_STATUS_PAID => '已付款',
-                Constant::ORDER_STATUS_PENDING => '待发货',
-                Constant::ORDER_STATUS_SHIPPED => '已发货',
-                Constant::ORDER_STATUS_RECEIVED => '已收货',
-                Constant::ORDER_STATUS_COMPLETE => '已完成',
-                Constant::ORDER_STATUS_CLOSE => '已关闭',
-            ],
-        ],
-        '2' => [
-            '1' => [
-                Constant::ORDER_STATUS_CREATED => '待付款',
-                Constant::ORDER_STATUS_PAID => '已付款',
-                Constant::ORDER_STATUS_PENDING => '等待电子券',
-                Constant::ORDER_STATUS_SHIPPED => '已发送电子券',
-                Constant::ORDER_STATUS_RECEIVED => '已使用',
-                Constant::ORDER_STATUS_COMPLETE => '已完成',
-                Constant::ORDER_STATUS_CLOSE => '已关闭',
-            ],
-            '2' => [
-                Constant::ORDER_STATUS_CREATED => '待付款',
-                Constant::ORDER_STATUS_PAID => '待成团',
-                Constant::ORDER_STATUS_PENDING => '已成团',
-                Constant::ORDER_STATUS_SHIPPED => '已发送电子券',
-                Constant::ORDER_STATUS_RECEIVED => '已使用',
-                Constant::ORDER_STATUS_COMPLETE => '已完成',
-                Constant::ORDER_STATUS_CLOSE => '已关闭',
-            ],
-            '3' => [
-                Constant::ORDER_STATUS_CREATED => '待付款',
-                Constant::ORDER_STATUS_PAID => '已付款',
-                Constant::ORDER_STATUS_PENDING => '等待电子券',
-                Constant::ORDER_STATUS_SHIPPED => '已发送电子券',
-                Constant::ORDER_STATUS_RECEIVED => '已使用',
-                Constant::ORDER_STATUS_COMPLETE => '已完成',
-                Constant::ORDER_STATUS_CLOSE => '已关闭',
-            ],
-        ],
-
-    ];
-
-    public $orderTypeList = [
-        Constant::ORDER_TYPE_REAL => '实物订单',
-        Constant::ORDER_TYPE_VIRTUAL => '虚拟物品订单',
-    ];
-    public $orderGroupList = [
-        Constant::ORDER_GROUP_NORMAL => '普通订单',
-        Constant::ORDER_GROUP_GROUPON => '团购订单',
-        Constant::ORDER_GROUP_FLASHSALE => '秒杀订单',
-    ];
 
     /**
      * @param $params
-     * @return array
+     * @return array|\Service
      * @throws \Exception
      */
     public function getList($params, $ispage = true)
@@ -175,127 +102,6 @@ class OrderService extends BaseService
         return $selector->findAll();
     }
 
-    /**
-     * @param $data
-     * @throws \Exception
-     */
-    public function saveOrder($data)
-    {
-        $variations = $data['variations'];
-        $variations = $variations ? json_decode($variations, true) : [];
-        if (empty($variations)) {
-            throw new \Exception('商品信息不能为空');
-        }
-        $variationList = \Db::table('ProductVariation')->rename('a')
-            ->join(['b' => 'Product'], 'a.product_id = b.product_id')
-            ->where(['a.variation_code' => ['in', array_column($variations, 'variation_code')]])
-            ->field(['b.product_id', 'a.variation_code', 'b.pic',
-                'b.product_name', 'b.category_id', 'a.rules_name', 'a.rules_value',
-                'b.product_weight', 'b.freight_id', 'a.stock'])
-            ->findAll();
-        $variationList = array_column($variationList, null, 'variation_code');
-        $pList = [];
-        $data['product_money'] = 0;
-        foreach ($variations as $v) {
-            if (!isset($variationList[$v['variation_code']])) {
-                throw new \Exception('商品信息有误');
-            }
-            $item = $variationList[$v['variation_code']];
-            if ($item['stock'] < $v['number']) {
-                throw new \Exception('商品库存不足，请确认');
-            }
-            $item['number'] = $v['number'];
-            if ($v['number'] == 0) {
-                continue;
-            }
-            $item['price'] = $v['price'];
-            $data['product_money'] += $item['number'] * $item['price'];
-            $pList[$v['variation_code']] = $item;
-        }
-        if (!empty($data['coupon_id'])) {
-            $this->useCoupon($data['coupon_id'], $pList);
-        }
-        $data['freight_money'] = $this->getFreightFee($pList);
-        $data['money'] = $data['product_money'] + $data['freight_money'] - $data['rate_money'];
-        if ($data['money'] < 0) {
-            throw new \Exception('订单金额小于0，订单创建失败～');
-        }
-        if (isset($data['order_id']) && $data['order_id']) {
-            \Db::table('Order')->where(['order_id' => $data['order_id']])->update($data);
-            $this->orderTrace('编辑', $data['order_id']);
-        } else {
-            $data['order_code'] = $this->generateCode();
-            $data['order_id'] = \Db::table('Order')->insert($data);
-            $this->orderTrace('创建', $data['order_id']);
-        }
-        foreach ($pList as $key => $v) {
-            unset($pList[$key]['product_weight']);
-            unset($pList[$key]['freight_id']);
-            unset($pList[$key]['stock']);
-            unset($pList[$key]['category_id']);
-            $pList[$key]['order_id'] = $data['order_id'];
-        }
-        $this->saveVariations($data, $pList);
-    }
-
-    public function saveVariations($order, $list)
-    {
-        $list = array_column($list, null, 'variation_code');
-        $variations = \Db::table('OrderVariation')
-            ->where(['order_id' => $order['order_id']])
-            ->findAll();
-        $variations = array_column($variations, null, 'variation_code');
-        $insertList = [];
-        $stockList = [];//增加库存
-        //更新
-        foreach ($list as $v) {
-            if (isset($variations[$v['variation_code']])) {
-                $variation = $variations[$v['variation_code']];
-                $stockList[$v['variation_code']] = $v['number'] - $variation['number'];
-                $v['status'] = 1;
-                \Db::table('OrderVariation')->where(['id' => $variation['id']])->update($v);
-            } else {
-                $v['order_id'] = $order['order_id'];
-                $stockList[$v['variation_code']] = $v['number'];
-                $insertList[] = $v;
-            }
-        }
-        //添加
-        if (count($insertList)) {
-            \Db::table('OrderVariation')->multiInsert($insertList);
-        }
-        //删除
-        foreach ($variations as $key => $v) {
-            if (!isset($list[$key])) {
-                $stockList[$v['variation_code']] = -$v['number'];
-                \Db::table('OrderVariation')->where(['id' => $v['id']])->update(['status' => 0]);
-            }
-        }
-        if ($order['order_group'] == 'product') {
-            foreach ($stockList as $code => $number) {
-                \Db::table('ProductVariation')
-                    ->where(['variation_code' => $code])
-                    ->decrease('stock', $number);
-            }
-        } else if ($order['order_group'] == 'groupon') {
-            $extra = json_decode($order['extra'], true);
-            foreach ($stockList as $code => $number) {
-                \Db::table('GrouponVariation')
-                    ->where(['go_id' => $extra['go_id']])
-                    ->where(['variation_code' => $code])
-                    ->decrease('stock', $number);
-            }
-        } else if ($order['order_group'] == 'flashsale') {
-            $extra = json_decode($order['extra'], true);
-            foreach ($stockList as $code => $number) {
-                \Db::table('FlashSale')
-                    ->where(['flash_id' => $extra['flash_id']])
-                    ->where(['variation_code' => $code])
-                    ->decrease('stock', $number);
-            }
-        }
-
-    }
 
     /**
      * @param $data
@@ -558,67 +364,6 @@ class OrderService extends BaseService
             }
         }
         return round($fee, 2);
-    }
-
-    /**
-     * 使用优惠券
-     * @param $coupon_id
-     * @param $variationList
-     * @throws \Exception
-     */
-    public function useCoupon($coupon_id, $variationList)
-    {
-        //优惠券使用
-        $coupon = \Db::table('CouponUser')->where(['id' => $coupon_id])->find();
-        if (!$coupon) {
-            throw new \Exception('用户优惠券不存在');
-        }
-        if ($coupon['status'] != 1) {
-            throw new \Exception('用户优惠券状态有误，请重新选择');
-        }
-        if ($coupon['expire_time'] <= time()) {
-            throw new \Exception('用户优惠券已过期，请重新选择');
-        }
-        $data['rate_money'] = $coupon['price'];
-        $used = 0;
-        if ($coupon['type'] == 2) {//品类券
-            $categoryIdList = $this->getChildIdList($coupon['relation_id'], 'ProductCategory', 'category_id');
-            $categoryIdList[] = $coupon['relation_id'];
-            $total = 0;
-            foreach ($variationList as $v) {
-                if (in_array($v['category_id'], $categoryIdList)) {
-                    $total += $v['price'] * $v['number'];
-                    $used = 1;
-                }
-            }
-            if ($total < $coupon['min_price']) {
-                throw new \Exception('优惠券不满足使用条件，请重新选择');
-            }
-        } else if ($coupon['type'] == 3) {//商品券
-            $total = 0;
-            foreach ($variationList as $v) {
-                if ($v['product_id'] == $coupon['relation_id']) {
-                    $total += $v['price'] * $v['number'];
-                    $used = 1;
-                }
-            }
-            if ($total < $coupon['min_price']) {
-                throw new \Exception('优惠券不满足使用条件，请重新选择');
-            }
-        } else {
-            $total = 0;
-            foreach ($variationList as $v) {
-                $total += $v['price'] * $v['number'];
-                $used = 1;
-            }
-            if ($total < $coupon['min_price']) {
-                throw new \Exception('优惠券不满足使用条件，请重新选择');
-            }
-        }
-        if ($used == 0) {
-            throw new \Exception('优惠券不满足使用条件，请重新选择');
-        }
-        \Db::table('CouponUser')->where(['id' => $coupon_id])->update(['status' => 2]);
     }
 
     //整单退款

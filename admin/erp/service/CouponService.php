@@ -4,17 +4,11 @@ namespace admin\erp\service;
 
 use admin\common\service\BaseService;
 
-class CouponService extends BaseService
+class CouponService extends \common\service\CouponService
 {
-    public $typeList = [
-        1 => '通用券',
-        2 => '品类券',
-        3 => '商品券'
-    ];
-
     /**
      * @param $params
-     * @return array
+     * @return array|\Service
      * @throws \Exception
      */
     public function getList($params, $ispage = true)

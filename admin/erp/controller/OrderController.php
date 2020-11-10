@@ -62,6 +62,8 @@ class OrderController extends BaseController
         if (\App::$request->isAjax() && \App::$request->isPost()) {
             try {
                 \Db::startTrans();
+                $params['add_type'] = 1;
+                $params['order_group'] = Constant::ORDER_GROUP_NORMAL;
                 $this->orderService->saveOrder($params);
                 \Db::commit();
                 return $this->success('保存成功');
@@ -183,6 +185,7 @@ class OrderController extends BaseController
             }
         }
     }
+
     /**
      * 收货/使用电子券
      * @throws \Exception
@@ -233,9 +236,9 @@ class OrderController extends BaseController
         $this->assign('operatorList', $operatorList);
         $this->assign('orderTypeList', $this->orderService->orderTypeList);
         $this->assign('orderGroupList', $this->orderService->orderGroupList);
-        if(!empty($order['coupon_id'])){
-            $coupon=\Db::table('CouponUser')->where(['id'=>$order['coupon_id']])->find();
-            $this->assign('coupon',$coupon);
+        if (!empty($order['coupon_id'])) {
+            $coupon = \Db::table('CouponUser')->where(['id' => $order['coupon_id']])->find();
+            $this->assign('coupon', $coupon);
         }
     }
 

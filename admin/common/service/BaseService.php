@@ -2,10 +2,7 @@
 
 namespace admin\common\Service;
 
-
-use component\WebService;
-
-class BaseService extends WebService
+class BaseService extends \Service
 {
     /**
      * @param int $parent_id

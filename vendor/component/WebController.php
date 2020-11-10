@@ -63,7 +63,7 @@ class WebController extends \Controller
     }
 
     /**
-     * @param WebService $service
+     * @param \Service $service
      * @return string
      */
     public function pagination($service)

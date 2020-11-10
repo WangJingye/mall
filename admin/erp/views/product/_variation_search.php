@@ -54,7 +54,7 @@
 
                 <?php foreach ($this->list as $v): ?>
                     <tr class="product-search-tr" style="cursor: pointer">
-                        <td><input type="checkbox" class="check-one" name="ids" value="<?= $v['id'] ?>"
+                        <td><input type="checkbox" class="check-one" name="ids" value="<?= $v['variation_code'] ?>"
                                    data-info='<?= json_encode($v, JSON_HEX_APOS) ?>'></td>
                         <td><?= $v['product_name'] ?></td>
                         <td><?= $v['variation_code'] ?></td>

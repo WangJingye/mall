@@ -8,9 +8,6 @@ class CartService extends BaseService
 {
     public function deleteCart($codes)
     {
-        \Db::table('Cart')
-            ->where(['user_id' => \App::$user['user_id']])
-            ->where(['variation_code'  => ['in', $codes]])
-            ->delete();
+
     }
 }
