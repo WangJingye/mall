@@ -2,7 +2,7 @@
 
 namespace admin\erp\service;
 
-use admin\extend\Constant;
+use common\helper\Constant;
 use common\extend\excel\SpreadExcel;
 
 class OrderService extends \common\service\OrderService

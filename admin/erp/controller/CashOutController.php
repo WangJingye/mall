@@ -4,7 +4,7 @@ namespace admin\erp\controller;
 
 use admin\common\controller\BaseController;
 use admin\erp\service\CashOutService;
-use admin\extend\Constant;
+use common\helper\Constant;
 
 class CashOutController extends BaseController
 {

@@ -49,7 +49,7 @@
                             <div><span>付款时间:</span><span><?= date('Y-m-d H:i:s', $this->order['pay_time']) ?></span>
                             </div>
                         <?php endif; ?>
-                        <?php if ($this->order['order_type'] == \admin\extend\Constant::ORDER_TYPE_REAL): ?>
+                        <?php if ($this->order['order_type'] == \common\helper\Constant::ORDER_TYPE_REAL): ?>
                             <?php if ($this->order['deliver_time']): ?>
                                 <div>
                                     <span>发货时间:</span><span><?= date('Y-m-d H:i:s', $this->order['deliver_time']) ?></span>
@@ -87,7 +87,7 @@
     <div class="product-info">
         <table class="table table-bordered list-table text-nowrap text-center">
             <tr>
-                <td>商品主图</td>
+                <td>商品缩略图</td>
                 <td>商品名称</td>
                 <td>规格</td>
                 <td>SKU编号</td>
@@ -101,7 +101,7 @@
                             <img src="<?= \App::$urlManager->staticUrl($v['pic']) ?>" style="width: 40px;height: 40px;">
                         <?php endif; ?>
                     </td>
-                    <td><?= $v['product_name'] ?></td>
+                    <td class="text-wrap text-break" style="max-width: 200px"><?= $v['product_name'] ?></td>
                     <td><?= $v['rules_value'] ? $v['rules_value'] : '<i style="color: #666">无规格</i>' ?></td>
                     <td><?= $v['variation_code'] ?></td>
                     <td><?= $v['price'] ?></td>
@@ -119,7 +119,7 @@
                     <td colspan="7" class="text-right">
                         <div><span>商品总价:</span><span style="color:#dc3545"><?= $this->order['product_money'] ?></span>
                         </div>
-                        <?php if ($this->order['order_type'] == \admin\extend\Constant::ORDER_TYPE_REAL): ?>
+                        <?php if ($this->order['order_type'] == \common\helper\Constant::ORDER_TYPE_REAL): ?>
                             <div><span>运费:</span><span style="color:#dc3545"><?= $this->order['freight_money'] ?></span>
                             </div>
                         <?php endif; ?>
@@ -134,7 +134,7 @@
             </tfooter>
         </table>
     </div>
-    <?php if ($this->order['order_type'] == \admin\extend\Constant::ORDER_TYPE_REAL): ?>
+    <?php if ($this->order['order_type'] == \common\helper\Constant::ORDER_TYPE_REAL): ?>
         <div class="detail-title">物流信息</div>
         <div class="transport-info">
             <table class="table table-bordered list-table text-nowrap text-center">
@@ -142,7 +142,7 @@
                     <td>物流方式</td>
                     <td>物流单号</td>
                 </tr>
-                <?php if ($this->order['status'] >= \admin\extend\Constant::ORDER_STATUS_SHIPPED && $this->transport): ?>
+                <?php if ($this->order['status'] >= \common\helper\Constant::ORDER_STATUS_SHIPPED && $this->transport): ?>
                     <tr>
                         <td><?= $this->transport['transport_name'] ?></td>
                         <td><?= $this->order['transport_order'] ?></td>

@@ -3,7 +3,7 @@
 namespace console\home\controller;
 
 use admin\erp\service\OrderService;
-use admin\extend\Constant;
+use common\helper\Constant;
 use component\ConsoleController;
 
 class OrderController extends ConsoleController

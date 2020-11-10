@@ -155,11 +155,10 @@
                                        value="<?= $product['freight_id'] ?>">
                                 <?= $v['product_id'] ?>
                             </td>
-                            <td><?= $v['product_name'] ?></td>
+                            <td class="text-wrap text-break" style="min-width: 200px"><?= $v['product_name'] ?></td>
                             <td><?= $v['variation_code'] ?></td>
                             <td><?= $v['rules_value'] ?></td>
-                            <td><input type="number" class="form-control number calc-price" value="<?= $v['number'] ?>">
-                            </td>
+                            <td><input type="number" class="form-control number calc-price" value="<?= $v['number'] ?>"></td>
                             <td><input type="number" class="form-control price calc-price" value="<?= $v['price'] ?>">
                             </td>
                             <td class="calc-total"><?= round($v['number'] * $v['price'], 2) ?></td>

@@ -2,8 +2,6 @@
 
 namespace common\service;
 
-use admin\common\service\BaseService;
-
 class CouponService extends BaseService
 {
     public $typeList = [

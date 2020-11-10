@@ -81,7 +81,7 @@
                            href="<?= \App::$urlManager->createUrl('erp/order/detail', ['order_id' => $v['order_id']]) ?>">
                             <i class="glyphicon glyphicon-eye-open"></i> 查看
                         </a>
-                        <?php if ($v['status'] != \admin\extend\Constant::ORDER_STATUS_CLOSE): ?>
+                        <?php if ($v['status'] != \common\helper\Constant::ORDER_STATUS_CLOSE): ?>
                             <a class="btn btn-primary btn-sm"
                                href="<?= \App::$urlManager->createUrl('erp/order/edit', ['order_id' => $v['order_id']]) ?>">
                                 <i class="glyphicon glyphicon-pencil"></i> 编辑
@@ -93,19 +93,19 @@
                         <?php endif; ?>
                     </div>
                     <div style="margin-top: 0.2rem">
-                        <?php if ($v['status'] == \admin\extend\Constant::ORDER_STATUS_CREATED): ?>
+                        <?php if ($v['status'] == \common\helper\Constant::ORDER_STATUS_CREATED): ?>
                             <div class="btn btn-outline-danger btn-sm pay-btn" data-id="<?= $v['order_id'] ?>">
                                 <i class="iconfont icon-pay"></i> 收款
                             </div>
                             <div class="btn btn-outline-danger btn-sm close-btn" data-id="<?= $v['order_id'] ?>">
                                 <i class="glyphicon glyphicon-remove"></i> 关闭
                             </div>
-                        <?php elseif ($v['status'] == \admin\extend\Constant::ORDER_STATUS_PENDING): ?>
+                        <?php elseif ($v['status'] == \common\helper\Constant::ORDER_STATUS_PENDING): ?>
                             <div class="btn btn-outline-primary btn-sm ship-btn" data-id="<?= $v['order_id'] ?>">
                                 <i class="glyphicon glyphicon-send"></i> 订单发货
                             </div>
-                        <?php elseif ($v['status'] == \admin\extend\Constant::ORDER_STATUS_SHIPPED): ?>
-                            <?php if ($v['order_type'] == \admin\extend\Constant::ORDER_TYPE_VIRTUAL): ?>
+                        <?php elseif ($v['status'] == \common\helper\Constant::ORDER_STATUS_SHIPPED): ?>
+                            <?php if ($v['order_type'] == \common\helper\Constant::ORDER_TYPE_VIRTUAL): ?>
                                 <div class="btn btn-outline-danger btn-sm confirm-virtual-btn"
                                      data-id="<?= $v['order_id'] ?>">
                                     <i class="glyphicon glyphicon-ok"></i> 确认使用

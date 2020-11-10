@@ -2,7 +2,7 @@
 
 namespace api\v1\controller;
 
-use admin\extend\Constant;
+use common\helper\Constant;
 use api\v1\service\UserService;
 
 class PublicController extends BaseController

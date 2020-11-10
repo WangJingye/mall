@@ -6,7 +6,7 @@ use admin\common\controller\BaseController;
 use admin\erp\service\OrderService;
 use admin\erp\service\ProductService;
 use admin\erp\service\UserService;
-use admin\extend\Constant;
+use common\helper\Constant;
 
 class UserController extends BaseController
 {

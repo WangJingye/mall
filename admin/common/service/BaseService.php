@@ -2,7 +2,7 @@
 
 namespace admin\common\Service;
 
-class BaseService extends \Service
+class BaseService extends \common\service\BaseService
 {
     /**
      * @param int $parent_id

@@ -3,7 +3,7 @@
 namespace admin\erp\service;
 
 use admin\common\service\BaseService;
-use admin\extend\Constant;
+use common\helper\Constant;
 
 class SpreadService extends BaseService
 {

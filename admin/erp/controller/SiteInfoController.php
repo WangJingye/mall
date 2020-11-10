@@ -3,7 +3,7 @@
 namespace admin\erp\controller;
 
 use admin\common\controller\BaseController;
-use admin\extend\Constant;
+use common\helper\Constant;
 
 class SiteInfoController extends BaseController
 {

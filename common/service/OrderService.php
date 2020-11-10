@@ -2,9 +2,9 @@
 
 namespace common\service;
 
-use admin\extend\Constant;
+use common\helper\Constant;
 
-class OrderService extends \Service
+class OrderService extends BaseService
 {
 
     public $statusList = [

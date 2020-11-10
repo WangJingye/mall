@@ -91,6 +91,7 @@ class AddressController extends BaseController
         } else {
             \Db::table('UserAddress')->insert($params);
         }
+        return $this->success('success');
     }
 
 }
