@@ -92,7 +92,7 @@
                     <?php foreach ($this->variationList as $v): ?>
                         <tr class="data-tr">
                             <td>
-                                <input type="hidden" class="variation-id" value="<?= $v['variation_id'] ?>">
+                                <input type="hidden" class="variation-id" value="<?= $v['id'] ?>">
                                 <?= $v['variation_code'] ?>
                             </td>
                             <td><?= $v['rules_value'] !== '' ? $v['rules_value'] : '<i style="color: #666">无规格</i>' ?></td>
