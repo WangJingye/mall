@@ -91,7 +91,6 @@ class OrderService extends \Service
         $order = [
             'user_id' => $params['user_id'],
             'order_group' => $params['order_group'],
-            'order_title' => $params['order_title'],
             'product_money' => 0,
             'rate_money' => 0,
             'freight_money' => 0,
@@ -159,6 +158,8 @@ class OrderService extends \Service
         }
         if (empty($params['order_title'])) {
             $order['order_title'] = $this->generateTitle($order['order_group']);
+        } else {
+            $order['order_title'] = $params['order_title'];
         }
         $variationList = array_column($variationList, null, 'variation_code');
         $productList = \Db::table('Product')

@@ -24,8 +24,14 @@ class OrderController extends BaseController
         parent::init();
     }
 
+
     public function getPreOrderAction()
     {
+        $typeList = [
+            'product' => 1,
+            'groupon' => 2,
+            'flashsale' => 3
+        ];
         $params = \App::$request->params->toArray();
         $variations = !empty($params['variations']) ? $params['variations'] : [];
         $type = !empty($params['type']) ? $params['type'] : 'product';
@@ -56,7 +62,6 @@ class OrderController extends BaseController
                 ->field(['product_id', 'variation_code', 'stock', 'price', 'rules_name', 'rules_value'])
                 ->where(['variation_code' => ['in', array_keys($variations)]])
                 ->findAll();
-
             $productIds = array_column($vs, 'product_id');
         }
         $ps = \Db::table('Product')
@@ -117,7 +122,7 @@ class OrderController extends BaseController
         $sum['money'] = $sum['product_money'] + $sum['freight_money'] - $sum['rate_money'];
         $sum['money'] = number_format($sum['money'], 2, '.', '');
         $res = [
-            'order_group' => $type,
+            'order_group' => $typeList[$type],
             'sum' => $sum,
             'list' => $list,
             'coupon_number' => $couponNumber,
@@ -133,6 +138,7 @@ class OrderController extends BaseController
         $params = \App::$request->params->toArray();
         $params['add_type'] = 2;
         $params['user_id'] = \App::$user['user_id'];
-        return $this->orderService->saveOrder($params);
+        $this->orderService->saveOrder($params);
+        return $this->success('success');
     }
 }
