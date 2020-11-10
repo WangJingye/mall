@@ -1,7 +1,7 @@
 <?php
 $runtimeConfig = [];
-if (file_exists(COMMON_PATH . 'config/config.php')) {
-    $runtimeConfig = include COMMON_PATH . 'config/config.php';
+if (file_exists(APP_PATH . 'common/config/config.php')) {
+    $runtimeConfig = include APP_PATH . 'common/config/config.php';
 }
 $configs = [
     'action_white_list' => [

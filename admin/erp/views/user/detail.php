@@ -35,7 +35,8 @@
         <div class="base-info-left">
             <div>
                 <?php if ($this->model['avatar']): ?>
-                    <img src="<?= \App::$urlManager->staticUrl($this->model['avatar']) ?>" style="width: 5rem;height:5rem">
+                    <img src="<?= \App::$urlManager->staticUrl($this->model['avatar']) ?>"
+                         style="width: 5rem;height:5rem">
                 <?php endif; ?>
             </div>
             <div class="text-center" style="margin-top: 0.5rem"><?= $this->model['nickname'] ?></div>
@@ -78,10 +79,11 @@
                 <tr>
                     <td><?= $v['receiver_name'] ?></td>
                     <td><?= $v['receiver_mobile'] ?></td>
-                    <td><?= $v['detail_address'] ?></td>
+                    <td><?= $v['address_area'] . ' ' . $v['detail_address'] ?></td>
                     <td><?= $v['postal'] ?></td>
-                    <td class="set-default"><input type="radio" name="is_default" class="is_default"
-                                                   value="<?= $v['address_id'] ?>" <?= $v['is_default'] == 1 ? 'checked' : '' ?>>
+                    <td class="set-default">
+                        <input type="radio" name="is_default" class="is_default"
+                               value="<?= $v['address_id'] ?>" <?= $v['is_default'] == 1 ? 'checked' : '' ?>>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -128,7 +130,7 @@
                 </tr>
             <?php elseif (count($this->orderList) == 5): ?>
                 <tr>
-                    <td colspan="18" class="show-more" data-id="<?= $this->model['user_id'] ?>"`
+                    <td colspan="18" class="show-more" data-id="<?= $this->model['user_id'] ?>" `
                         data-page="2">
                         点击显示更多
                     </td>

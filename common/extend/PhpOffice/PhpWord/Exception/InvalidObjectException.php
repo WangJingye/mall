@@ -20,6 +20,6 @@ namespace common\extend\PhpOffice\PhpWord\Exception;
 /**
  * Exception used for when an image is not found
  */
-class InvalidObjectException extends Exception
+class InvalidObjectException extends \Exception
 {
 }

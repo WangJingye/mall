@@ -20,6 +20,6 @@ namespace common\extend\PhpOffice\PhpWord\Exception;
 /**
  * Exception used for when an image type is unsupported
  */
-class UnsupportedImageTypeException extends Exception
+class UnsupportedImageTypeException extends \Exception
 {
 }

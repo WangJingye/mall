@@ -221,11 +221,8 @@ class OrderService extends BaseService
         if ($data['money'] < 0) {
             throw new \Exception('订单金额小于0，订单创建失败～');
         }
-        $orderVariationList = [];
         if (isset($data['order_id']) && $data['order_id']) {
             \Db::table('Order')->where(['order_id' => $data['order_id']])->update($data);
-            $orderVariationList = \Db::table('OrderVariation')->where(['order_id' => $data['order_id']])->findAll();
-            $orderVariationList = array_column($orderVariationList, null, 'variation_id');
             $this->orderTrace('编辑', $data['order_id']);
         } else {
             $data['order_code'] = $this->generateCode();
@@ -239,16 +236,28 @@ class OrderService extends BaseService
             unset($pList[$key]['category_id']);
             $pList[$key]['order_id'] = $data['order_id'];
         }
+        $this->saveVariations($data, $pList);
+    }
+
+    public function saveVariations($order, $list)
+    {
+        $list = array_column($list, null, 'variation_code');
+        $variations = \Db::table('OrderVariation')
+            ->where(['order_id' => $order['order_id']])
+            ->findAll();
+        $variations = array_column($variations, null, 'variation_code');
         $insertList = [];
         $stockList = [];//增加库存
         //更新
-        foreach ($pList as $key => $v) {
-            if (isset($orderVariationList[$key])) {
-                $orderVariation = $orderVariationList[$key];
-                $stockList[$v['variation_id']] = $v['number'] - $orderVariation['number'];
-                \Db::table('OrderVariation')->where(['id' => $orderVariation['id']])->update($v);
+        foreach ($list as $v) {
+            if (isset($variations[$v['variation_code']])) {
+                $variation = $variations[$v['variation_code']];
+                $stockList[$v['variation_code']] = $v['number'] - $variation['number'];
+                $v['status'] = 1;
+                \Db::table('OrderVariation')->where(['id' => $variation['id']])->update($v);
             } else {
-                $stockList[$v['variation_id']] = $v['number'];
+                $v['order_id'] = $order['order_id'];
+                $stockList[$v['variation_code']] = $v['number'];
                 $insertList[] = $v;
             }
         }
@@ -257,15 +266,36 @@ class OrderService extends BaseService
             \Db::table('OrderVariation')->multiInsert($insertList);
         }
         //删除
-        foreach ($orderVariationList as $key => $v) {
-            if (!isset($pList[$key])) {
-                $stockList[$v['variation_id']] = -$v['number'];
+        foreach ($variations as $key => $v) {
+            if (!isset($list[$key])) {
+                $stockList[$v['variation_code']] = -$v['number'];
                 \Db::table('OrderVariation')->where(['id' => $v['id']])->update(['status' => 0]);
             }
         }
-        foreach ($stockList as $id => $number) {
-            \Db::table('ProductVariation')->where(['variation_id' => $id])->decrease('stock', $number);
+        if ($order['order_group'] == 'product') {
+            foreach ($stockList as $code => $number) {
+                \Db::table('ProductVariation')
+                    ->where(['variation_code' => $code])
+                    ->decrease('stock', $number);
+            }
+        } else if ($order['order_group'] == 'groupon') {
+            $extra = json_decode($order['extra'], true);
+            foreach ($stockList as $code => $number) {
+                \Db::table('GrouponVariation')
+                    ->where(['go_id' => $extra['go_id']])
+                    ->where(['variation_code' => $code])
+                    ->decrease('stock', $number);
+            }
+        } else if ($order['order_group'] == 'flashsale') {
+            $extra = json_decode($order['extra'], true);
+            foreach ($stockList as $code => $number) {
+                \Db::table('FlashSale')
+                    ->where(['flash_id' => $extra['flash_id']])
+                    ->where(['variation_code' => $code])
+                    ->decrease('stock', $number);
+            }
         }
+
     }
 
     /**

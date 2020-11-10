@@ -11,6 +11,7 @@ class BaseController extends RestController
      */
     public function init()
     {
+        file_put_contents(\App::$config->apiLog, date('Y-m-d H:i:s ') . \App::$request->uri . ' ' . json_encode(\App::$request->params->toArray()) . PHP_EOL, FILE_APPEND);
         $this->getUserByToken();
         parent::init();
     }

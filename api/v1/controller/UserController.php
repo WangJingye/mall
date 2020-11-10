@@ -17,11 +17,11 @@ class UserController extends BaseController
 
     public function addressAction()
     {
-        $params = \App::$request->params;
+        $params = \App::$request->params->toArray();
         $selector = \Db::table('UserAddress')
             ->where(['user_id' => \App::$user['user_id']]);
-        if (!empty($params['address_id'])) {
-            $selector->where(['address_id' => $params['address_id']]);
+        if (!empty($params['id'])) {
+            $selector->where(['address_id' => $params['id']]);
         } else {
             $selector->where(['is_default' => 1]);
         }
@@ -37,57 +37,34 @@ class UserController extends BaseController
         return $this->success('success', $data);
     }
 
-    public function setDefaultAddressAction()
+    public function cartAction()
     {
-        $params = \App::$request->params;
-        if (empty($params['id'])) {
-            throw new \Exception('参数有误');
-        }
-        $obj = \Db::table('UserAddress')
+        $cartList = \Db::table('Cart')
             ->where(['user_id' => \App::$user['user_id']])
-            ->where(['address_id' => $params['id']])
-            ->find();
-        if (!$obj) {
-            throw new \Exception('参数有误');
-        }
-        \Db::table('UserAddress')
-            ->where(['user_id' => \App::$user['user_id']])
-            ->update(['is_default' => 0]);
-        \Db::table('UserAddress')
-            ->where(['address_id' => $params['id']])
-            ->update(['is_default' => 1]);
-        return $this->success('success');
-    }
-
-    public function deleteAddressAction()
-    {
-        $params = \App::$request->params;
-        if (empty($params['id'])) {
-            throw new \Exception('参数有误');
-        }
-        $obj = \Db::table('UserAddress')
-            ->where(['user_id' => \App::$user['user_id']])
-            ->where(['address_id' => $params['id']])
-            ->find();
-        if (!$obj) {
-            throw new \Exception('参数有误');
-        }
-        \Db::table('UserAddress')
-            ->where(['user_id' => \App::$user['user_id']])
-            ->where(['address_id' => $params['id']])
-            ->delete();
+            ->findAll();
+        $variations = \Db::table('ProductVariation')
+            ->where(['variation_code' => ['in', array_column($cartList, 'variation_code')]])
+            ->findAll();
+        $products = \Db::table('Product')
+            ->where(['product_id' => ['in', array_column($variations, 'product_id')]])
+            ->findAll();
+        $variations = array_column($variations, null, 'variation_code');
+        $products = array_column($products, null, 'product_id');
         $res = [];
-        if ($obj['is_default']) {
-            $other = \Db::table('UserAddress')
-                ->where(['user_id' => \App::$user['user_id']])
-                ->find();
-            if ($other) {
-                \Db::table('UserAddress')
-                    ->where(['user_id' => \App::$user['user_id']])
-                    ->where(['address_id' => $other['address_id']])
-                    ->update(['is_default' => 1]);
-                $res['default_id'] = $other['address_id'];
-            }
+        foreach ($cartList as $v) {
+            $variation = $variations[$v['variation_code']];
+            $product = $products[$variation['product_id']];
+            $arr = [];
+            $arr['product_id'] = $product['product_id'];
+            $arr['variation_code'] = $v['variation_code'];
+            $arr['product_name'] = $product['product_name'];
+            $arr['pic'] = $product['pic'];
+            $arr['rules'] = $variation['rules_value'];
+            $arr['price'] = $variation['price'];
+            $arr['stock'] = $variation['stock'];
+            $arr['number'] = min($v['number'],$variation['stock']);
+            $arr['status'] = $product['status'];
+            $res[] = $arr;
         }
         return $this->success('success', $res);
     }

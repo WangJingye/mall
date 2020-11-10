@@ -20,7 +20,7 @@ namespace common\extend\PhpOffice\PhpWord\Exception;
 /**
  * @since 0.12.0
  */
-final class CopyFileException extends Exception
+final class CopyFileException extends \Exception
 {
     /**
      * @param string $source The fully qualified source file name

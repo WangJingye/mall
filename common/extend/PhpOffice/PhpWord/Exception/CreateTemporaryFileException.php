@@ -20,7 +20,7 @@ namespace common\extend\PhpOffice\PhpWord\Exception;
 /**
  * @since 0.12.0
  */
-final class CreateTemporaryFileException extends Exception
+final class CreateTemporaryFileException extends \Exception
 {
     /**
      * @param int $code The user defined exception code

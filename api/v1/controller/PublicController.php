@@ -84,6 +84,8 @@ class PublicController extends BaseController
         $list = \Db::table('Product')->where(['status' => 1])->limit(6)->findAll();
         $list1 = $list;
         $list = array_merge($list1, $list);
+        $list1 = array_reverse($list1);
+        $list = array_merge($list1, $list);
         $res['modules'] = [
             ['title' => '每日好货', 'show_more' => 0, 'list' => $list],
             ['title' => '为您推荐', 'show_more' => 1, 'list' => $list],
