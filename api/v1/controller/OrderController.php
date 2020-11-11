@@ -5,6 +5,8 @@ namespace api\v1\controller;
 use admin\erp\service\CouponService;
 use api\v1\service\CartService;
 use common\service\OrderService;
+use common\service\PayService;
+use component\Util;
 
 class OrderController extends BaseController
 {
@@ -15,12 +17,15 @@ class OrderController extends BaseController
     private $cartService;
     /** @var OrderService */
     private $orderService;
+    /** @var PayService */
+    private $payService;
 
     public function init()
     {
         $this->couponService = new  CouponService();
         $this->cartService = new  CartService();
         $this->orderService = new  OrderService();
+        $this->payService = new  PayService();
         parent::init();
     }
 
@@ -138,7 +143,47 @@ class OrderController extends BaseController
         $params = \App::$request->params->toArray();
         $params['add_type'] = 2;
         $params['user_id'] = \App::$user['user_id'];
-        $this->orderService->saveOrder($params);
-        return $this->success('success');
+        $order = $this->orderService->saveOrder($params);
+        try {
+            $res = $this->payService->do($order);
+            return $this->success('success', $res);
+        } catch (\Exception $e) {
+            return $this->success('调用支付失败：' . $e->getMessage());
+        }
+    }
+
+    public function payAction()
+    {
+        $params = \App::$request->params->toArray();
+        if (empty($params['order_code'])) {
+            throw new \Exception('参数有误');
+        }
+        $order = \Db::table('Order')->where(['order_code' => $params['order_code']])->find();
+        if (!$order) {
+            throw new \Exception('订单不存在');
+        }
+        return $this->success('success', $this->payService->do($order));
+    }
+
+    /**
+     * 微信支付回调
+     */
+    public function notifyAction()
+    {
+        try {
+            $xml = file_get_contents('php://input');
+            file_put_contents('/tmp/123.log', date('Y-m-d H:i:s ') . $xml . PHP_EOL, FILE_APPEND);
+            $this->payService->notify($xml);
+            $res = [
+                'return_code' => 'SUCCESS',
+                'return_msg' => 'OK'
+            ];
+        } catch (\Exception $e) {
+            $res = [
+                'return_code' => 'FAIL',
+                'return_msg' => $e->getMessage()
+            ];
+        }
+        exit(Util::array2xml($res));
     }
 }

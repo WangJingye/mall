@@ -30,4 +30,5 @@ class Constant
     const USER_LEVEL_STATUS_ACCEPT = 2;
     const USER_LEVEL_STATUS_REJECT = 3;
 
+
 }

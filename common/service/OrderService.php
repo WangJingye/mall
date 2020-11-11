@@ -240,6 +240,7 @@ class OrderService extends BaseService
                 ->where(['variation_code' => ['in', array_column($dataList, 'variation_code')]])
                 ->delete();
         }
+        return $order;
     }
 
     public function saveVariations($order, $list)
@@ -329,18 +330,23 @@ class OrderService extends BaseService
      * 订单日志
      * @param $detail
      * @param $params
-     * @param int $addType
+     * @param int $userType
      * @throws \Exception
      */
-    public function orderTrace($detail, $orderId, $addType = 1)
+    public function orderTrace($detail, $orderId, $userType = 1)
     {
         if (empty($orderId)) {
             return;
         }
+        if ($userType == 1) {
+            $userId = \App::$user ? \App::$user['admin_id'] : 1;
+        } else {
+            $userId = \App::$user['user_id'];
+        }
         $data = [
             'order_id' => $orderId,
-            'create_userid' => $addType == 1 ? \App::$user['admin_id'] : \App::$user['user_id'],
-            'user_type' => $addType,
+            'create_userid' => $userId,
+            'user_type' => $userType,
             'detail' => $detail,
         ];
         \Db::table('OrderTrace')->insert($data);
