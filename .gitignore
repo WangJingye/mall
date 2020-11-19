@@ -7,3 +7,4 @@ common/config/redis.php
 public/index-local.php
 common/config/elasticsearch.php
 vendor
+composer.lock
