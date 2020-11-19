@@ -56,13 +56,25 @@ class Elasticsearch
         return $this->elasticsearch->indices()->exists($params);
     }
 
-    public function existMapping($index, $type)
+    public function existMapping($type = 'product', $index = 'mall')
     {
         $params = [
             'index' => $index, //索引名称
             'type' => $type, //索引名称
         ];
         return $this->elasticsearch->indices()->existsType($params);
+    }
+
+    public function existsDoc($id = 1, $type = 'product', $index = 'mall')
+    {
+        $params = [
+            'index' => $index,
+            'type' => $type,
+            'id' => $id
+        ];
+
+        $response = $this->elasticsearch->exists($params);
+        return $response;
     }
 
 
@@ -106,30 +118,58 @@ class Elasticsearch
         }
     }
 
-    public function deleteProduct()
+    public function deleteMapping($type = 'product', $index = 'mall')
     {
-        if ($this->existMapping('mall', 'product')) {
+        if ($this->existMapping($type, $index)) {
             $params = [
-                'index' => 'mall',
-                'type' => 'product'
+                'index' => $index,
+                'type' => $type
             ];
             $this->elasticsearch->indices()->deleteMapping($params);
         }
     }
 
-    public function put($type, $data)
+    public function save($data, $type = 'product')
     {
         $params = [
             'index' => 'mall',
             'type' => $type,
+            'id' => $data['product_id'],
             'body' => [
                 'product_id' => $data['product_id'],
                 'product_name' => $data['product_name'],
                 'product_sub_name' => $data['product_sub_name'],
                 'category_name' => $data['category_name'],
-                'brand' => $data['brand'],
+                'brand' => $data['brand_name'],
             ]
         ];
-        $this->elasticsearch->index($params);
+        if (!Elasticsearch::instance()->existsDoc($data['product_id'])) {
+            return $this->elasticsearch->index($params);
+        } else {
+            return $this->elasticsearch->update($params);
+        }
+    }
+
+    public function delete($id, $type = 'product', $index = 'mall')
+    {
+        if (!$this->existsDoc($id)) {
+            return true;
+        }
+        $params = [
+            'index' => $index,
+            'type' => $type,
+            'id' => $id
+        ];
+
+        return $this->elasticsearch->delete($params);
+    }
+
+    public function getMapping($index, $type)
+    {
+        $params = [
+            'index' => $index,
+            'type' => $type
+        ];
+        return $this->elasticsearch->indices()->getMapping($params);
     }
 }

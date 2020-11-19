@@ -211,8 +211,8 @@ class ProductService extends BaseService
             }
         }
         $brand = \Db::table('Brand')->where(['brand_id' => $data['brand_id']])->find();
-        $data['brand'] = $brand['brand_name'];
-        Elasticsearch::instance()->put('product', $data);
+        $data['brand_name'] = $brand['brand_name'];
+        Elasticsearch::instance()->save($data);
     }
 
     /**
