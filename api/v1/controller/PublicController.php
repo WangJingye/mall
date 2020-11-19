@@ -2,8 +2,8 @@
 
 namespace api\v1\controller;
 
-use common\helper\Constant;
 use api\v1\service\UserService;
+use common\helper\Constant;
 
 class PublicController extends BaseController
 {
@@ -20,7 +20,8 @@ class PublicController extends BaseController
     {
         try {
             $params = \App::$request->params->toArray();
-            if (empty($params['openid'])) {
+            $header = \App::$request->header;
+            if (empty($header['identity'])) {
                 $checkList = [
                     'telephone' => '手机号不能为空',
                     'nickname' => '昵称不能为空',
@@ -32,11 +33,13 @@ class PublicController extends BaseController
                         throw new \Exception($message);
                     }
                 }
+            } else {
+                $params['openid'] = $header['identity'];
             }
             $res = $this->userService->getUserInfo($params);
-            return $this->success($res);
+            return $this->success('success', $res);
         } catch (\Exception $e) {
-            return $this->error($e);
+            return $this->error($e->getMessage());
         }
     }
 
@@ -215,6 +218,7 @@ class PublicController extends BaseController
             'sub_title' => $product['product_sub_name'],
             'order_type' => $product['product_type'],
             'order_group' => Constant::ORDER_GROUP_NORMAL,
+            'pic' => $product['pic'],
             'price' => $product['price'],
             'detail' => $product['detail'],
             'product_params' => $extra['product_params'],
@@ -232,11 +236,53 @@ class PublicController extends BaseController
             $arr['variation_code'] = $v['variation_code'];
             $arr['rules_value'] = $v['rules_value'];
             $arr['stock'] = $v['stock'];
+            $arr['pic'] = $v['pic'];
             $arr['price'] = $v['price'];
             $arr['product_price'] = $v['market_price'];
             $list[] = $arr;
         }
         $res['list'] = $list;
         return $res;
+    }
+
+    public function uploadAction()
+    {
+        if (empty($_FILES['file'])) {
+            throw new \Exception('未选择上传文件');
+        }
+        $pic = $this->parseFileOrUrl('file', 'v1/comment');
+        return $this->success('success', ['pic' => $pic]);
+    }
+
+    public function categoryAction()
+    {
+        $categories = \Db::table('ProductCategory')
+            ->field(['category_id', 'category_name', 'pic', 'parent_id'])
+            ->where(['status' => 1])->findAll();
+        $categoryList = [];
+        foreach ($categories as $v) {
+            $categoryList[$v['parent_id']][] = $v;
+        }
+        return $this->success('success', $categoryList);
+    }
+
+    public function searchAction()
+    {
+        $params = \App::$request->params->toArray();
+        $selector = \Db::table('Product');
+        if (!empty($params['content'])) {
+            $selector->where(['category_id' => $params['content']]);
+        }
+        $page = 1;
+        if (!empty($params['page'])) {
+            $page = $params['page'];
+        }
+        $pageSize = 10;
+        $total = $selector->count();
+        $totalPage = (int)ceil($total / $pageSize);
+        $page = min($page, $totalPage);
+        $page = max($page, 1);
+        $list = $selector->limit((($page - 1) * $pageSize) . ',' . $pageSize)->findAll();
+        return $this->success('success', $list);
     }
 }

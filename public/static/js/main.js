@@ -55,7 +55,7 @@ $(function () {
         min: jQuery.validator.format('请输入不小于 {0} 的数值')
     });
 
-    $('.fileinput-box-list').on('change', '.fileinput-input', function () {
+    $('body').on('change', '.fileinput-input', function () {
         var $this = $(this);
         var box = $this.parents('.fileinput-box');
         box.find('input[type=hidden]').remove();

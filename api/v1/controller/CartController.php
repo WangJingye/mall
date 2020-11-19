@@ -64,7 +64,10 @@ class CartController extends BaseController
         if (!$obj) {
             throw new \Exception('参数有误');
         }
-        $this->cartService->deleteCart($codes);
+        \Db::table('Cart')
+            ->where(['user_id' => \App::$user['user_id']])
+            ->where(['variation_code' => ['in', $codes]])
+            ->delete();
         return $this->success('success');
     }
 
@@ -89,6 +92,46 @@ class CartController extends BaseController
             \Db::table('Cart')->where(['user_id' => \App::$user['user_id']])
                 ->where(['variation_code' => $params['variation_code']])
                 ->update(['number' => $params['number']]);
+        }
+        return $this->success('success');
+    }
+
+    public function addByOrderAction()
+    {
+        $params = \App::$request->params->toArray();
+        if (empty($params['order_code'])) {
+            throw new \Exception('参数有误');
+        }
+        $order = \Db::table('Order')
+            ->where(['user_id' => \App::$user['user_id']])
+            ->where(['order_code' => $params['order_code']])
+            ->find();
+        if (!$order) {
+            throw new \Exception('订单已删除');
+        }
+        $variations = \Db::table('OrderVariation')
+            ->field(['variation_code', 'number'])
+            ->where(['order_id' => $order['order_id']])
+            ->findAll();
+        $cartList = \Db::table('Cart')
+            ->where(['variation_code' => ['in', array_column($variations, 'variation_code')]])
+            ->where(['user_id' => \App::$user['user_id']])
+            ->findAll();
+        $cartList = array_column($cartList, null, 'variation_code');
+        $list = [];
+        foreach ($variations as $v) {
+            if (isset($cartList[$v['variation_code']])) {
+                continue;
+            }
+            $data = [
+                'user_id' => \App::$user['user_id'],
+                'number' => $v['number'],
+                'variation_code' => $v['variation_code']
+            ];
+            $list[] = $data;
+        }
+        if (count($list)) {
+            \Db::table('Cart')->multiInsert($list);
         }
         return $this->success('success');
     }

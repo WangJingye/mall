@@ -351,4 +351,29 @@ class OrderService extends BaseService
         ];
         \Db::table('OrderTrace')->insert($data);
     }
+
+    public function setOrderStatus($data, $from, $to)
+    {
+        if (empty($data['order_code'])) {
+            return ['success' => false, 'message' => '参数有误'];
+        }
+        $order = \Db::table('Order')
+            ->where(['user_id' => \App::$user['user_id']])
+            ->where(['order_code' => $data['order_code']])
+            ->find();
+        if (!$order) {
+            return ['success' => false, 'message' => '订单已删除'];
+        }
+        if ($order['status'] == $to) {
+            return ['success' => true, 'message' => '成功'];
+        }
+        if ($order['status'] != $from) {
+            return ['success' => false, 'message' => '订单状态有误，请确认～'];
+        }
+        \Db::table('Order')
+            ->where(['user_id' => \App::$user['user_id']])
+            ->where(['order_code' => $order['order_code']])
+            ->update(['status' => $to]);
+        return ['success' => true, 'message' => '成功'];
+    }
 }

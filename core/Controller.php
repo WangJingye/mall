@@ -119,7 +119,7 @@ class Controller extends ObjectAccess
      * @return string
      * @throws Exception
      */
-    public function parseFileOrUrl($key, $path = '/')
+    public function parseFileOrUrl($key, $path = '/', $ret = 'string')
     {
         $res = [];
         //如果是common目录下的文件需要移动到对应目录
@@ -127,7 +127,6 @@ class Controller extends ObjectAccess
             if (!is_array($urlList)) {
                 $urlList = explode(',', $urlList);
             }
-//            $baseUrl = \App::$config['site_info']['web_host'];
             foreach ($urlList as $i => $url) {
                 if (strpos($url, '/upload/common') === 0) {
                     $filename = str_replace('/upload/common/', '', $url);
@@ -158,12 +157,9 @@ class Controller extends ObjectAccess
         if (!empty($_FILES[$key . '_add'])) {
             $files = $this->parseFile($_FILES[$key . '_add'], $path);
             foreach ($files as $i => $new) {
-                $res[($i + 1000)] = $new;
+                array_push($res, $new);
             }
         }
-        if (count($res)) {
-            ksort($res);
-        }
-        return implode(',', $res);
+        return $ret == 'string' ? implode(',', $res) : $res;
     }
 }

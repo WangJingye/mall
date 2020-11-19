@@ -3,6 +3,7 @@
 namespace admin\erp\service;
 
 use admin\common\service\BaseService;
+use common\extend\elasticsearch\Elasticsearch;
 use common\extend\excel\SpreadExcel;
 
 class ProductService extends BaseService
@@ -138,7 +139,7 @@ class ProductService extends BaseService
         $data['category_id'] = json_decode($data['category_id'], true);
         $extra = [
             'category' => $data['category_id'],
-            'images' => $data['pic'],
+            'images' => $data['images'],
             'product_params' => json_decode($data['product_params'], true),
             'rules' => json_decode($data['rules'], true),
         ];
@@ -153,7 +154,6 @@ class ProductService extends BaseService
         }
         $data['category_id'] = end($data['category_id']);
         $data['category_name'] = implode(',', $categoryNames);
-        $data['pic'] = explode(',', $data['pic'])[0];
         $variations = json_decode($data['variations'], true);
         if (empty($variations)) {
             throw new \Exception('必须添加一个SKU');
@@ -184,6 +184,7 @@ class ProductService extends BaseService
                     'rules_value' => $v['rules_value'],
                     'variation_code' => $v['variation_code'],
                     'stock' => $v['stock'],
+                    'pic' => isset($params['v_pic'][$key]) ? $params['v_pic'][$key] : $data['pic'],
                     'price' => $v['price'],
                     'market_price' => $v['market_price'],
                     'status' => 1
@@ -196,6 +197,7 @@ class ProductService extends BaseService
                     'rules_value' => $v['rules_value'],
                     'stock' => $v['stock'],
                     'price' => $v['price'],
+                    'pic' => isset($params['v_pic'][$key]) ? $params['v_pic'][$key] : $data['pic'],
                     'market_price' => $v['market_price'],
                     'status' => 1
                 ];
@@ -208,6 +210,9 @@ class ProductService extends BaseService
                 \Db::table('ProductVariation')->where(['id' => $v['id']])->update(['status' => 0]);
             }
         }
+        $brand = \Db::table('Brand')->where(['brand_id' => $data['brand_id']])->find();
+        $data['brand'] = $brand['brand_name'];
+        Elasticsearch::instance()->put('product', $data);
     }
 
     /**

@@ -17,7 +17,8 @@ class OrderController extends BaseController
         parent::init();
     }
 
-    /**实物订单列表
+    /**
+     * 订单列表
      * @throws \Exception
      */
     public function indexAction()

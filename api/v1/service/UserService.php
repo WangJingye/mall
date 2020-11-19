@@ -18,7 +18,7 @@ class UserService extends BaseService
         if (!empty($params['openid'])) {
             $user = \Db::table('User')->where(['openid' => $params['openid']])->find();
             if (!$user) {
-                throw new \Exception('openid有误，请重新登录', 999);
+                throw new \Exception('token有误，请重新登录', 999);
             }
         } else {
             $user = \Db::table('User')->where(['telephone' => $params['telephone']])->find();

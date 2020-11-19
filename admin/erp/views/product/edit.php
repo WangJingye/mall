@@ -40,6 +40,36 @@
     .stock, .market_price, .price {
         width: 5.5rem;
     }
+
+    .product_variation_list .fileinput-box-list {
+        height: 90px;
+    }
+
+    .product_variation_list .fileinput-box {
+        width: 62px;
+        height: 62px;
+    }
+
+    .product_variation_list img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .product_variation_list .plus-symbol {
+        font-size: 36px;
+        width: 60px;
+        height: 60px;
+    }
+
+    .product_variation_list .fileinput-input {
+        width: 60px;
+        height: 60px;
+    }
+
+    .product_variation_list .file-remove-btn {
+        top: 62px;
+        left: 13px;
+    }
 </style>
 <form class="form-box col-12 col-sm-10 col-md-10 table-responsive" id="save-form"
       action="<?= \App::$urlManager->createUrl('erp/product/edit') ?>" method="post">
@@ -157,7 +187,12 @@
                     <?php endif; ?>
                 </div>
                 <div style="margin-top: 0.5rem">
-                    <small class="text-muted">单条SKU记录的输入框内容都设置时，该记录才能有效保存</small>
+                    <div>
+                        <small class="text-muted">单条SKU记录的输入框内容都设置时，该记录才能有效保存</small>
+                    </div>
+                    <div>
+                        <small class="text-muted">展示图未设置时自动选取商品展示图</small>
+                    </div>
                     <table class="table table-bordered text-nowrap product_variation_list">
                         <tr>
                             <td>规格</td>
@@ -165,6 +200,7 @@
                             <td>销售价</td>
                             <td>划线价</td>
                             <td>库存</td>
+                            <td>展示图</td>
                         </tr>
                         <?php $noSkuProduct = empty($productRules) ? $this->variationList[0] : [] ?>
                         <tr class="empty-rule-sku" <?= empty($productRules) ? '' : 'style="display:none"' ?>>
@@ -179,6 +215,7 @@
                             <td><input type="number" class="form-control stock"
                                        value="<?= isset($noSkuProduct['stock']) ? $noSkuProduct['stock'] : '' ?>"
                                        placeholder="stock"></td>
+                            <td></td>
                         </tr>
                         <?php if (!empty($productRules)): ?>
                             <?php foreach ($this->variationList as $v): ?>
@@ -195,6 +232,7 @@
                                                value="<?= $v['market_price'] ?>" placeholder="划线价"></td>
                                     <td><input type="number" class="form-control stock" value="<?= $v['stock'] ?>"
                                                placeholder="stock"></td>
+                                    <td><?= \admin\extend\image\ImageInput::instance($v['pic'], 'v_pic', 1)->show(); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
@@ -204,12 +242,21 @@
         </div>
     </div>
     <div class="form-group row">
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>商品展示图</label>
+        <div class="col-sm-10">
+            <div>
+                <small class="text-muted">注：图片长宽比1:1</small>
+            </div>
+            <?= \admin\extend\image\ImageInput::instance($this->model['pic'], 'pic', 1)->show(); ?>
+        </div>
+    </div>
+    <div class="form-group row">
         <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>商品图片</label>
         <div class="col-sm-10">
             <div>
-                <small class="text-muted">注：第一张图为商品主图，最多添加6张，单张图片不能超过150k</small>
+                <small class="text-muted">注：最多添加6张，单张图片不能超过150k</small>
             </div>
-            <?= \admin\extend\image\ImageInput::instance($this->model['extra']['images'], 'pic', 6)->show(); ?>
+            <?= \admin\extend\image\ImageInput::instance($this->model['extra']['images'], 'images', 6)->show(); ?>
         </div>
     </div>
     <div class="form-group row">

@@ -7,7 +7,7 @@ use common\helper\Constant;
 
 class PayService extends BaseService
 {
-    public function do($order)
+    public function exec($order)
     {
         $no = WechatPay::instance()->generateTradeNo();
         \Db::table('Order')->where(['order_code' => $order['order_code']])->update(['trade_no' => $no]);

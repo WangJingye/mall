@@ -313,6 +313,14 @@ function showSku() {
             '<td><input type="number" class="form-control price" placeholder="销售价"></td>' +
             '<td><input type="number" class="form-control market_price" placeholder="划线价"></td>' +
             '<td><input type="number" class="form-control stock" placeholder="stock"></td>' +
+            '<td><div class="fileinput-box-list" data-max="1">' +
+            '<div class="fileinput-box">' +
+            '<div class="fileinput-button">' +
+            '<div class="plus-symbol">+</div>' +
+            '<input class="fileinput-input add-new" data-type="image" type="file" data-no="1" name="v_pic">' +
+            '</div>' +
+            '</div></div>' +
+            '</td>' +
             '</tr>';
     }
     $('.empty-rule-sku').after(html);
@@ -345,6 +353,9 @@ function saveForm() {
         formData.append(data[i].name, data[i].value);
     }
     form.find('input[type=file]').each(function () {
+        if($(this).attr('data-no')=='1'){
+            return;
+        }
         if ($(this).val().length) {
             formData.append($(this).attr('name'), $(this)[0].files[0]);
         }
@@ -431,6 +442,15 @@ function saveForm() {
                 continue;
             }
             if (tag == 3) {
+                var pic = tr.find('input[type=file][name=v_pic]');
+                if (pic.val().length) {
+                    formData.append('v_pic[' + variations.length + ']', pic[0].files[0]);
+                } else {
+                    pic = tr.find('input[type=hidden][name=v_pic]');
+                    if(pic.get(0)){
+                        formData.append('v_pic[' + variations.length + ']',pic.val());
+                    }
+                }
                 variations.push(variation);
             } else {
                 for (i in map) {

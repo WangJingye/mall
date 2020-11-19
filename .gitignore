@@ -5,3 +5,4 @@ public/upload
 common/config/db.php
 common/config/redis.php
 public/index-local.php
+common/config/elasticsearch.php

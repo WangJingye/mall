@@ -67,10 +67,12 @@ class ProductController extends BaseController
         if (\App::$request->isAjax() && \App::$request->isPost()) {
             try {
                 $params['pic'] = $this->parseFileOrUrl('pic', 'erp/product');
+                $params['images'] = $this->parseFileOrUrl('images', 'erp/product');
                 if (empty($params['pic'])) {
                     throw new \Exception('请选择商品图片');
                 }
                 $params['media'] = $this->parseFileOrUrl('media', 'erp/product');
+                $params['v_pic'] = $this->parseFileOrUrl('v_pic', 'erp/product','array');
                 \Db::startTrans();
                 $this->productService->saveProduct($params);
                 \Db::commit();

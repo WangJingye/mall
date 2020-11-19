@@ -4,6 +4,7 @@ namespace api\v1\controller;
 
 use admin\erp\service\CouponService;
 use api\v1\service\CartService;
+use common\helper\Constant;
 use common\service\OrderService;
 use common\service\PayService;
 use component\Util;
@@ -144,8 +145,10 @@ class OrderController extends BaseController
         $params['add_type'] = 2;
         $params['user_id'] = \App::$user['user_id'];
         $order = $this->orderService->saveOrder($params);
+        return $this->success('调用支付失败：支付未开通');
+        //todo
         try {
-            $res = $this->payService->do($order);
+            $res = $this->payService->exec($order);
             return $this->success('success', $res);
         } catch (\Exception $e) {
             return $this->success('调用支付失败：' . $e->getMessage());
@@ -162,7 +165,8 @@ class OrderController extends BaseController
         if (!$order) {
             throw new \Exception('订单不存在');
         }
-        return $this->success('success', $this->payService->do($order));
+        return $this->success('success');
+        return $this->success('success', $this->payService->exec($order));
     }
 
     /**
@@ -186,4 +190,113 @@ class OrderController extends BaseController
         }
         exit(Util::array2xml($res));
     }
+
+    public function indexAction()
+    {
+        $params = \App::$request->params->toArray();
+        $selector = \Db::table('Order')
+            ->where(['user_id' => \App::$user['user_id']]);
+        if (!empty($params['status']) && $params['status'] != 'all') {
+            $selector->where(['status' => $params['status']]);
+        } else {
+            $selector->where(['status' => ['!=', 0]]);
+        }
+        $page = 1;
+        if (!empty($params['page'])) {
+            $page = $params['page'];
+        }
+        $pageSize = 10;
+        $total = $selector->count();
+        $totalPage = (int)ceil($total / $pageSize);
+        $page = min($page, $totalPage);
+        $page = max($page, 1);
+        $list = $selector->order('order_id desc')->limit((($page - 1) * $pageSize) . ',' . $pageSize)->findAll();
+        $variations = \Db::table('OrderVariation')
+            ->where(['order_id' => ['in', array_column($list, 'order_id')]])
+            ->where(['status' => 1])
+            ->findAll();
+        $variationList = [];
+        foreach ($variations as $v) {
+            $variationList[$v['order_id']][] = $v;
+        }
+        foreach ($list as $k => $v) {
+            $v['variations'] = $variationList[$v['order_id']];
+            $v['status_name'] = $this->orderService->statusList[$v['order_type']][$v['order_group']][$v['status']];
+            $list[$k] = $v;
+        }
+        return $this->success('success', ['list' => $list, 'page' => $page, 'total_page' => $totalPage]);
+    }
+
+    public function deleteAction()
+    {
+        $params = \App::$request->params->toArray();
+        $res = $this->orderService->setOrderStatus($params, Constant::ORDER_STATUS_CLOSE, Constant::ORDER_STATUS_DELETE);
+        return $res['success'] ? $this->success('success') : $this->error($res['message']);
+    }
+
+    public function cancelAction()
+    {
+        $params = \App::$request->params->toArray();
+        $res = $this->orderService->setOrderStatus($params, Constant::ORDER_STATUS_CREATED, Constant::ORDER_STATUS_CLOSE);
+        return $res['success'] ? $this->success('success') : $this->error($res['message']);
+    }
+
+    public function receiveAction()
+    {
+        $params = \App::$request->params->toArray();
+        $res = $this->orderService->setOrderStatus($params, Constant::ORDER_STATUS_SHIPPED, Constant::ORDER_STATUS_RECEIVED);
+        return $res['success'] ? $this->success('success') : $this->error($res['message']);
+    }
+
+    public function pushCommentAction()
+    {
+        $params = \App::$request->params->toArray();
+        if (empty($params['order_code'])) {
+            throw new \Exception('参数有误');
+        }
+        if (empty($params['list'])) {
+            throw new \Exception('评价内容不能为空');
+        }
+        $order = \Db::table('Order')
+            ->where(['user_id' => \App::$user['user_id']])
+            ->where(['order_code' => $params['order_code']])
+            ->find();
+        if (!$order) {
+            throw new \Exception('参数有误');
+        }
+        if ($order['status'] == Constant::ORDER_STATUS_COMPLETE) {
+            throw new \Exception('订单已评论');
+        }
+        if ($order['status'] != Constant::ORDER_STATUS_RECEIVED) {
+            throw new \Exception('订单未完成');
+        }
+        \Db::table('Order')
+            ->where(['user_id' => \App::$user['user_id']])
+            ->where(['order_code' => $params['order_code']])
+            ->update(['status' => Constant::ORDER_STATUS_COMPLETE]);
+        $list = $params['list'];
+        $codes = array_column($list, 'variation_code');
+        $variations = \Db::table('ProductVariation')
+            ->where(['variation_code' => ['in', $codes]])
+            ->findAll();
+        $variations = array_column($variations, null, 'variation_code');
+        $inserts = [];
+        foreach ($list as $v) {
+            $variation = isset($variations[$v['variation_code']]) ? $variations[$v['variation_code']] : [];
+            $data = [
+                'order_code' => $order['order_code'],
+                'user_type' => 2,
+                'user_id' => \App::$user['user_id'],
+                'product_id' => !empty($variation['product_id']) ? $variation['product_id'] : 0,
+                'variation_code' => $v['variation_code'],
+                'star' => $v['star'],
+                'detail' => $v['comment'],
+                'images' => implode(',', $v['images'])
+            ];
+            $inserts[] = $data;
+        }
+        \Db::table('ProductComment')->multiInsert($inserts);
+        return $this->success('success');
+    }
+
 }

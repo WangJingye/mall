@@ -18,5 +18,6 @@ if (APP_DEBUG) {
 if (file_exists('index-local.php')) {
     require 'index-local.php';
 }
+require BASE_PATH . 'core/autoload.php';
 require BASE_PATH . 'vendor/autoload.php';
 App::run();

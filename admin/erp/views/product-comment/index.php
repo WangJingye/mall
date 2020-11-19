@@ -53,6 +53,8 @@
             <th>ID</th>
             <th>用户昵称</th>
             <th>商品名称</th>
+            <th>评论内容</th>
+            <th>评论图片</th>
             <th>评价</th>
             <th>是否显示</th>
             <th>评论时间</th>
@@ -67,7 +69,18 @@
                 </td>
                 <td><?= $v['comment_id'] ?></td>
                 <td><?= $this->operatorList[$v['user_type']][$v['user_id']] ?></td>
-                <td><?= $this->productList[$v['product_id']] ?></td>
+                <td class="text-wrap text-break"
+                    style="max-width: 180px"><?= $this->productList[$v['product_id']] ?></td>
+                <td class="text-wrap text-break"
+                    style="max-width: 180px"><?= strip_tags($v['detail']) ?></td>
+                <td>
+                    <?php $pics = $v['images'] ? explode(',', $v['images']) : []; ?>
+                    <?php foreach ($pics as $pic): ?>
+                        <a href="<?= \App::$urlManager->staticUrl($pic) ?>" rel="lightbox">
+                            <img src="<?= \App::$urlManager->staticUrl($pic) ?>" style="width: 40px;height:40px;">
+                        </a>
+                    <?php endforeach; ?>
+                </td>
                 <td><?= $this->starList[$v['star']] ?></td>
                 <td>
                     <div class="custom-control custom-switch">
@@ -77,7 +90,8 @@
                         <label class="custom-control-label" for="is-show<?= $v['comment_id'] ?>"></label>
                     </div>
                 </td>
-                <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
+                <td class="text-wrap text-break"
+                    style="max-width:80px"><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
                 <td><?= $this->statusList[$v['status']] ?></td>
                 <td>
                     <?php if ($v['status'] == 1): ?>
