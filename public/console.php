@@ -18,6 +18,7 @@ if (APP_DEBUG) {
 } else {
     ini_set('display_errors', 'Off');
 }
+require BASE_PATH . 'core/autoload.php';
 require BASE_PATH . 'vendor/autoload.php';
 $_GET['s'] = isset($argv[1]) ? $argv[1] : '';
 App::run();

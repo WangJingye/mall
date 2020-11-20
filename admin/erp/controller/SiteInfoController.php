@@ -3,8 +3,8 @@
 namespace admin\erp\controller;
 
 use admin\common\controller\BaseController;
-use common\extend\elasticsearch\Elasticsearch;
 use common\helper\Constant;
+
 class SiteInfoController extends BaseController
 {
 
@@ -91,7 +91,6 @@ class SiteInfoController extends BaseController
      */
     public function indexAction()
     {
-
         $today = strtotime(date('Y-m-d'));
         $data['order_total'] = \Db::table('Order')->where(['create_time' => ['>=', $today]])->count();
         $todaySales = \Db::table('Order')->field('sum(money) as money')->where(['create_time' => ['>=', $today]])->find();

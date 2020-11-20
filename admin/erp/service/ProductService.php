@@ -3,7 +3,6 @@
 namespace admin\erp\service;
 
 use admin\common\service\BaseService;
-use common\extend\elasticsearch\Elasticsearch;
 use common\extend\excel\SpreadExcel;
 
 class ProductService extends BaseService
@@ -152,6 +151,7 @@ class ProductService extends BaseService
         foreach ($data['category_id'] as $v) {
             $categoryNames[] = $categoryList[$v];
         }
+        $data['is_sync_es'] = 0;
         $data['category_id'] = end($data['category_id']);
         $data['category_name'] = implode(',', $categoryNames);
         $variations = json_decode($data['variations'], true);
@@ -210,9 +210,6 @@ class ProductService extends BaseService
                 \Db::table('ProductVariation')->where(['id' => $v['id']])->update(['status' => 0]);
             }
         }
-        $brand = \Db::table('Brand')->where(['brand_id' => $data['brand_id']])->find();
-        $data['brand_name'] = $brand['brand_name'];
-        Elasticsearch::instance()->save($data);
     }
 
     /**
@@ -222,7 +219,7 @@ class ProductService extends BaseService
     public function deleteProduct($data)
     {
         $this->productTrace('删除', $data);
-        \Db::table('Product')->where($data)->update(['status' => 0]);
+        \Db::table('Product')->where($data)->update(['status' => 0, 'is_sync_es' => 0]);
     }
 
     /**

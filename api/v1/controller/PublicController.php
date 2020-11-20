@@ -3,8 +3,8 @@
 namespace api\v1\controller;
 
 use api\v1\service\UserService;
-use common\extend\elasticsearch\Elasticsearch;
 use common\helper\Constant;
+use common\helper\ProductESHelper;
 
 class PublicController extends BaseController
 {
@@ -271,11 +271,9 @@ class PublicController extends BaseController
     {
         $params = \App::$request->params->toArray();
         if (empty($params['content'])) {
-            throw new \Exception('没有查询的内容');
+            return $this->success(['page' => 1, 'total_page' => 0, 'list' => []]);
         }
-        $res = Elasticsearch::instance()->search($params['content']);
-
-       var_dump($res);die;
-        return $this->success('success', $list);
+        $res = ProductESHelper::instance()->search($params['content']);
+        return $this->success('success', $res);
     }
 }

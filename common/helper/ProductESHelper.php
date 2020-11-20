@@ -1,16 +1,16 @@
 <?php
 
-namespace common\extend\elasticsearch;
+namespace common\helper;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 
-class Elasticsearch
+class ProductESHelper
 {
     /** @var Client */
     public $elasticsearch;
 
-    /** @var Elasticsearch */
+    /** @var ProductESHelper */
     public static $instance;
 
     public static function instance()
@@ -38,7 +38,7 @@ class Elasticsearch
         }
     }
 
-    public function createIndex($index)
+    public function createIndex($index = 'mall')
     {
         if (!$this->existIndex($index)) {
             $params = [
@@ -110,6 +110,18 @@ class Elasticsearch
                                 'analyzer' => 'ik_max_word',
                                 'search_analyzer' => 'ik_max_word',
                             ],
+                            'pic' => [
+                                'type' => 'keyword'
+                            ],
+                            'price' => [
+                                'type' => 'float'
+                            ],
+                            'comment_number' => [
+                                'type' => 'integer'
+                            ],
+                            'good_comment_percent' => [
+                                'type' => 'float'
+                            ],
                         ]
                     ],
                 ]
@@ -143,11 +155,7 @@ class Elasticsearch
                 'brand' => $data['brand_name'],
             ]
         ];
-        if (!Elasticsearch::instance()->existsDoc($data['product_id'])) {
-            return $this->elasticsearch->index($params);
-        } else {
-            return $this->elasticsearch->update($params);
-        }
+        return $this->elasticsearch->index($params);
     }
 
     public function delete($id, $type = 'product', $index = 'mall')
@@ -160,7 +168,6 @@ class Elasticsearch
             'type' => $type,
             'id' => $id
         ];
-
         return $this->elasticsearch->delete($params);
     }
 
@@ -184,8 +191,9 @@ class Elasticsearch
         return $this->elasticsearch->indices()->getMapping($params);
     }
 
-    public function search($keywords, $from = 0, $size = 10, $index = 'mall', $type = 'product')
+    public function search($keywords, $page = 1, $size = 2, $index = 'mall', $type = 'product')
     {
+        $from = ($page - 1) * $size;
         $params = [
             'index' => $index,
             'type' => $type,
@@ -229,8 +237,46 @@ class Elasticsearch
                 'from' => $from, 'size' => $size
             ]
         ];
-
         $results = $this->elasticsearch->search($params);
-        return $results;
+        $results = $results['hits'];
+        $total = $results['total'];
+        $totalPage = (int)ceil($total / $size);
+        $list = array_column($results['hits'], '_source');
+        return ['list' => $list, 'page' => $page, 'total_page' => $totalPage];
+    }
+
+    public function bulkDelete($idList, $type = 'product', $index = 'mall')
+    {
+        if (!count($idList)) {
+            return true;
+        }
+        $params = [
+            'index' => $index,
+            'type' => $type,
+        ];
+        foreach ($idList as $id) {
+            $params['body'][] = [
+                'delete' => ['_id' => $id]
+            ];
+        }
+        $this->elasticsearch->bulk($params);
+    }
+
+    public function bulkIndex($list, $type = 'product', $index = 'mall')
+    {
+        if (!count($list)) {
+            return true;
+        }
+        $params = [
+            'index' => $index,
+            'type' => $type,
+        ];
+        foreach ($list as $v) {
+            $params['body'][] = [
+                'index' => ['_id' => $v['product_id']]
+            ];
+            $params['body'][] = $v;
+        }
+        $this->elasticsearch->bulk($params);
     }
 }

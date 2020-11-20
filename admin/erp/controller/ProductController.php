@@ -72,7 +72,7 @@ class ProductController extends BaseController
                     throw new \Exception('请选择商品图片');
                 }
                 $params['media'] = $this->parseFileOrUrl('media', 'erp/product');
-                $params['v_pic'] = $this->parseFileOrUrl('v_pic', 'erp/product','array');
+                $params['v_pic'] = $this->parseFileOrUrl('v_pic', 'erp/product', 'array');
                 \Db::startTrans();
                 $this->productService->saveProduct($params);
                 \Db::commit();
@@ -147,7 +147,9 @@ class ProductController extends BaseController
                 }
                 \Db::startTrans();
                 $this->productService->productTrace($params['status'] == 1 ? '上架' : '下架', $params);
-                \Db::table('Product')->where(['product_id' => $params['product_id']])->update(['status' => $params['status']]);
+                \Db::table('Product')
+                    ->where(['product_id' => $params['product_id']])
+                    ->update(['status' => $params['status'], 'is_sync_es' => 0]);
                 \Db::commit();
                 return $this->success($params['status'] == 1 ? '已上架' : '已下架');
             } catch (\Exception $e) {
@@ -249,7 +251,8 @@ class ProductController extends BaseController
         }
     }
 
-    public function generateSpuAction(){
+    public function generateSpuAction()
+    {
         return $this->productService->generateCode();
     }
 }
