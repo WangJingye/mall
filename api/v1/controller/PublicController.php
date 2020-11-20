@@ -3,6 +3,7 @@
 namespace api\v1\controller;
 
 use api\v1\service\UserService;
+use common\extend\elasticsearch\Elasticsearch;
 use common\helper\Constant;
 
 class PublicController extends BaseController
@@ -269,20 +270,12 @@ class PublicController extends BaseController
     public function searchAction()
     {
         $params = \App::$request->params->toArray();
-        $selector = \Db::table('Product');
-        if (!empty($params['content'])) {
-            $selector->where(['category_id' => $params['content']]);
+        if (empty($params['content'])) {
+            throw new \Exception('没有查询的内容');
         }
-        $page = 1;
-        if (!empty($params['page'])) {
-            $page = $params['page'];
-        }
-        $pageSize = 10;
-        $total = $selector->count();
-        $totalPage = (int)ceil($total / $pageSize);
-        $page = min($page, $totalPage);
-        $page = max($page, 1);
-        $list = $selector->limit((($page - 1) * $pageSize) . ',' . $pageSize)->findAll();
+        $res = Elasticsearch::instance()->search($params['content']);
+
+       var_dump($res);die;
         return $this->success('success', $list);
     }
 }

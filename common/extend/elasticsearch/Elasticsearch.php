@@ -164,6 +164,17 @@ class Elasticsearch
         return $this->elasticsearch->delete($params);
     }
 
+    public function get($id, $type = 'product', $index = 'mall')
+    {
+        $params = [
+            'index' => $index,
+            'type' => $type,
+            'id' => $id
+        ];
+
+        return $this->elasticsearch->get($params);
+    }
+
     public function getMapping($index, $type)
     {
         $params = [
@@ -171,5 +182,55 @@ class Elasticsearch
             'type' => $type
         ];
         return $this->elasticsearch->indices()->getMapping($params);
+    }
+
+    public function search($keywords, $from = 0, $size = 10, $index = 'mall', $type = 'product')
+    {
+        $params = [
+            'index' => $index,
+            'type' => $type,
+            'body' => [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            [
+                                'match' => [
+                                    'product_name' => [
+                                        'query' => $keywords,
+                                        'boost' => 3, // 权重大
+                                    ]
+                                ]
+                            ],
+                            [
+                                'match' => [
+                                    'product_sub_name' => [
+                                        'query' => $keywords,
+                                        'boost' => 3,
+                                    ]
+                                ]
+                            ], [
+                                'match' => [
+                                    'category_name' => [
+                                        'query' => $keywords,
+                                        'boost' => 2,
+                                    ]
+                                ]
+                            ], [
+                                'match' => [
+                                    'brand' => [
+                                        'query' => $keywords,
+                                        'boost' => 1,
+                                    ]
+                                ]
+                            ],
+                        ],
+                    ],
+                ],
+                'from' => $from, 'size' => $size
+            ]
+        ];
+
+        $results = $this->elasticsearch->search($params);
+        return $results;
     }
 }

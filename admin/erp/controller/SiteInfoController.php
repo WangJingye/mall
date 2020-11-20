@@ -91,9 +91,7 @@ class SiteInfoController extends BaseController
      */
     public function indexAction()
     {
-        $res=Elasticsearch::instance()->delete(5);
-        var_dump($res);
-        die;
+
         $today = strtotime(date('Y-m-d'));
         $data['order_total'] = \Db::table('Order')->where(['create_time' => ['>=', $today]])->count();
         $todaySales = \Db::table('Order')->field('sum(money) as money')->where(['create_time' => ['>=', $today]])->find();
