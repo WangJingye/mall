@@ -80,7 +80,7 @@ class ProductESHelper
 
     public function createProduct()
     {
-        if (!$this->existMapping('mall', 'product')) {
+        if (1 && !$this->existMapping('mall', 'product')) {
             $params = [
                 'index' => 'mall',
                 'type' => 'product',
@@ -122,6 +122,12 @@ class ProductESHelper
                             'good_comment_percent' => [
                                 'type' => 'float'
                             ],
+                            'sale_number' => [
+                                'type' => 'integer'
+                            ],
+                            'created_at' => [
+                                'type' => 'integer'
+                            ],
                         ]
                     ],
                 ]
@@ -141,22 +147,6 @@ class ProductESHelper
         }
     }
 
-    public function save($data, $type = 'product')
-    {
-        $params = [
-            'index' => 'mall',
-            'type' => $type,
-            'id' => $data['product_id'],
-            'body' => [
-                'product_id' => $data['product_id'],
-                'product_name' => $data['product_name'],
-                'product_sub_name' => $data['product_sub_name'],
-                'category_name' => $data['category_name'],
-                'brand' => $data['brand_name'],
-            ]
-        ];
-        return $this->elasticsearch->index($params);
-    }
 
     public function delete($id, $type = 'product', $index = 'mall')
     {
@@ -191,7 +181,7 @@ class ProductESHelper
         return $this->elasticsearch->indices()->getMapping($params);
     }
 
-    public function search($keywords, $page = 1, $size = 2, $index = 'mall', $type = 'product')
+    public function search($keywords, $page = 1, $size = 10, $sort = [], $index = 'mall', $type = 'product')
     {
         $from = ($page - 1) * $size;
         $params = [
@@ -234,9 +224,13 @@ class ProductESHelper
                         ],
                     ],
                 ],
-                'from' => $from, 'size' => $size
+                'from' => $from,
+                'size' => $size
             ]
         ];
+        if (!empty($sort)) {
+            $params['body']['sort'][$sort['name']] = ['order' => $sort['order']];
+        }
         $results = $this->elasticsearch->search($params);
         $results = $results['hits'];
         $total = $results['total'];

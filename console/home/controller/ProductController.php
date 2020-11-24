@@ -17,7 +17,7 @@ class ProductController extends ConsoleController
         $list = \Db::table('Product')
             ->field([
                 'product_id', 'product_name', 'product_sub_name', 'category_name',
-                'brand_id', 'price', 'pic', 'status'
+                'brand_id', 'price', 'pic', 'status', 'create_time'
             ])->where(['is_sync_es' => 0])->findAll();
         if (!count($list)) {
             echo '脚本执行成功' . PHP_EOL;
@@ -51,8 +51,10 @@ class ProductController extends ConsoleController
                 'brand' => $brandList[$v['brand_id']] ?? '',
                 'price' => $v['price'],
                 'pic' => $v['pic'],
+                'sale_number' => 0,
                 'comment_number' => $commentNumber,
-                'good_comment_percent' => $commentNumber > 0 ? round($goodNumber / $commentNumber, 2) : 0
+                'good_comment_percent' => $commentNumber > 0 ? round($goodNumber / $commentNumber, 2) : 0,
+                'created_at' => (int)$v['create_time'],
             ];
         }
         if (count($deletes)) {

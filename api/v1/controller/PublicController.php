@@ -122,6 +122,7 @@ class PublicController extends BaseController
         if (!$obj) {
             throw new \Exception('商品不存在');
         }
+
         $product = \Db::table('Product')->where(['product_id' => $obj['product_id']])->find();
         if (!$product) {
             throw new \Exception('商品不存在');
@@ -271,9 +272,28 @@ class PublicController extends BaseController
     {
         $params = \App::$request->params->toArray();
         if (empty($params['content'])) {
-            return $this->success(['page' => 1, 'total_page' => 0, 'list' => []]);
+            return $this->success('success', ['page' => 1, 'total_page' => 0, 'list' => []]);
         }
-        $res = ProductESHelper::instance()->search($params['content']);
+        $page = 1;
+        if (!empty($params['page'])) {
+            $page = $params['page'];
+        }
+        $size = 10;
+        $sort = [];
+        if (!empty($params['sort'])) {
+            $sort = $params['sort'];
+            $sortList = [
+                'new' => 'created_at',
+                'comment' => 'comment_number',
+                'sale' => 'sale_number',
+            ];
+            if (isset($sortList[$sort['name']])) {
+                $sort['name'] = $sortList[$sort['name']];
+            } else {
+                $sort = [];
+            }
+        }
+        $res = ProductESHelper::instance()->search($params['content'], $page, $size, $sort);
         return $this->success('success', $res);
     }
 }

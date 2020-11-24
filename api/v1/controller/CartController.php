@@ -2,16 +2,10 @@
 
 namespace api\v1\controller;
 
-use api\v1\service\CartService;
-
 class CartController extends BaseController
 {
-    /** @var CartService */
-    private $cartService;
-
     public function init()
     {
-        $this->cartService = new CartService();
         parent::init();
     }
 

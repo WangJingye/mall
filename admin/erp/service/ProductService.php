@@ -78,9 +78,6 @@ class ProductService extends BaseService
         if (isset($params['create_time']) && $params['create_time'] != '') {
             $selector->where(['create_time' => $params['create_time']]);
         }
-        if (isset($params['verify_status']) && $params['verify_status'] != '') {
-            $selector->where(['verify_status' => $params['verify_status']]);
-        }
         if (isset($params['update_time']) && $params['update_time'] != '') {
             $selector->where(['update_time' => $params['update_time']]);
         }

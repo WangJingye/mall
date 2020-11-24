@@ -39,7 +39,6 @@ class ProductController extends BaseController
         if (!empty($params['export_type'])) {
             $this->productService->export($params);
         }
-        $params['verify_status'] = ['!=', 0];
         /** @var ProductService $res */
         $res = $this->productService->getList($params);
         $this->assign('params', $params);

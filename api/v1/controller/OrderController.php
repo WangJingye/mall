@@ -3,7 +3,6 @@
 namespace api\v1\controller;
 
 use admin\erp\service\CouponService;
-use api\v1\service\CartService;
 use common\helper\Constant;
 use common\service\OrderService;
 use common\service\PayService;
@@ -14,8 +13,6 @@ class OrderController extends BaseController
     /** @var CouponService */
     public $couponService;
 
-    /** @var CartService */
-    private $cartService;
     /** @var OrderService */
     private $orderService;
     /** @var PayService */
@@ -24,7 +21,6 @@ class OrderController extends BaseController
     public function init()
     {
         $this->couponService = new  CouponService();
-        $this->cartService = new  CartService();
         $this->orderService = new  OrderService();
         $this->payService = new  PayService();
         parent::init();
@@ -52,6 +48,7 @@ class OrderController extends BaseController
         } else if ($type == 'groupon') {
             $gv = \Db::table('GroupVariation')
                 ->field(['go_id', 'variation_code', 'rules_name', 'rules_value', 'stock', 'price', 'product_price'])
+                ->where(['go_id' => $params['rel_id']])
                 ->where(['variation_code' => ['in', array_keys($variations)]])
                 ->find();
             $groupon = \Db::table('Groupon')->where(['id' => $gv['go_id']])->find();
@@ -66,6 +63,7 @@ class OrderController extends BaseController
         } else if ($type == 'flashsale') {
             $vs = \Db::table('FlashSale')
                 ->field(['product_id', 'variation_code', 'stock', 'price', 'rules_name', 'rules_value'])
+                ->where(['flash_id' => $params['rel_id']])
                 ->where(['variation_code' => ['in', array_keys($variations)]])
                 ->findAll();
             $productIds = array_column($vs, 'product_id');
