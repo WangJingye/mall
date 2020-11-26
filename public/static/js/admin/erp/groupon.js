@@ -114,16 +114,16 @@ $(function () {
             callback: function (data) {
                 var html = '';
                 var existList = [];
-                $('.groupon-variation-box').find('.data-tr .variation-id').each(function () {
+                $('.groupon-variation-box').find('.data-tr .variation-code').each(function () {
                     existList.push($(this).val());
                 });
                 for (var i in data) {
                     var info = data[i]['info'];
-                    if (existList.indexOf(info['id'].toString()) != -1) {
+                    if (existList.indexOf(info['variation_code'].toString()) != -1) {
                         continue;
                     }
                     html += '<tr class="data-tr">' +
-                        '<td><input type="hidden" class="variation-id" value="' + info['id'] + '">' + info['variation_code'] + '</td>' +
+                        '<td><input type="hidden" class="variation-code" value="' + info['variation_code'] + '">' + info['variation_code'] + '</td>' +
                         '<td>' + (info['rules_value'] !== '' ? info['rules_value'] : '<i style="color: #666">无规格</i>') + '</td>' +
                         '<td><input type="number" class="form-control variation-product-price" value="' + info['price'] + '"></td>' +
                         '<td><input type="number" class="form-control variation-price"></td>' +
@@ -181,7 +181,7 @@ function saveForm() {
     for (var i = 0; i < max; i++) {
         var tr = $('.groupon-variation-box').find('.data-tr').eq(i);
         var variation = {
-            'variation_id': tr.find('input.variation-id').val(),
+            'variation_code': tr.find('input.variation-code').val(),
             'product_price': tr.find('input.variation-product-price').val(),
             'price': tr.find('input.variation-price').val(),
             'stock': tr.find('input.variation-stock').val(),

@@ -46,20 +46,20 @@ class OrderController extends BaseController
                 ->findAll();
             $productIds = array_column($vs, 'product_id');
         } else if ($type == 'groupon') {
-            $gv = \Db::table('GroupVariation')
+            $gv = \Db::table('GrouponVariation')
                 ->field(['go_id', 'variation_code', 'rules_name', 'rules_value', 'stock', 'price', 'product_price'])
                 ->where(['go_id' => $params['rel_id']])
                 ->where(['variation_code' => ['in', array_keys($variations)]])
                 ->find();
             $groupon = \Db::table('Groupon')->where(['id' => $gv['go_id']])->find();
             $arr['product_id'] = $groupon['product_id'];
-            $buyType = !empty($params['buy_type']) ? 'single' : 'together';
-            $arr['price'] = $buyType == 'single' ? $gv['product_price'] : $gv['price'];
+            $arr['price'] = !empty($params['buy_type']) && $params['buy_type'] == 'single' ? $gv['product_price'] : $gv['price'];
             $arr['stock'] = $gv['stock'];
             $arr['rules_name'] = $gv['rules_name'];
             $arr['rules_value'] = $gv['rules_value'];
+            $arr['variation_code'] = $gv['variation_code'];
             $vs[] = $arr;
-            $productIds = [$gv['product_id']];
+            $productIds = [$groupon['product_id']];
         } else if ($type == 'flashsale') {
             $vs = \Db::table('FlashSale')
                 ->field(['product_id', 'variation_code', 'stock', 'price', 'rules_name', 'rules_value'])
@@ -79,8 +79,8 @@ class OrderController extends BaseController
             if ($v['stock'] < $variation['number']) {
                 throw new \Exception('该商品不能购买更多哦～');
             }
-            $names = explode(',', $v['rules_name']);
-            $values = explode(',', $v['rules_value']);
+            $names = $v['rules_name'] != '' ? explode(',', $v['rules_name']) : [];
+            $values = $v['rules_value'] != '' ? explode(',', $v['rules_value']) : [];
             $rules = [];
             foreach ($names as $k => $n) {
                 $rules[] = ['name' => $n, 'value' => $values[$k]];

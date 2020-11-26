@@ -117,7 +117,7 @@ class OrderService extends BaseService
                 ->where(['variation_code' => ['in', array_column($list, 'variation_code')]])
                 ->findAll();
         } else if ($params['order_group'] == 2) {
-            $obj = \Db::table('Groupon')->where(['id' => $params['go_id']])->find();
+            $obj = \Db::table('Groupon')->where(['id' => $params['rel_id']])->find();
             if (!$obj) {
                 throw new \Exception('团购商品信息有误，请联系客服');
             }
@@ -128,7 +128,7 @@ class OrderService extends BaseService
                 throw new \Exception('团购已结束，请确认');
             }
             $v = \Db::table('GrouponVariation')
-                ->field(['variation_code', 'price', 'stock', 'product_price', 'status', 'rules_name', 'rules_value'])
+                ->field(['variation_code', 'price','pic', 'stock', 'product_price', 'status', 'rules_name', 'rules_value'])
                 ->where(['go_id' => $obj['id']])
                 ->where(['variation_code' => ['in', array_column($list, 'variation_code')]])
                 ->find();
@@ -137,11 +137,11 @@ class OrderService extends BaseService
             }
             $v['product_id'] = $obj['product_id'];
             $variationList[] = $v;
-            $order['extra'] = json_encode(['go_id' => $obj['go_id']]);
+            $order['extra'] = json_encode(['go_id' => $obj['id']]);
         } else if ($params['order_group'] == 3) {
             $v = \Db::table('FlashSale')
                 ->field(['product_id', 'variation_code', 'pic', 'stock', 'price', 'status', 'rules_name', 'rules_value'])
-                ->where(['flash_id' => $params['flash_id']])
+                ->where(['flash_id' => $params['rel_id']])
                 ->where(['variation_code' => ['in', array_column($list, 'variation_code')]])
                 ->find();
             if (!$v) {

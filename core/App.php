@@ -118,7 +118,7 @@ class App extends ObjectAccess
                 }
             }
         }
-        $view = BASE_PATH . 'vendor/generate/view.php';
+        $view = BASE_PATH . 'core/generate/view.php';
         include $view;
     }
 

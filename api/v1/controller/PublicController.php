@@ -4,7 +4,6 @@ namespace api\v1\controller;
 
 use api\v1\service\UserService;
 use common\helper\Constant;
-use common\helper\ProductESHelper;
 
 class PublicController extends BaseController
 {
@@ -180,6 +179,7 @@ class PublicController extends BaseController
             'order_type' => $product['product_type'],
             'group_user_number' => $groupon['group_user_number'],
             'price' => $groupon['price'],
+            'product_price' => $groupon['product_price'],
             'detail' => $product['detail'],
             'product_params' => $extra['product_params'],
             'status' => $groupon['status'],
@@ -266,34 +266,5 @@ class PublicController extends BaseController
             $categoryList[$v['parent_id']][] = $v;
         }
         return $this->success('success', $categoryList);
-    }
-
-    public function searchAction()
-    {
-        $params = \App::$request->params->toArray();
-        if (empty($params['content'])) {
-            return $this->success('success', ['page' => 1, 'total_page' => 0, 'list' => []]);
-        }
-        $page = 1;
-        if (!empty($params['page'])) {
-            $page = $params['page'];
-        }
-        $size = 10;
-        $sort = [];
-        if (!empty($params['sort'])) {
-            $sort = $params['sort'];
-            $sortList = [
-                'new' => 'created_at',
-                'comment' => 'comment_number',
-                'sale' => 'sale_number',
-            ];
-            if (isset($sortList[$sort['name']])) {
-                $sort['name'] = $sortList[$sort['name']];
-            } else {
-                $sort = [];
-            }
-        }
-        $res = ProductESHelper::instance()->search($params['content'], $page, $size, $sort);
-        return $this->success('success', $res);
     }
 }
