@@ -230,39 +230,39 @@ class OrderService extends \common\service\OrderService
         }
         $order['status'] = Constant::ORDER_STATUS_PAID;
         if ($order['order_group'] == Constant::ORDER_GROUP_GROUPON) {
-            if (isset($data['collage_id'])) {
-                $collage = \Db::table('GrouponCollage')->where(['collage_id' => $data['collage_id']])->find();
-                if ($collage['status'] == 2 && $collage['expire_time'] < time()) {
+            if (isset($data['join_id'])) {
+                $join = \Db::table('GrouponJoin')->where(['join_id' => $data['join_id']])->find();
+                if ($join['status'] == 2 && $join['expire_time'] < time()) {
                     throw new \Exception('成团失败，请加入其他团');
                 }
-                $collage['extra'] = $collage['extra'] ? json_decode($collage['extra'], true) : [];
-                $collage['extra'][] = [
+                $join['extra'] = $join['extra'] ? json_decode($join['extra'], true) : [];
+                $join['extra'][] = [
                     'user_id' => $order['user_id'],
                     'order_code' => $order['order_code'],
                 ];
-                if (count($collage['extra']) >= $collage['number']) {
-                    if ($collage['status'] == 1) {
+                if (count($join['extra']) >= $join['number']) {
+                    if ($join['status'] == 1) {
                         //成团完毕15分钟内该团允许加入
-                        $collage['expire_time'] = time() + 15 * 60;
+                        $join['expire_time'] = time() + 15 * 60;
                     }
-                    $collage['status'] = 2;
+                    $join['status'] = 2;
                 }
-                if ($collage['status'] == 2) {
+                if ($join['status'] == 2) {
                     $order['status'] = Constant::ORDER_STATUS_PENDING;
                 }
-                $collage['extra'] = json_encode($collage['extra']);
-                \Db::table('GrouponCollage')->where(['collage_id' => $data['collage_id']])->save($collage);
+                $join['extra'] = json_encode($join['extra']);
+                \Db::table('GrouponJoin')->where(['join_id' => $data['join_id']])->update($join);
             } else {
                 $extra = json_decode($order['extra'], true);
                 $groupon = \Db::table('Groupon')->where(['id' => $extra['go_id']])->find();
                 if ($groupon['group_user_number'] > 1) {
-                    $collage = [
+                    $join = [
                         'go_id' => $extra['go_id'],
                         'number' => $groupon['group_user_number'],
                         'start_userid' => $order['user_id'],
                         'extra' => json_encode([['user_id' => $order['user_id'], 'order_code' => $order['order_code']]])
                     ];
-                    \Db::table('GrouponCollage')->insert($collage);
+                    \Db::table('GrouponJoin')->insert($join);
                 } else {
                     $order['status'] = Constant::ORDER_STATUS_PENDING;
                 }

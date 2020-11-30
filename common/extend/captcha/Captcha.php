@@ -65,8 +65,8 @@ class Captcha
     /**
      * 设置验证码配置
      * @access public
-     * @param  string $name 配置名称
-     * @param  string $value 配置值
+     * @param string $name 配置名称
+     * @param string $value 配置值
      * @return void
      */
     public function __set($name, $value)
@@ -128,7 +128,7 @@ class Captcha
         $code = "123456789abcdefghijkmnpqrstuvwxyzABCDEFGHIJKMNPQRSTUVWXYZ";
         $string = '';
         for ($i = 0; $i < $this->codeNum; $i++) {
-            $char = $code{rand(0, strlen($code) - 1)};
+            $char = $code[rand(0, strlen($code) - 1)];
             $string .= $char;
         }
         $this->checkCode = $string;
@@ -186,14 +186,14 @@ class Captcha
                 $fontsize = rand(12, 16);
                 $x = floor(($this->width - 8) / $this->codeNum) * $i + 8;
                 $y = rand($fontsize + 5, $this->height);
-                imagettftext($this->image, $fontsize, rand(-30, 30), $x, $y, $fontcolor, $fontFace, $this->checkCode{$i});
+                imagettftext($this->image, $fontsize, rand(-30, 30), $x, $y, $fontcolor, $fontFace, $this->checkCode[$i]);
             }
         }
     }
 
     private function outputImage()
     {
-        if(ob_get_contents()) ob_end_clean();
+        if (ob_get_contents()) ob_end_clean();
         if (imagetypes() & IMG_GIF) {
             header("Content-Type:image/gif");
             imagegif($this->image);

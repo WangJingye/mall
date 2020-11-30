@@ -3,7 +3,6 @@
 namespace api\v1\controller;
 
 use api\v1\service\UserService;
-use common\helper\Constant;
 
 class PublicController extends BaseController
 {
@@ -96,157 +95,6 @@ class PublicController extends BaseController
         return $this->success('success', $res);
     }
 
-    public function detailAction()
-    {
-        $params = \App::$request->params;
-        if (empty($params['id'])) {
-            throw new \Exception('参数有误');
-        }
-        if (empty($params['type'])) {
-            $params['type'] = 'product';
-        }
-        if ($params['type'] == 'flashsale') {
-            $res = $this->flashSale($params['id']);
-        } else if ($params['type'] == 'groupon') {
-            $res = $this->groupon($params['id']);
-        } else {
-            $res = $this->product($params['id']);
-        }
-        return $this->success('success', $res);
-    }
-
-    public function flashSale($id)
-    {
-        $obj = \Db::table('FlashSale')->where(['flash_id' => $id])->find();
-        if (!$obj) {
-            throw new \Exception('商品不存在');
-        }
-
-        $product = \Db::table('Product')->where(['product_id' => $obj['product_id']])->find();
-        if (!$product) {
-            throw new \Exception('商品不存在');
-        }
-        $extra = json_decode($product['extra'], true);
-        $res = [
-            'id' => $obj['flash_id'],
-            'order_group' => Constant::ORDER_GROUP_FLASHSALE,
-            'order_type' => $product['product_type'],
-            'title' => $obj['title'],
-            'price' => $obj['price'],
-            'product_price' => $obj['product_price'],
-            'images' => explode(',', $extra['images']),
-            'detail' => $product['detail'],
-            'product_params' => $extra['product_params'],
-            'status' => $obj['status']
-        ];
-        $res['list'] = [
-            [
-                'variation_code' => $obj['variation_code'],
-                'price' => $obj['price'],
-                'stock' => $obj['stock'],
-                'product_price' => $obj['product_price'],
-            ]
-        ];
-        if ($obj['status'] == 1) {
-            $res['left_time'] = time() - $obj['start_time'];
-        } else if ($obj['status'] == 2) {
-            $res['left_time'] = $obj['end_time'] - time();
-        } else {
-            $res['left_time'] = 0;
-        }
-        return $res;
-    }
-
-    public function groupon($id)
-    {
-        $groupon = \Db::table('Groupon')->where(['id' => $id])->find();
-        if (!$groupon) {
-            throw new \Exception('商品不存在');
-        }
-        $product = \Db::table('Product')->where(['product_id' => $groupon['product_id']])->find();
-        if (!$product) {
-            throw new \Exception('商品不存在');
-        }
-        $extra = json_decode($product['extra'], true);
-        $grouponVariations = \Db::table('GrouponVariation')
-            ->where(['go_id' => $groupon['id']])
-            ->where(['status' => 1])
-            ->findAll();
-        $res = [
-            'id' => $groupon['id'],
-            'title' => $groupon['title'],
-            'order_group' => Constant::ORDER_GROUP_GROUPON,
-            'order_type' => $product['product_type'],
-            'group_user_number' => $groupon['group_user_number'],
-            'price' => $groupon['price'],
-            'product_price' => $groupon['product_price'],
-            'detail' => $product['detail'],
-            'product_params' => $extra['product_params'],
-            'status' => $groupon['status'],
-            'images' => explode(',', $extra['images']),
-            'rules' => $extra['rules']
-        ];
-        if ($groupon['status'] == 1) {
-            $res['left_time'] = time() - $groupon['start_time'];
-        } else if ($groupon['status'] == 2) {
-            $res['left_time'] = $groupon['end_time'] - time();
-        } else {
-            $res['left_time'] = 0;
-        }
-        $list = [];
-        foreach ($grouponVariations as $v) {
-            $arr = [];
-            $arr['variation_code'] = $v['variation_code'];
-            $arr['rules_value'] = $v['rules_value'];
-            $arr['stock'] = $v['stock'];
-            $arr['price'] = $v['price'];
-            $arr['product_price'] = $v['product_price'];
-            $list[] = $arr;
-        }
-        $res['list'] = $list;
-        return $res;
-    }
-
-    public function product($id)
-    {
-        $product = \Db::table('Product')->where(['product_id' => $id])->find();
-        if (!$product) {
-            throw new \Exception('商品不存在');
-        }
-        $extra = json_decode($product['extra'], true);
-        $res = [
-            'id' => $product['product_id'],
-            'title' => $product['product_name'],
-            'sub_title' => $product['product_sub_name'],
-            'order_type' => $product['product_type'],
-            'order_group' => Constant::ORDER_GROUP_NORMAL,
-            'pic' => $product['pic'],
-            'price' => $product['price'],
-            'detail' => $product['detail'],
-            'product_params' => $extra['product_params'],
-            'status' => $product['status'],
-            'images' => explode(',', $extra['images']),
-            'rules' => $extra['rules']
-        ];
-        $variations = \Db::table('ProductVariation')
-            ->where(['product_id' => $product['product_id']])
-            ->where(['status' => 1])
-            ->findAll();
-        $list = [];
-        foreach ($variations as $v) {
-            $arr = [];
-            $arr['variation_code'] = $v['variation_code'];
-            $arr['rules_value'] = $v['rules_value'];
-            $arr['stock'] = $v['stock'];
-            $arr['pic'] = $v['pic'];
-            $arr['price'] = $v['price'];
-            $arr['product_price'] = $v['market_price'];
-            $list[] = $arr;
-        }
-        $res['list'] = $list;
-        return $res;
-    }
-
     public function uploadAction()
     {
         if (empty($_FILES['file'])) {
@@ -267,4 +115,5 @@ class PublicController extends BaseController
         }
         return $this->success('success', $categoryList);
     }
+
 }

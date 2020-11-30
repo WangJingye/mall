@@ -128,7 +128,7 @@ class OrderService extends BaseService
                 throw new \Exception('团购已结束，请确认');
             }
             $v = \Db::table('GrouponVariation')
-                ->field(['variation_code', 'price','pic', 'stock', 'product_price', 'status', 'rules_name', 'rules_value'])
+                ->field(['variation_code', 'price', 'pic', 'stock', 'product_price', 'status', 'rules_name', 'rules_value'])
                 ->where(['go_id' => $obj['id']])
                 ->where(['variation_code' => ['in', array_column($list, 'variation_code')]])
                 ->find();
@@ -137,7 +137,11 @@ class OrderService extends BaseService
             }
             $v['product_id'] = $obj['product_id'];
             $variationList[] = $v;
-            $order['extra'] = json_encode(['go_id' => $obj['id']]);
+            $extra = ['go_id' => $obj['id'], 'buy_type' => $params['buy_type']];
+            if (!empty($params['join_id'])) {
+                $extra['join_id'] = $params['join_id'];
+            }
+            $order['extra'] = json_encode($extra);
         } else if ($params['order_group'] == 3) {
             $v = \Db::table('FlashSale')
                 ->field(['product_id', 'variation_code', 'pic', 'stock', 'price', 'status', 'rules_name', 'rules_value'])
