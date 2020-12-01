@@ -31,6 +31,9 @@ class CategoryService extends BaseService
             $selector->where(['has_child' => $params['has_child']]);
             $flag = 0;
         }
+        if (isset($params['show_home']) && $params['show_home'] !== '') {
+            $selector->where(['show_home' => $params['show_home']]);
+        }
         if (isset($params['parent_id']) && $params['parent_id'] != '') {
             $selector->where(['parent_id' => $params['parent_id']]);
             $flag = 0;

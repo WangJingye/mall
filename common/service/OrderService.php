@@ -136,6 +136,9 @@ class OrderService extends BaseService
                 throw new \Exception('团购信息有误，请联系客服');
             }
             $v['product_id'] = $obj['product_id'];
+            if (!empty($params['buy_type']) && $params['buy_type'] == 'single') {
+                $v['price'] = $v['product_price'];
+            }
             $variationList[] = $v;
             $extra = ['go_id' => $obj['id'], 'buy_type' => $params['buy_type']];
             if (!empty($params['join_id'])) {
@@ -175,11 +178,11 @@ class OrderService extends BaseService
         $dataList = [];
         foreach ($list as $v) {
             if (!isset($variationList[$v['variation_code']])) {
-                throw new \Exception('商品信息已变更，请确认～');
+                throw new \Exception('1商品信息已变更，请确认～');
             }
             $item = $variationList[$v['variation_code']];
             if ($item['price'] != $v['price']) {
-                throw new \Exception('商品信息已变更，请确认～');
+                throw new \Exception('2商品信息已变更，请确认～');
             }
             $product = $productList[$item['product_id']];
             if ($item['status'] == 0) {
@@ -223,7 +226,7 @@ class OrderService extends BaseService
         }
         $order['money'] = $order['product_money'] + $order['freight_money'] - $order['rate_money'];
         if ($order['money'] != $params['money']) {
-            throw new \Exception('商品信息已变更，请确认～');
+            throw new \Exception('3商品信息已变更，请确认～');
         }
         if (!empty($params['order_id'])) {
             $order['order_id'] = $params['order_id'];

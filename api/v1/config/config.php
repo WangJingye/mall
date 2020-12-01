@@ -7,6 +7,7 @@ $configs = [
     'action_white_list' => [
         'v1/public' => ['*'],
         'v1/order' => ['notify'],
+        'v1/product' => ['detail', 'comment'],
         'v1/test' => ['*']
     ]
 ];

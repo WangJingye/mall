@@ -18,6 +18,15 @@
             <?php endforeach; ?>
         </select>
     </div>
+    <div class="form-content">
+        <span class="col-form-label search-label">显示到首页</span>
+        <select class="form-control search-input" name="show_home">
+            <option value="">请选择</option>
+            <?php foreach ($this->boolList as $k => $v): ?>
+                <option value="<?= $k ?>" <?= $this->params['show_home'] == (string)$k ? 'selected' : '' ?>><?= $v ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
     <?php $searchList = ['category_id' => 'ID']; ?>
     <div class="form-content">
         <span class="col-form-label search-label">查询条件</span>

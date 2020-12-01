@@ -196,6 +196,7 @@ class ProductController extends BaseController
             'order_group' => Constant::ORDER_GROUP_NORMAL,
             'pic' => $product['pic'],
             'price' => $product['price'],
+            'market_price' => $product['market_price'],
             'detail' => $product['detail'],
             'product_params' => $extra['product_params'],
             'status' => $product['status'],

@@ -54,11 +54,6 @@ class UserService extends BaseService
         $res['telephone'] = $user['telephone'];
         $res['openid'] = $user['openid'];
         $res['is_promoter'] = $user['is_promoter'];
-        if ($user['level'] == 2) {
-            $res['realname'] = $user['realname'];
-            $res['company_name'] = $user['company_name'];
-            $res['industry_id'] = $user['industry_id'];
-        }
         \App::$user = $user;
         return $res;
     }
