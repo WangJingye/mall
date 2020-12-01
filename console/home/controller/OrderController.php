@@ -60,7 +60,7 @@ class OrderController extends ConsoleController
     public function closeGrouponPendingAction()
     {
         $orderList = \Db::table('Order')->where([
-            'status' => Constant::ORDER_STATUS_PENDING,
+            'status' => Constant::ORDER_STATUS_PAID,
             'order_group' => Constant::ORDER_GROUP_GROUPON,
             'pay_time' => ['<=', time() + \App::$config['site_info']['expire_order_pending'] * 60]
         ])->findAll();
@@ -72,11 +72,11 @@ class OrderController extends ConsoleController
             $orderService = new OrderService();
             $orderService->refundByOrder($orderList);
             $variations = \Db::table('OrderVariation')
-                ->field(['variation_id', 'number'])
+                ->field(['variation_code', 'number'])
                 ->where(['order_id' => ['in', array_column($orderList, 'order_id')]])
                 ->where(['status' => 1])->findAll();
             foreach ($variations as $v) {
-                \Db::table('ProductVariation')->where(['variation_id' => $v['variation_id']])->increase('stock', $v['number']);
+                \Db::table('ProductVariation')->where(['variation_code' => $v['variation_code']])->increase('stock', $v['number']);
             }
             $insertList = [];
             foreach ($orderList as $v) {
@@ -160,7 +160,7 @@ class OrderController extends ConsoleController
             \Db::table('OrderTrace')->multiInsert($insertList);
             $insertList = [];
             $variations = \Db::table('OrderVariation')
-                ->field(['order_id', 'product_id', 'variation_id'])
+                ->field(['order_id', 'product_id', 'variation_code'])
                 ->where(['order_id' => ['in', $orderIdList]])
                 ->findAll();
             $variationList = [];
@@ -173,7 +173,7 @@ class OrderController extends ConsoleController
                     $insert = [
                         'order_id' => $v['order_id'],
                         'product_id' => $item['product_id'],
-                        'variation_id' => $item['variation_id'],
+                        'variation_code' => $item['variation_code'],
                         'user_id' => 0,
                         'star' => 5,
                         'detail' => '超时未评价，系统自动好评',

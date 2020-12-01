@@ -22,7 +22,7 @@ class ProductESHelper
                 throw new \Exception('elasticsearch配置文件elasticsearch.php不存在');
             }
             $config = require $ef;
-            $instance->elasticsearch = ClientBuilder::create()->setHosts([$config['host'] . ':' . $config['port']])->build();
+            $instance->elasticsearch = ClientBuilder::create()->setHosts($config)->build();
             static::$instance = $instance;
         }
         return static::$instance;

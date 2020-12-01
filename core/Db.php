@@ -371,6 +371,9 @@ class Db extends ObjectAccess
             }
         }
         $sql = $this->array2sql($this->table_name, $data, 'update', $this->condition);
+        if (strpos($sql, '1=0') !== false || strpos($sql, '1 = 0') !== false) {
+            return false;
+        }
         if ($this->db->exec($sql) === false) {
             $error = $this->db->errorInfo();
             throw new \Exception($error[2]);
