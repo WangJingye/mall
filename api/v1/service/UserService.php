@@ -21,19 +21,19 @@ class UserService extends BaseService
                 throw new \Exception('token有误，请重新登录', 999);
             }
         } else {
-            $user = \Db::table('User')->where(['telephone' => $params['telephone']])->find();
+            $openid = Wechat::instance()->getOpenIdByCode($params['code']);
+            $user = \Db::table('User')
+                ->where(['openid' => $openid])
+                ->find();
             if (!$user) {
                 $user = [
-                    'telephone' => $params['telephone'],
                     'nickname' => $params['nickname'],
                     'city' => $params['city'],
-                    'level' => 1,
-                    'avatar' => $params['avatar'],
-                    'birthday' => $params['birthday'],
-                    'openid' => Wechat::instance()->getOpenIdByCode($params['code']),
                     'gender' => $params['gender'],
-                    'is_promoter' => 0,
-                    'status' => 1
+                    'avatar' => $params['avatar'],
+                    'openid' => $openid,
+                    'status' => 1,
+                    'is_promoter'=>0
                 ];
                 $spread = !empty(\App::$config['site_info']['spread']) ? json_decode(\App::$config['site_info']['spread'], true) : [];
                 if ($spread['type'] == 2) {
@@ -48,11 +48,9 @@ class UserService extends BaseService
         }
         $res = [];
         $res['user_id'] = $user['user_id'];
-        $res['level'] = $user['level'];
         $res['nickname'] = $user['nickname'];
         $res['avatar'] = $user['avatar'];
-        $res['telephone'] = $user['telephone'];
-        $res['openid'] = $user['openid'];
+        $res['identity'] = $user['openid'];
         $res['is_promoter'] = $user['is_promoter'];
         \App::$user = $user;
         return $res;

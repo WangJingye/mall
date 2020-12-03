@@ -11,7 +11,6 @@ class ProductController extends BaseController
         parent::init();
     }
 
-
     public function detailAction()
     {
         $params = \App::$request->params;
@@ -72,6 +71,7 @@ class ProductController extends BaseController
         } else {
             $res['left_time'] = 0;
         }
+        $res['show_time'] = $this->getLeftTime($res['left_time']);
         $res['comments'] = $this->comment($product['product_id']);
         return $res;
     }
@@ -114,6 +114,7 @@ class ProductController extends BaseController
         } else {
             $res['left_time'] = 0;
         }
+        $res['show_time'] = $this->getLeftTime($res['left_time']);
         $list = [];
         foreach ($grouponVariations as $v) {
             $arr = [];
@@ -173,6 +174,8 @@ class ProductController extends BaseController
                 'avatar' => $user['avatar'],
                 'left_number' => max($v['number'] - count($extra), 0),
                 'left_time' => max($leftTime, 0),
+                'show_time' => $this->getLeftTime(max($leftTime, 0)),
+
             ];
         }
         $res['join_list'] = $joinList;
@@ -296,6 +299,93 @@ class ProductController extends BaseController
                 'create_time' => $v['create_time'],
                 'rules_value' => $rules
             ];
+        }
+        return $this->success('success', ['list' => $res, 'page' => $page, 'total_page' => $totalPage]);
+    }
+
+    public function grouponAction()
+    {
+        $page = 1;
+        if (!empty($params['page'])) {
+            $page = $params['page'];
+        }
+        $selector = \Db::table('Groupon')->where(['status' => 2]);
+        $pageSize = 10;
+        $total = $selector->count();
+        $totalPage = (int)ceil($total / $pageSize);
+        $page = min($page, $totalPage);
+        $page = max($page, 1);
+        $list = $selector->order('id asc')->limit((($page - 1) * $pageSize) . ',' . $pageSize)->findAll();
+        $ids = array_column($list, 'id');
+        $joins = \Db::table('GrouponJoin')
+            ->field(['start_userid', 'go_id'])
+            ->where(['go_id' => ['in', $ids]])
+            ->where(['status' => 1])
+            ->findAll();
+        $joinList = [];
+        foreach ($joins as $v) {
+            $joinList[$v['go_id']][] = $v['start_userid'];
+        }
+        $users = \Db::table('User')
+            ->field(['avatar', 'user_id'])
+            ->where(['user_id' => ['in', array_column($joins, 'start_userid')]])
+            ->findAll();
+        $users = array_column($users, 'avatar', 'user_id');
+        $res = [];
+        foreach ($list as $v) {
+            $joins = $joinList[$v['id']] ?? [];
+            $avatars = [];
+            foreach ($joins as $j) {
+                $avatars[] = $users[$j] ?? '';
+                if (count($avatars) > 2) {
+                    break;
+                }
+            }
+            $res[] = [
+                'id' => $v['id'],
+                'title' => $v['title'],
+                'price' => $v['price'],
+                'pic' => $v['pic'],
+                'sale' => rand(0, 999),//todo
+                'joins' => $avatars,
+            ];
+        }
+        return $this->success('success', ['list' => $res, 'page' => $page, 'total_page' => $totalPage]);
+    }
+
+    public function flashSaleAction()
+    {
+        $page = 1;
+        if (!empty($params['page'])) {
+            $page = $params['page'];
+        }
+        $selector = \Db::table('FlashSale')
+            ->where(['status' => 2]);
+        $pageSize = 10;
+        $total = $selector->count();
+        $totalPage = (int)ceil($total / $pageSize);
+        $page = min($page, $totalPage);
+        $page = max($page, 1);
+        $list = $selector->order('flash_id asc')->limit((($page - 1) * $pageSize) . ',' . $pageSize)->findAll();
+        $res = [];
+        foreach ($list as $k => $v) {
+            $arr = [];
+            $arr['id'] = $v['flash_id'];
+            $arr['title'] = $v['title'];
+            $arr['price'] = $v['price'];
+            $arr['rules_value'] = $v['rules_value'];
+            $arr['product_price'] = $v['product_price'];
+            $arr['pic'] = $v['pic'];
+            $arr['percent'] = rand(0, 100);//todo
+            if ($v['status'] == 1) {
+                $arr['left_time'] = time() - $v['start_time'];
+            } else if ($v['status'] == 2) {
+                $arr['left_time'] = $v['end_time'] - time();
+            } else {
+                $arr['left_time'] = 0;
+            }
+            $arr['show_time'] = $this->getLeftTime($arr['left_time']);
+            $res[] = $arr;
         }
         return $this->success('success', ['list' => $res, 'page' => $page, 'total_page' => $totalPage]);
     }

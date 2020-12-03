@@ -3,6 +3,7 @@
 namespace api\v1\controller;
 
 use api\v1\service\UserService;
+use common\extend\wechat\Wechat;
 
 class PublicController extends BaseController
 {
@@ -15,31 +16,55 @@ class PublicController extends BaseController
         parent::init();
     }
 
+    public function loginAction()
+    {
+        $params = \App::$request->params->toArray();
+        $checkList = [
+            'nickname' => '昵称不能为空',
+            'avatar' => '头像不能为空',
+            'city' => '城市不能为空',
+            'gender' => '性别不能为空',
+            'code' => 'code不能为空',
+        ];
+        foreach ($checkList as $field => $message) {
+            if (!isset($params[$field]) || $params[$field] == '') {
+                throw new \Exception($message);
+            }
+        }
+        $res = $this->userService->getUserInfo($params);
+        return $this->success('success', $res);
+    }
+
     public function getUserInfoAction()
     {
-        try {
-            $params = \App::$request->params->toArray();
-            $header = \App::$request->header;
-            if (empty($header['identity'])) {
-                $checkList = [
-                    'telephone' => '手机号不能为空',
-                    'nickname' => '昵称不能为空',
-                    'avatar' => '头像不能为空',
-                    'code' => 'code不能为空',
-                ];
-                foreach ($checkList as $field => $message) {
-                    if (!isset($params[$field]) || $params[$field] == '') {
-                        throw new \Exception($message);
-                    }
-                }
-            } else {
-                $params['openid'] = $header['identity'];
-            }
-            $res = $this->userService->getUserInfo($params);
-            return $this->success('success', $res);
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage());
+        $header = \App::$request->header;
+        if (empty($header['identity'])) {
+            throw new \Exception('未登录', 999);
         }
+        $params['openid'] = $header['identity'];
+        $res = $this->userService->getUserInfo($params);
+        return $this->success('success', $res);
+    }
+
+    public function getIdentityByCodeAction()
+    {
+        $params = \App::$request->params->toArray();
+        if (empty($params['code'])) {
+            throw new \Exception('参数有误');
+        }
+        $openid = Wechat::instance()->getOpenIdByCode($params['code']);
+        $user = \Db::table('User')
+            ->where(['openid' => $openid])
+            ->find();
+        $res = [];
+        if ($user) {
+            $res['user_id'] = $user['user_id'];
+            $res['nickname'] = $user['nickname'];
+            $res['avatar'] = $user['avatar'];
+            $res['identity'] = $user['openid'];
+            $res['is_promoter'] = $user['is_promoter'];
+        }
+        return $this->success('success', $res);
     }
 
     public function indexAction()
@@ -61,7 +86,7 @@ class PublicController extends BaseController
         $res['categories'] = $categories;
         $flashSales = \Db::table('FlashSale')
             ->field(['flash_id', 'title', 'price', 'product_price', 'status', 'start_time', 'end_time', 'pic'])
-            ->where(['status' => ['in', [1, 2]]])
+            ->where(['status' => ['in', [2]]])
             ->where(['show_home' => 1])
             ->order('sort desc,flash_id desc')
             ->limit(8)
@@ -72,6 +97,7 @@ class PublicController extends BaseController
             } else {
                 $flashSales[$k]['left_time'] = $v['start_time'] - time();
             }
+            $flashSales[$k]['show_time'] = $this->getLeftTime($flashSales[$k]['left_time']);
         }
         $res['flashsales'] = $flashSales;
         $groupons = \Db::table('Groupon')
@@ -80,7 +106,9 @@ class PublicController extends BaseController
             ->where(['status' => 2])
             ->findAll();
         foreach ($groupons as $k => $v) {
-            $groupons[$k]['left_time'] = $v['end_time'] - time();
+            $left = $v['end_time'] - time();
+            $groupons[$k]['left_time'] = $left;
+            $groupons[$k]['show_time'] = $this->getLeftTime($left);
         }
         $res['groupons'] = $groupons;
         $list = \Db::table('Product')->where(['status' => 1])->limit(6)->findAll();
