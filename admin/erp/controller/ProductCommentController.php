@@ -106,7 +106,7 @@ class ProductCommentController extends BaseController
     }
 
     /**
-     * 设置是否显示
+     * 回复
      */
     public function replyAction()
     {

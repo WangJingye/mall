@@ -2,8 +2,8 @@
 
 namespace admin\erp\service;
 
-use common\helper\Constant;
 use common\extend\excel\SpreadExcel;
+use common\helper\Constant;
 
 class OrderService extends \common\service\OrderService
 {
@@ -87,7 +87,7 @@ class OrderService extends \common\service\OrderService
         }
         if (isset($params['nickname']) && $params['nickname'] != '') {
             $userList = \Db::table('User')->field(['user_id'])
-                ->where(['nickname' => $params['nickname']])
+                ->where(['nickname' => ['like', '%' . $params['nickname'] . '%']])
                 ->findAll();
             $userIdList = array_column($userList, 'user_id');
             $selector->where(['user_id' => ['in', $userIdList]]);

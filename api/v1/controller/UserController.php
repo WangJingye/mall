@@ -62,10 +62,24 @@ class UserController extends BaseController
             $arr['rules'] = $variation['rules_value'];
             $arr['price'] = $variation['price'];
             $arr['stock'] = $variation['stock'];
-            $arr['number'] = min($v['number'],$variation['stock']);
+            $arr['number'] = min($v['number'], $variation['stock']);
             $arr['status'] = $product['status'];
             $res[] = $arr;
         }
         return $this->success('success', $res);
+    }
+
+    public function suggestAction()
+    {
+        $params = \App::$request->params->toArray();
+        if (!isset($params['content']) || $params['content'] === '') {
+            throw new \Exception('参数有误');
+        }
+        $data = [
+            'user_id' => \App::$user['user_id'],
+            'content' => $params['content']
+        ];
+        \Db::table('Suggest')->insert($data);
+        return $this->success('success');
     }
 }
