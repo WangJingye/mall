@@ -23,14 +23,58 @@ class MessageController extends BaseController
             ->findAll();
         $res = [];
         foreach ($categoryList as $v) {
-            $message = \Db::table('Message')->where(['category_id' => $v['category_id']])->where(['status' => 1])->order('update_time desc')->limit(1)->find();
+            $message = \Db::table('Message')
+                ->where(['category_id' => $v['category_id']])
+                ->where(['status' => 1])
+                ->order('update_time desc')
+                ->limit(1)
+                ->find();
             $arr = [];
+            $arr['id'] = $v['category_id'];
             $arr['content'] = $message['content'];
-            $arr['category_name'] = $v['category_name'];
+            $arr['title'] = $v['category_name'];
             $arr['pic'] = $v['pic'];
             $arr['last_time'] = $message['update_time'];
             $res[] = $arr;
         }
         return $this->success('success', $res);
+    }
+
+    public function listAction()
+    {
+        $params = \App::$request->params->toArray();
+        $category = \Db::table('MessageCategory')->where(['category_id' => $params['category_id']])->find();
+        $selector = \Db::table('Message')
+            ->where(['category_id' => $params['category_id']])
+            ->where(['user_id' => \App::$user['user_id']])
+            ->where(['status' => 1]);
+        $page = 1;
+        if (!empty($params['page'])) {
+            $page = $params['page'];
+        }
+        $pageSize = 10;
+        $total = $selector->count();
+        $totalPage = (int)ceil($total / $pageSize);
+        $page = min($page, $totalPage);
+        $page = max($page, 1);
+        $list = $selector->order('id desc')
+            ->limit((($page - 1) * $pageSize) . ',' . $pageSize)
+            ->findAll();
+        $list = array_reverse($list);
+        $res = [];
+        foreach ($list as $v) {
+            $extra = $v['extra'] ? json_decode($v['extra'], true) : [];
+            $arr = [];
+            $arr['id'] = $v['id'];
+            $arr['title'] = $v['title'];
+            $arr['content'] = $v['content'];
+            $arr['update_time'] = $v['update_time'];
+            if ($category['type'] == 1) {
+                $arr['pic'] = $extra['pic'];
+                $arr['order_code'] = $extra['order_code'];
+            }
+            $res[] = $arr;
+        }
+        return $this->success('success', ['list' => $res, 'page' => $page, 'total_page' => $totalPage]);
     }
 }

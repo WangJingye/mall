@@ -208,7 +208,9 @@ class OrderController extends BaseController
         $totalPage = (int)ceil($total / $pageSize);
         $page = min($page, $totalPage);
         $page = max($page, 1);
-        $list = $selector->order('order_id desc')->limit((($page - 1) * $pageSize) . ',' . $pageSize)->findAll();
+        $list = $selector->order('order_id desc')
+            ->limit((($page - 1) * $pageSize) . ',' . $pageSize)
+            ->findAll();
         $variations = \Db::table('OrderVariation')
             ->where(['order_id' => ['in', array_column($list, 'order_id')]])
             ->where(['status' => 1])
@@ -295,6 +297,74 @@ class OrderController extends BaseController
         }
         \Db::table('ProductComment')->multiInsert($inserts);
         return $this->success('success');
+    }
+
+    /**
+     * 订单详情
+     * @return array
+     * @throws \Exception
+     */
+    public function detailAction()
+    {
+        $params = \App::$request->params->toArray();
+        if (empty($params['order_code'])) {
+            throw new \Exception('参数有误');
+        }
+        $order = \Db::table('Order')
+            ->where(['order_code' => $params['order_code']])
+            ->find();
+        if ($order['status'] == Constant::ORDER_STATUS_DELETE) {
+            throw new \Exception('订单已删除');
+        }
+        $orderVariations = \Db::table('OrderVariation')
+            ->where(['order_id' => $order['order_id']])
+            ->where(['status' => 1])
+            ->findAll();
+        $payMethod = '';
+        if ($order['status'] >= 2 && $order['pay_method']) {
+            $payMethodObj = \Db::table('PayMethod')->where(['method_id' => $order['pay_method']])->find();
+            $payMethod = $payMethodObj['name'];
+        }
+        $transport = '';
+        if ($order['is_deliver'] == '1' && !empty($order['transport_id'])) {
+            $transport = \Db::table('Transport')->where(['transport_id' => $order['transport_id']])->find();
+            $transport = $transport['transport_name'];
+        }
+        $res = [
+            'order_code' => $order['order_code'],
+            'order_group' => $order['order_group'],
+            'receiver_name' => $order['receiver_name'],
+            'receiver_mobile' => $order['receiver_mobile'],
+            'receiver_address' => $order['receiver_address'],
+            'create_time' => $order['create_time'],
+            'pay_time' => $order['pay_time'],
+            'pay_method' => $payMethod,
+            'is_deliver' => $order['is_deliver'],
+            'deliver_time' => $order['deliver_time'],
+            'receive_time' => $order['receive_time'],
+            'status' => $order['status'],
+            'transport' => $transport,
+            'transport_order' => $order['transport_order'],
+            'pin_time' => $order['pin_time'],
+            'money' => $order['money'],
+            'product_money' => $order['product_money'],
+            'rate_money' => $order['rate_money'],
+            'freight_money' => $order['freight_money'],
+            'extra' => $order['extra'] ? json_decode($order['extra'], true) : []
+        ];
+        $list = [];
+        foreach ($orderVariations as $v) {
+            $arr = [];
+            $arr['product_id'] = $v['product_id'];
+            $arr['title'] = $v['product_name'];
+            $arr['price'] = $v['price'];
+            $arr['number'] = $v['number'];
+            $arr['pic'] = $v['pic'];
+            $arr['rules_value'] = $v['rules_value'];
+            $list[] = $arr;
+        }
+        $res['list'] = $list;
+        return $this->success('success', $res);
     }
 
 }
