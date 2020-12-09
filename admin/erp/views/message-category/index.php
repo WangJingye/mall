@@ -6,7 +6,8 @@
 <form class="search-form" action="<?= \App::$urlManager->createUrl('erp/message-category/index') ?>" method="get">
     <div class="form-content">
         <span class="col-form-label search-label">分类名称</span>
-        <input type="text" class="form-control search-input" name="category_name" value="<?= $this->params['category_name'] ?>">
+        <input type="text" class="form-control search-input" name="category_name"
+               value="<?= $this->params['category_name'] ?>">
     </div>
     <?php $searchList = ['category_id' => 'ID']; ?>
     <div class="form-content">

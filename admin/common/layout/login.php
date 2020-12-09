@@ -9,7 +9,8 @@
     <?php endforeach; ?>
 </head>
 <body>
-<div class="custom-bg" style="background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)), url(<?= \App::$urlManager->staticUrl('/static/images/login-background.jpg') ?>);">
+<div class="custom-bg"
+     style="background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)), url(<?= \App::$urlManager->staticUrl('/static/images/login-background.jpg') ?>);">
     <?php include $view ?>
 </div>
 </body>

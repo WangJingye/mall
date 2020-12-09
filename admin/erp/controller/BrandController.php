@@ -42,7 +42,7 @@ class BrandController extends BaseController
         $params = \App::$request->params->toArray();
         if (\App::$request->isAjax() && \App::$request->isPost()) {
             try {
-                $params['logo'] = $this->parseFileOrUrl('logo','erp/brand');
+                $params['logo'] = $this->parseFileOrUrl('logo', 'erp/brand');
                 $this->brandService->saveBrand($params);
                 return $this->success('保存成功');
             } catch (\Exception $e) {

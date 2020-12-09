@@ -47,7 +47,7 @@ class MessageCategoryController extends BaseController
         $params = \App::$request->params->toArray();
         if (\App::$request->isAjax() && \App::$request->isPost()) {
             try {
-                $params['pic'] = $this->parseFileOrUrl('pic','erp/message-category');
+                $params['pic'] = $this->parseFileOrUrl('pic', 'erp/message-category');
                 $this->messageCategoryService->saveMessageCategory($params);
                 return $this->success('保存成功');
             } catch (\Exception $e) {
@@ -77,7 +77,7 @@ class MessageCategoryController extends BaseController
                 if (empty($params['id'])) {
                     throw new \Exception('非法请求');
                 }
-                \Db::table('MessageCategory')->where(['category_id' => $params['id']])->update(['status'=>0]);
+                \Db::table('MessageCategory')->where(['category_id' => $params['id']])->update(['status' => 0]);
                 return $this->success('删除成功');
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());

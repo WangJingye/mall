@@ -8,7 +8,7 @@ $configs = [
         'v1/public' => ['*'],
         'v1/order' => ['notify'],
         'v1/search' => ['*'],
-        'v1/product' => ['detail', 'comment','flash-sale','groupon'],
+        'v1/product' => ['detail', 'comment', 'flash-sale', 'groupon'],
         'v1/test' => ['*']
     ]
 ];

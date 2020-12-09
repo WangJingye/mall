@@ -185,25 +185,6 @@ class BaseService extends \common\service\BaseService
     }
 
     /**
-     * 获取数据
-     * @param $table
-     * @param string $idField
-     * @param string $nameField
-     * @param array $where
-     * @return array
-     * @throws \Exception
-     */
-    public function getDataList($table, $idField = 'id', $nameField = 'name', $where = ['status' => 1])
-    {
-        $selector = \Db::table($table)->field([$idField, $nameField]);
-        if (!empty($where)) {
-            $selector->where($where);
-        }
-        $list = $selector->findAll();
-        return array_column($list, $nameField, $idField);
-    }
-
-    /**
      * @param $data
      * @param string $idField
      * @throws \Exception
@@ -222,5 +203,24 @@ class BaseService extends \common\service\BaseService
             1 => $this->getDataList('Admin', 'admin_id', 'realname', ['admin_id' => ['in', $adminIdList]]),
             2 => $this->getDataList('User', 'user_id', 'nickname', ['user_id' => ['in', $userIdList]])
         ];
+    }
+
+    /**
+     * 获取数据
+     * @param $table
+     * @param string $idField
+     * @param string $nameField
+     * @param array $where
+     * @return array
+     * @throws \Exception
+     */
+    public function getDataList($table, $idField = 'id', $nameField = 'name', $where = ['status' => 1])
+    {
+        $selector = \Db::table($table)->field([$idField, $nameField]);
+        if (!empty($where)) {
+            $selector->where($where);
+        }
+        $list = $selector->findAll();
+        return array_column($list, $nameField, $idField);
     }
 }

@@ -4,11 +4,10 @@ namespace admin\extend\input;
 
 class TimeSearch extends \ObjectAccess
 {
+    public static $instance;
     public $name;
     public $label;
     public $params;
-
-    public static $instance;
 
     public function __construct($name, $label, $params)
     {

@@ -15,8 +15,8 @@ class TestController extends ConsoleController
     public function indexAction()
     {
         $service = new  CategoryService();
-       $list= $service->getChildIdList(1,'ProductCategory','category_id');
-       var_dump($list);
+        $list = $service->getChildIdList(1, 'ProductCategory', 'category_id');
+        var_dump($list);
         echo '脚本执行成功' . PHP_EOL;
     }
 }

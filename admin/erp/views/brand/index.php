@@ -6,7 +6,8 @@
 <form class="search-form" action="<?= \App::$urlManager->createUrl('erp/brand/index') ?>" method="get">
     <div class="form-content">
         <span class="col-form-label search-label">品牌名称</span>
-        <input type="text" class="form-control search-input" name="brand_name" value="<?= $this->params['brand_name'] ?>">
+        <input type="text" class="form-control search-input" name="brand_name"
+               value="<?= $this->params['brand_name'] ?>">
     </div>
     <?php $searchList = ['brand_id' => 'ID']; ?>
     <div class="form-content">
@@ -45,7 +46,8 @@
                 </td>
                 <td class="sort"><?= $v['sort'] ?></td>
                 <td>
-                    <a class="btn btn-primary btn-sm" href="<?= \App::$urlManager->createUrl('erp/brand/edit', ['brand_id' => $v['brand_id']]) ?>">
+                    <a class="btn btn-primary btn-sm"
+                       href="<?= \App::$urlManager->createUrl('erp/brand/edit', ['brand_id' => $v['brand_id']]) ?>">
                         <i class="glyphicon glyphicon-pencil"></i> 编辑
                     </a>
                     <div class="btn btn-info btn-sm set-sort-btn" data-id="<?= $v['brand_id'] ?>">
@@ -66,4 +68,4 @@
     </table>
 </div>
 <?= $this->pagination ?>
-<?php $this->appendScript('brand.js')?>
+<?php $this->appendScript('brand.js') ?>

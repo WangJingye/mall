@@ -19,9 +19,9 @@ class ProductCommentService extends BaseService
         '1' => '是',
     ];
 
-    public $statusList=[
-        '1'=>'未回复',
-        '2'=>'已回复'
+    public $statusList = [
+        '1' => '未回复',
+        '2' => '已回复'
     ];
 
     /**

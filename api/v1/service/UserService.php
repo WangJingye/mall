@@ -33,7 +33,7 @@ class UserService extends BaseService
                     'avatar' => $params['avatar'],
                     'openid' => $openid,
                     'status' => 1,
-                    'is_promoter'=>0
+                    'is_promoter' => 0
                 ];
                 $spread = !empty(\App::$config['site_info']['spread']) ? json_decode(\App::$config['site_info']['spread'], true) : [];
                 if ($spread['type'] == 2) {

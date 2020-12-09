@@ -13,6 +13,60 @@ class UserService extends BaseService
     ];
 
     /**
+     * @param $data
+     * @throws \Exception
+     */
+    public function saveUser($data)
+    {
+        if (isset($data['user_id']) && $data['user_id']) {
+            \Db::table('User')->where(['user_id' => $data['user_id']])->update($data);
+        } else {
+            \Db::table('User')->insert($data);
+        }
+    }
+
+    /**
+     * @param $data
+     * @throws \Exception
+     */
+    public function deleteUser($data)
+    {
+        \Db::table('User')->where($data)->delete();
+    }
+
+    public function export($params)
+    {
+        if ($params['export_type'] == 1) {
+            $list = $this->getList($params, false);
+        } else {
+            $list = \Db::table('User')->where(['user_id' => ['in', explode(',', $params['ids'])]])->findAll();
+        }
+        if (count($list) > 10000) {
+            throw new \Exception('最多导出1万条数据');
+        }
+        if (count($list) == 0) {
+            throw new \Exception('没有符合条件的数据');
+        }
+        foreach ($list as $v) {
+            $data[] = [
+                $v['user_id'],
+                $v['nickname'],
+                $v['telephone'],
+                $v['city'],
+                $this->genderList[$v['gender']],
+                $v['birthday'],
+                date('Y-m-d H:i:s', $v['create_time'])
+            ];
+        }
+
+        $export = [];
+        $export['table_name'] = '普通会员数据';
+        $export['info'] = ['会员ID', '昵称', '手机号', '城市', '性别', '生日', '注册时间'];
+        $export['data'] = $data;
+        SpreadExcel::exportExcel($export);
+    }
+
+    /**
      * @param $params
      * @return array
      * @throws \Exception
@@ -68,60 +122,6 @@ class UserService extends BaseService
             return $this->pagination($selector, $params);
         }
         return $selector->findAll();
-    }
-
-    /**
-     * @param $data
-     * @throws \Exception
-     */
-    public function saveUser($data)
-    {
-        if (isset($data['user_id']) && $data['user_id']) {
-            \Db::table('User')->where(['user_id' => $data['user_id']])->update($data);
-        } else {
-            \Db::table('User')->insert($data);
-        }
-    }
-
-    /**
-     * @param $data
-     * @throws \Exception
-     */
-    public function deleteUser($data)
-    {
-        \Db::table('User')->where($data)->delete();
-    }
-
-    public function export($params)
-    {
-        if ($params['export_type'] == 1) {
-            $list = $this->getList($params, false);
-        } else {
-            $list = \Db::table('User')->where(['user_id' => ['in', explode(',', $params['ids'])]])->findAll();
-        }
-        if (count($list) > 10000) {
-            throw new \Exception('最多导出1万条数据');
-        }
-        if (count($list) == 0) {
-            throw new \Exception('没有符合条件的数据');
-        }
-        foreach ($list as $v) {
-            $data[] = [
-                $v['user_id'],
-                $v['nickname'],
-                $v['telephone'],
-                $v['city'],
-                $this->genderList[$v['gender']],
-                $v['birthday'],
-                date('Y-m-d H:i:s', $v['create_time'])
-            ];
-        }
-
-        $export = [];
-        $export['table_name'] = '普通会员数据';
-        $export['info'] = ['会员ID', '昵称', '手机号', '城市', '性别', '生日', '注册时间'];
-        $export['data'] = $data;
-        SpreadExcel::exportExcel($export);
     }
 
     public function exportProfession($params)

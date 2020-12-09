@@ -76,6 +76,36 @@ class ProductController extends BaseController
         return $res;
     }
 
+    public function comment($productId)
+    {
+        $comments = \Db::table('ProductComment')
+            ->field(['star', 'user_id', 'detail'])
+            ->where(['product_id' => $productId])
+            ->where(['is_show' => 1])
+            ->limit(3)
+            ->findAll();
+        $userIdList = array_column($comments, 'user_id');
+        $userList = \Db::table('User')
+            ->field(['user_id', 'nickname', 'avatar'])
+            ->where(['user_id' => ['in', $userIdList]])
+            ->findAll();
+        $userList = array_column($userList, null, 'user_id');
+        $res = [];
+        foreach ($comments as $c) {
+            $user = $userList[$c['user_id']];
+            $res[] = [
+                'nickname' => $user['nickname'],
+                'avatar' => $user['avatar'],
+                'star' => $c['star'],
+                'detail' => $c['detail']
+            ];
+        }
+        $count = \Db::table('ProductComment')
+            ->where(['product_id' => $productId])
+            ->where(['is_show' => 1])->count();
+        return ['total' => $count, 'list' => $res];
+    }
+
     public function groupon($id)
     {
         $groupon = \Db::table('Groupon')->where(['id' => $id])->find();
@@ -224,36 +254,6 @@ class ProductController extends BaseController
         $res['list'] = $list;
         $res['comments'] = $this->comment($product['product_id']);
         return $res;
-    }
-
-    public function comment($productId)
-    {
-        $comments = \Db::table('ProductComment')
-            ->field(['star', 'user_id', 'detail'])
-            ->where(['product_id' => $productId])
-            ->where(['is_show' => 1])
-            ->limit(3)
-            ->findAll();
-        $userIdList = array_column($comments, 'user_id');
-        $userList = \Db::table('User')
-            ->field(['user_id', 'nickname', 'avatar'])
-            ->where(['user_id' => ['in', $userIdList]])
-            ->findAll();
-        $userList = array_column($userList, null, 'user_id');
-        $res = [];
-        foreach ($comments as $c) {
-            $user = $userList[$c['user_id']];
-            $res[] = [
-                'nickname' => $user['nickname'],
-                'avatar' => $user['avatar'],
-                'star' => $c['star'],
-                'detail' => $c['detail']
-            ];
-        }
-        $count = \Db::table('ProductComment')
-            ->where(['product_id' => $productId])
-            ->where(['is_show' => 1])->count();
-        return ['total' => $count, 'list' => $res];
     }
 
     public function commentAction()

@@ -79,14 +79,16 @@
                 <td><?= $this->linkTypeList[$v['link_type']] ?></td>
                 <td>
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input is-show-btn" id="is-show<?= $v['carousel_id'] ?>"
+                        <input type="checkbox" class="custom-control-input is-show-btn"
+                               id="is-show<?= $v['carousel_id'] ?>"
                                value="<?= $v['carousel_id'] ?>" <?= $v['is_show'] ? 'checked' : '' ?>>
                         <label class="custom-control-label" for="is-show<?= $v['carousel_id'] ?>"></label>
                     </div>
                 </td>
                 <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
                 <td>
-                    <a class="btn btn-primary btn-sm" href="<?= \App::$urlManager->createUrl('erp/carousel/edit', ['carousel_id' => $v['carousel_id']]) ?>">
+                    <a class="btn btn-primary btn-sm"
+                       href="<?= \App::$urlManager->createUrl('erp/carousel/edit', ['carousel_id' => $v['carousel_id']]) ?>">
                         <i class="glyphicon glyphicon-pencil"></i> 编辑
                     </a>
                     <div class="btn btn-info btn-sm set-sort-btn" data-id="<?= $v['carousel_id'] ?>">
@@ -107,4 +109,4 @@
     </table>
 </div>
 <?= $this->pagination ?>
-<?php $this->appendScript('carousel.js')?>
+<?php $this->appendScript('carousel.js') ?>

@@ -23,6 +23,43 @@ class ProductService extends BaseService
 
     /**
      * @param $params
+     * @throws \Exception
+     */
+    public function export($params)
+    {
+        if ($params['export_type'] == 1) {
+            $list = $this->getList($params, false);
+        } else {
+            $list = \Db::table('Product')->where(['product_id' => ['in', explode(',', $params['ids'])]])->findAll();
+        }
+        if (count($list) > 10000) {
+            throw new \Exception('最多导出1万条数据');
+        }
+        if (count($list) == 0) {
+            throw new \Exception('没有符合条件的数据');
+        }
+        $data = [];
+        $brandList = $this->getDataList('Brand', 'brand_id', 'brand_name');
+        foreach ($list as $v) {
+            $arr = [
+                $v['product_id'],
+                $v['product_name'],
+                $v['category_name'],
+                $brandList[$v['brand_id']],
+                $this->productTypeList[$v['product_type']],
+                $this->statusList[$v['status']]
+            ];
+            $data[] = $arr;
+        }
+        $export = [];
+        $export['table_name'] = '商品数据';
+        $export['info'] = ['商品ID', '商品名称', '分类', '品牌', '类型', '状态'];
+        $export['data'] = $data;
+        SpreadExcel::exportExcel($export);
+    }
+
+    /**
+     * @param $params
      * @return array
      * @throws \Exception
      */
@@ -86,43 +123,6 @@ class ProductService extends BaseService
             return $this->pagination($selector, $params);
         }
         return $selector->findAll();
-    }
-
-    /**
-     * @param $params
-     * @throws \Exception
-     */
-    public function export($params)
-    {
-        if ($params['export_type'] == 1) {
-            $list = $this->getList($params, false);
-        } else {
-            $list = \Db::table('Product')->where(['product_id' => ['in', explode(',', $params['ids'])]])->findAll();
-        }
-        if (count($list) > 10000) {
-            throw new \Exception('最多导出1万条数据');
-        }
-        if (count($list) == 0) {
-            throw new \Exception('没有符合条件的数据');
-        }
-        $data = [];
-        $brandList = $this->getDataList('Brand', 'brand_id', 'brand_name');
-        foreach ($list as $v) {
-            $arr = [
-                $v['product_id'],
-                $v['product_name'],
-                $v['category_name'],
-                $brandList[$v['brand_id']],
-                $this->productTypeList[$v['product_type']],
-                $this->statusList[$v['status']]
-            ];
-            $data[] = $arr;
-        }
-        $export = [];
-        $export['table_name'] = '商品数据';
-        $export['info'] = ['商品ID', '商品名称', '分类', '品牌', '类型', '状态'];
-        $export['data'] = $data;
-        SpreadExcel::exportExcel($export);
     }
 
     /**
@@ -209,6 +209,30 @@ class ProductService extends BaseService
         }
     }
 
+    public static function getVariationCode()
+    {
+        $variation = \Db::table('ProductVariation')->order('id desc')->limit(1)->find();
+        if (!empty($variation)) {
+            $code = (int)substr($variation['variation_code'], 0, 12) + 1;
+        } else {
+            $code = 351500000000;   //若货品列表没东西则基于此自增生成SKU
+        }
+        $arr = str_split($code, 1);
+        $tmp1 = $arr[11] + $arr[9] + $arr[7] + $arr[5] + $arr[3] + $arr[1];
+        $tmp2 = $tmp1 * 3;
+        $tmp3 = $arr[10] + $arr[8] + $arr[6] + $arr[4] + $arr[2] + $arr[0];
+        $tmp4 = $tmp2 + $tmp3;
+        $tmp5 = ($tmp4 % 10);
+        if ($tmp5 > 0) {
+            $tmp5 = 10 - $tmp5;
+        }
+        $code .= $tmp5;
+        if (strlen($code) != 13) {
+            throw new \Exception('SKU编码长度不为13位!');
+        }
+        return $code;
+    }
+
     /**
      * @param $data
      * @throws \Exception
@@ -247,29 +271,5 @@ class ProductService extends BaseService
             return $this->pagination($selector, $params);
         }
         return $selector->findAll();
-    }
-
-    public static function getVariationCode()
-    {
-        $variation = \Db::table('ProductVariation')->order('id desc')->limit(1)->find();
-        if (!empty($variation)) {
-            $code = (int)substr($variation['variation_code'], 0, 12) + 1;
-        } else {
-            $code = 351500000000;   //若货品列表没东西则基于此自增生成SKU
-        }
-        $arr = str_split($code, 1);
-        $tmp1 = $arr[11] + $arr[9] + $arr[7] + $arr[5] + $arr[3] + $arr[1];
-        $tmp2 = $tmp1 * 3;
-        $tmp3 = $arr[10] + $arr[8] + $arr[6] + $arr[4] + $arr[2] + $arr[0];
-        $tmp4 = $tmp2 + $tmp3;
-        $tmp5 = ($tmp4 % 10);
-        if ($tmp5 > 0) {
-            $tmp5 = 10 - $tmp5;
-        }
-        $code .= $tmp5;
-        if (strlen($code) != 13) {
-            throw new \Exception('SKU编码长度不为13位!');
-        }
-        return $code;
     }
 }

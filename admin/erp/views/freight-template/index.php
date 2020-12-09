@@ -6,7 +6,8 @@
 <form class="search-form" action="<?= \App::$urlManager->createUrl('erp/freight-template/index') ?>" method="get">
     <div class="form-content">
         <span class="col-form-label search-label">模版名称</span>
-        <input type="text" class="form-control search-input" name="template_name" value="<?= $this->params['template_name'] ?>">
+        <input type="text" class="form-control search-input" name="template_name"
+               value="<?= $this->params['template_name'] ?>">
     </div>
     <div class="form-content">
         <span class="col-form-label search-label">计价方式</span>
@@ -58,7 +59,8 @@
                 <td><?= $v['step_price'] ?></td>
                 <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
                 <td>
-                    <a class="btn btn-primary btn-sm" href="<?= \App::$urlManager->createUrl('erp/freight-template/edit', ['freight_id' => $v['freight_id']]) ?>">
+                    <a class="btn btn-primary btn-sm"
+                       href="<?= \App::$urlManager->createUrl('erp/freight-template/edit', ['freight_id' => $v['freight_id']]) ?>">
                         <i class="glyphicon glyphicon-pencil"></i> 编辑
                     </a>
                     <div class="btn btn-danger btn-sm remove-btn" data-freight_id="<?= $v['freight_id'] ?>">
@@ -76,4 +78,4 @@
     </table>
 </div>
 <?= $this->pagination ?>
-<?php $this->appendScript('freight-template.js')?>
+<?php $this->appendScript('freight-template.js') ?>

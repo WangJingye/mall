@@ -2,8 +2,6 @@
 
 namespace admin\erp\service;
 
-use admin\common\service\BaseService;
-
 class CouponService extends \common\service\CouponService
 {
     /**

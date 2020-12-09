@@ -49,14 +49,19 @@
                 <td><?= $v['status'] == '1' ? '可用' : '禁用' ?></td>
                 <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
                 <td>
-                    <a class="btn btn-primary btn-sm" href="<?= \App::$urlManager->createUrl('system/menu/edit-menu', ['id' => $v['id']]) ?>">
+                    <a class="btn btn-primary btn-sm"
+                       href="<?= \App::$urlManager->createUrl('system/menu/edit-menu', ['id' => $v['id']]) ?>">
                         <i class="glyphicon glyphicon-pencil"></i> 编辑
                     </a>
-                    <?php if($v['status']==1):?>
-                        <div class="btn btn-danger btn-sm set-status-btn" data-id="<?= $v['id'] ?>" data-status="0"><i class="glyphicon glyphicon-ban-circle"></i> 禁用</div>
-                    <?php else:?>
-                        <div class="btn btn-success btn-sm set-status-btn" data-id="<?= $v['id'] ?>" data-status="1"><i class="glyphicon glyphicon-ok-circle"></i> 启用</div>
-                    <?php endif;?>
+                    <?php if ($v['status'] == 1): ?>
+                        <div class="btn btn-danger btn-sm set-status-btn" data-id="<?= $v['id'] ?>" data-status="0"><i
+                                    class="glyphicon glyphicon-ban-circle"></i> 禁用
+                        </div>
+                    <?php else: ?>
+                        <div class="btn btn-success btn-sm set-status-btn" data-id="<?= $v['id'] ?>" data-status="1"><i
+                                    class="glyphicon glyphicon-ok-circle"></i> 启用
+                        </div>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -69,4 +74,4 @@
     </table>
 </div>
 <?= $this->pagination ?>
-<?php $this->appendScript('menu.js')?>
+<?php $this->appendScript('menu.js') ?>

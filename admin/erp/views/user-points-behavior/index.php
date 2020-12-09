@@ -6,7 +6,8 @@
 <form class="search-form" action="<?= \App::$urlManager->createUrl('erp/user-points-behavior/index') ?>" method="get">
     <div class="form-content">
         <span class="col-form-label search-label">行为名称</span>
-        <input type="text" class="form-control search-input" name="behavior_name" value="<?= $this->params['behavior_name'] ?>">
+        <input type="text" class="form-control search-input" name="behavior_name"
+               value="<?= $this->params['behavior_name'] ?>">
     </div>
     <?php $searchList = ['behavior_id' => 'ID']; ?>
     <div class="form-content">

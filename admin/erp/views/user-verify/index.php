@@ -18,7 +18,8 @@
     </div>
     <div class="form-content">
         <span class="col-form-label search-label">公司名称</span>
-        <input type="text" class="form-control search-input" name="company_name" value="<?= $this->params['company_name'] ?>">
+        <input type="text" class="form-control search-input" name="company_name"
+               value="<?= $this->params['company_name'] ?>">
     </div>
     <div class="form-content">
         <span class="col-form-label search-label">手机号</span>
@@ -45,7 +46,9 @@
             </select>
             <input type="text" class="form-control search-value" name="search_value" placeholder="关键词"
                    value="<?= $this->params['search_value'] ?>">
-            <div class="btn btn-primary search-with-export-btn text-nowrap"><i class="glyphicon glyphicon-search"></i> 搜索</div>
+            <div class="btn btn-primary search-with-export-btn text-nowrap"><i class="glyphicon glyphicon-search"></i>
+                搜索
+            </div>
             <div class="btn btn-success export-btn text-nowrap"><i class="glyphicon glyphicon-export"></i> 导出</div>
         </div>
     </div>
@@ -77,7 +80,8 @@
                 <td><?= $this->industryList[$v['industry_id']] ?></td>
                 <td><?= $v['company_name'] ?></td>
                 <td><?= $v['telephone'] ?></td>
-                <td class="verify-status" style="color:<?=$statusColorList[$v['verify_status']]?>"><?= $this->verifyStatusList[$v['verify_status']] ?></td>
+                <td class="verify-status"
+                    style="color:<?= $statusColorList[$v['verify_status']] ?>"><?= $this->verifyStatusList[$v['verify_status']] ?></td>
                 <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
                 <td><?= $v['verify_time'] ? date('Y-m-d H:i:s', $v['verify_time']) : '--' ?></td>
                 <td>

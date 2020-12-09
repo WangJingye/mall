@@ -146,7 +146,7 @@ class UserController extends BaseController
             ->order('order_id desc')
             ->limit($limit)
             ->findAll();
-       return $this->success('获取成功', $list);
+        return $this->success('获取成功', $list);
     }
 
     /**

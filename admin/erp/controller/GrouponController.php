@@ -69,7 +69,7 @@ class GrouponController extends BaseController
         }
         $this->title = '创建团购';
         $variationList = [];
-        if(!empty($params['product_id'])){
+        if (!empty($params['product_id'])) {
             $product = \Db::table('Product')->where(['product_id' => $params['product_id']])->find();
             $this->assign('product', $product);
         }

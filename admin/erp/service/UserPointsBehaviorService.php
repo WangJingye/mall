@@ -10,6 +10,7 @@ class UserPointsBehaviorService extends BaseService
         '1' => '启用中',
         '2' => '禁用中',
     ];
+
     /**
      * @param $params
      * @return array

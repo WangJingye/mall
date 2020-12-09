@@ -44,7 +44,7 @@ class PublicController extends BaseController
                 return $this->error($e->getMessage());
             }
         }
-        $this->assign('redirectUrl', \App::$request->getParams('redirect_url','/'));
+        $this->assign('redirectUrl', \App::$request->getParams('redirect_url', '/'));
         $this->appendCss('/static/css/login.css');
         $this->layout('login');
     }

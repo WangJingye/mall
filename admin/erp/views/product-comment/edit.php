@@ -1,4 +1,5 @@
-<form class="form-box col-12 col-sm-8 col-md-6" id="save-form" action="<?= \App::$urlManager->createUrl('erp/product-comment/edit') ?>" method="post">
+<form class="form-box col-12 col-sm-8 col-md-6" id="save-form"
+      action="<?= \App::$urlManager->createUrl('erp/product-comment/edit') ?>" method="post">
     <input type="hidden" name="comment_id" value="<?= $this->model['comment_id'] ?>">
     <div class="form-group row">
         <div class="offset-4 col-sm-8">

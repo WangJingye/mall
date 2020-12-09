@@ -22,7 +22,8 @@
             <tr>
                 <td class="table-thead">头像</td>
                 <td> <?php if ($this->user['avatar']): ?>
-                        <img src="<?= \App::$urlManager->staticUrl($this->user['avatar']) ?>" style="width: 40px;height: 40px;">
+                        <img src="<?= \App::$urlManager->staticUrl($this->user['avatar']) ?>"
+                             style="width: 40px;height: 40px;">
                     <?php endif; ?>
                 </td>
             </tr>

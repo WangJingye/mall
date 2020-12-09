@@ -6,8 +6,9 @@
 <form class="search-form" action="<?= \App::$urlManager->createUrl('erp/groupon/index') ?>" method="get">
     <div class="form-content">
         <span class="col-form-label search-label">所属商品</span>
-        <input type="hidden" name="product_id" value="<?= $this->params['product_id']?>">
-        <input type="text" class="form-control search-input search-product" readonly value="<?= $this->product['product_name']?>" placeholder="点击选择商品">
+        <input type="hidden" name="product_id" value="<?= $this->params['product_id'] ?>">
+        <input type="text" class="form-control search-input search-product" readonly
+               value="<?= $this->product['product_name'] ?>" placeholder="点击选择商品">
         <?php if ($this->params['product_id']): ?>
             <span class="search-clear-btn"><i class="glyphicon glyphicon-remove-circle"></i></span>
         <?php endif; ?>
@@ -78,11 +79,11 @@
                     <div class="btn btn-danger btn-sm remove-btn" data-id="<?= $v['id'] ?>">
                         <i class="glyphicon glyphicon-trash"></i> 删除
                     </div>
-                    <?php if($v['status']==2):?>
+                    <?php if ($v['status'] == 2): ?>
                         <div class="btn btn-outline-danger btn-sm end-btn" data-id="<?= $v['id'] ?>">
                             <i class="glyphicon glyphicon-remove"></i> 立即结束
                         </div>
-                    <?php endif;?>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>

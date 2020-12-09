@@ -4,13 +4,12 @@ namespace admin\extend\input;
 
 class SelectInput extends \ObjectAccess
 {
+    public static $instance;
     public $name = 'key';
     public $list = [];
     public $type = 'radio';
     public $checked;
     public $multi;
-
-    public static $instance;
 
     public function __construct($list, $checked, $name, $type)
     {

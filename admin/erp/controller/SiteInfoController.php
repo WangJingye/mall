@@ -4,7 +4,6 @@ namespace admin\erp\controller;
 
 use admin\common\controller\BaseController;
 use common\helper\Constant;
-use common\helper\ProductESHelper;
 
 class SiteInfoController extends BaseController
 {

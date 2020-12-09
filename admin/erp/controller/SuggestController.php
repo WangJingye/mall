@@ -34,12 +34,12 @@ class SuggestController extends BaseController
         }
         /** @var SuggestService $res */
         $res = $this->suggestService->getList($params);
-        $list=$res->list;
-        $userIds=array_column($list,'user_id');
-        $userList=$this->suggestService->getDataList('User','user_id','nickname',['user_id'=>['in',$userIds]]);
+        $list = $res->list;
+        $userIds = array_column($list, 'user_id');
+        $userList = $this->suggestService->getDataList('User', 'user_id', 'nickname', ['user_id' => ['in', $userIds]]);
         $this->assign('params', $params);
         $this->assign('pagination', $this->pagination($res));
-        $this->assign('list',$list);
+        $this->assign('list', $list);
         $this->assign('statusList', $this->statusList);
         $this->assign('userList', $userList);
     }
@@ -55,7 +55,7 @@ class SuggestController extends BaseController
                 if (empty($params['id'])) {
                     throw new \Exception('非法请求');
                 }
-                \Db::table('Suggest')->where(['id' => $params['id']])->update(['status'=>0]);
+                \Db::table('Suggest')->where(['id' => $params['id']])->update(['status' => 0]);
                 return $this->success('删除成功');
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());

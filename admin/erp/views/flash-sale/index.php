@@ -10,15 +10,17 @@
     </div>
     <div class="form-content">
         <span class="col-form-label search-label">所属商品</span>
-        <input type="hidden" name="product_id" value="<?= $this->params['product_id']?>">
-        <input type="text" class="form-control search-input search-product" readonly value="<?= $this->product['product_name']?>" placeholder="点击选择商品">
+        <input type="hidden" name="product_id" value="<?= $this->params['product_id'] ?>">
+        <input type="text" class="form-control search-input search-product" readonly
+               value="<?= $this->product['product_name'] ?>" placeholder="点击选择商品">
         <?php if ($this->params['product_id']): ?>
             <span class="search-clear-btn"><i class="glyphicon glyphicon-remove-circle"></i></span>
         <?php endif; ?>
     </div>
     <div class="form-content">
         <span class="col-form-label search-label">sku</span>
-        <input type="text" class="form-control search-input" name="variation_code" value="<?= $this->params['variation_code'] ?>">
+        <input type="text" class="form-control search-input" name="variation_code"
+               value="<?= $this->params['variation_code'] ?>">
     </div>
     <div class="form-content">
         <span class="col-form-label search-label">状态</span>

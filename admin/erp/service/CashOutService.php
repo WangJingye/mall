@@ -15,43 +15,6 @@ class CashOutService extends BaseService
 
     /**
      * @param $params
-     * @return array
-     * @throws \Exception
-     */
-    public function getList($params, $ispage = true)
-    {
-        $selector = \Db::table('CashOut')->where(['status' => ['!=', 0]]);
-
-        if (isset($params['id']) && $params['id'] != '') {
-            $selector->where(['id' => $params['id']]);
-        }
-        if (isset($params['user_id']) && $params['user_id'] != '') {
-            $selector->where(['user_id' => $params['user_id']]);
-        }
-        if (isset($params['amount']) && $params['amount'] != '') {
-            $selector->where(['amount' => $params['amount']]);
-        }
-        if (isset($params['status']) && $params['status'] != '') {
-            $selector->where(['status' => $params['status']]);
-        }
-        if (isset($params['operator']) && $params['operator'] != '') {
-            $selector->where(['operator' => $params['operator']]);
-        }
-        if (isset($params['create_time']) && $params['create_time'] != '') {
-            $selector->where(['create_time' => $params['create_time']]);
-        }
-        if (isset($params['update_time']) && $params['update_time'] != '') {
-            $selector->where(['update_time' => $params['update_time']]);
-        }
-        $selector->order('id desc');
-        if ($ispage) {
-            return $this->pagination($selector, $params);
-        }
-        return $selector->findAll();
-    }
-
-    /**
-     * @param $params
      * @throws \Exception
      */
     public function export($params)
@@ -87,6 +50,43 @@ class CashOutService extends BaseService
         $export['info'] = ['ID', '用户', '提现金额', '状态', '操作员', '创建时间', '审核时间'];
         $export['data'] = $data;
         SpreadExcel::exportExcel($export);
+    }
+
+    /**
+     * @param $params
+     * @return array
+     * @throws \Exception
+     */
+    public function getList($params, $ispage = true)
+    {
+        $selector = \Db::table('CashOut')->where(['status' => ['!=', 0]]);
+
+        if (isset($params['id']) && $params['id'] != '') {
+            $selector->where(['id' => $params['id']]);
+        }
+        if (isset($params['user_id']) && $params['user_id'] != '') {
+            $selector->where(['user_id' => $params['user_id']]);
+        }
+        if (isset($params['amount']) && $params['amount'] != '') {
+            $selector->where(['amount' => $params['amount']]);
+        }
+        if (isset($params['status']) && $params['status'] != '') {
+            $selector->where(['status' => $params['status']]);
+        }
+        if (isset($params['operator']) && $params['operator'] != '') {
+            $selector->where(['operator' => $params['operator']]);
+        }
+        if (isset($params['create_time']) && $params['create_time'] != '') {
+            $selector->where(['create_time' => $params['create_time']]);
+        }
+        if (isset($params['update_time']) && $params['update_time'] != '') {
+            $selector->where(['update_time' => $params['update_time']]);
+        }
+        $selector->order('id desc');
+        if ($ispage) {
+            return $this->pagination($selector, $params);
+        }
+        return $selector->findAll();
     }
 
     /**

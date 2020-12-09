@@ -3,7 +3,7 @@
         <h1>Oops!</h1>
         <p>请求失败!</p>
         <p style="color: #FF6666;">
-            <?= !empty($e) ? $e->getMessage() : '您所请求的页面不存在!' ;?>
+            <?= !empty($e) ? $e->getMessage() : '您所请求的页面不存在!'; ?>
         </p>
         <p id="page-jump">页面将在<span id="time_span">5</span>秒后跳转到<a id="jump_url"
                                                                    href="<?= \App::$urlManager->createUrl('/'); ?>">主页!</a>

@@ -1,4 +1,5 @@
-<form class="form-box col-12 col-sm-8 col-md-6" id="save-form" action="<?= \App::$urlManager->createUrl('system/admin/edit-admin') ?>" method="post">
+<form class="form-box col-12 col-sm-8 col-md-6" id="save-form"
+      action="<?= \App::$urlManager->createUrl('system/admin/edit-admin') ?>" method="post">
     <input type="hidden" name="admin_id" value="<?= isset($this->model['admin_id']) ? $this->model['admin_id'] : '' ?>">
     <div class="form-group row">
         <label class="col-sm-4 text-nowrap col-form-label form-label">用户名</label>

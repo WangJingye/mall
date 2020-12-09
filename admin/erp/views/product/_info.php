@@ -1,4 +1,4 @@
-<tr class="ajaxDropDownView" data-id="<?=$this->id?>">
+<tr class="ajaxDropDownView" data-id="<?= $this->id ?>">
     <td colspan="100">
         <ul class="nav nav-tabs">
             <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#operation-log">操作日志</a></li>

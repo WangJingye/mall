@@ -159,6 +159,29 @@ class MenuService extends BaseService
     }
 
     /**
+     * @return array|mixed
+     * @throws \Exception
+     */
+    public function getActiveMenu()
+    {
+        $menu = $this->getCurrentMenu();
+        $activeList = [];
+        if ($menu) {
+            $activeList = $this->getParent($menu, []);
+        }
+        return $activeList;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getCurrentMenu()
+    {
+        return \Db::table('Menu')->where(['url' => \App::$request->uri])->find();
+    }
+
+    /**
      * @param $cmenu
      * @param $menuList
      * @return mixed
@@ -172,29 +195,6 @@ class MenuService extends BaseService
         }
         $menu = \Db::table('Menu')->where(['id' => $cmenu['parent_id']])->find();
         return $this->getParent($menu, $menuList);
-    }
-
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getCurrentMenu()
-    {
-        return \Db::table('Menu')->where(['url' => \App::$request->uri])->find();
-    }
-
-    /**
-     * @return array|mixed
-     * @throws \Exception
-     */
-    public function getActiveMenu()
-    {
-        $menu = $this->getCurrentMenu();
-        $activeList = [];
-        if ($menu) {
-            $activeList = $this->getParent($menu, []);
-        }
-        return $activeList;
     }
 
     /**

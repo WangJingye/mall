@@ -33,7 +33,9 @@
             </select>
             <input type="text" class="form-control search-value" name="search_value" placeholder="关键词"
                    value="<?= $this->params['search_value'] ?>">
-            <div class="btn btn-primary search-with-export-btn text-nowrap"><i class="glyphicon glyphicon-search"></i> 搜索</div>
+            <div class="btn btn-primary search-with-export-btn text-nowrap"><i class="glyphicon glyphicon-search"></i>
+                搜索
+            </div>
             <div class="btn btn-success export-btn text-nowrap"><i class="glyphicon glyphicon-export"></i> 导出</div>
         </div>
     </div>

@@ -77,7 +77,8 @@
                         <td><?= $this->brandList[$v['brand_id']] ?></td>
                         <td class="pic" data-value="<?= $v['pic'] ?>">
                             <?php if ($v['pic']): ?>
-                                <img src="<?= \App::$urlManager->staticUrl($v['pic']) ?>" style="width: 40px;height:40px;">
+                                <img src="<?= \App::$urlManager->staticUrl($v['pic']) ?>"
+                                     style="width: 40px;height:40px;">
                             <?php endif; ?>
                         </td>
                         <td class="status"><?= $this->statusList[$v['status']] ?></td>

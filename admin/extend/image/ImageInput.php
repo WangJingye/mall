@@ -4,12 +4,11 @@ namespace admin\extend\image;
 
 class ImageInput extends \ObjectAccess
 {
+    public static $instance;
     public $count = 1;
     public $name = 'file';
     public $images = [];
     public $fileType = 'image';
-
-    public static $instance;
 
     public function __construct($images, $name = 'file', $count = 1, $fileType = 'image')
     {

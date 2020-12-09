@@ -32,8 +32,8 @@ class MessageController extends BaseController
         $this->assign('params', $params);
         $this->assign('pagination', $this->pagination($res));
         $this->assign('list', $res->list);
-        $categoryList = \Db::table('MessageCategory,category_id')->field(['category_name', 'categoryList'])->findAll();
-        $categoryList1 = array_column($categoryList, 'categoryList','category_name');
+        $categoryList = \Db::table('MessageCategory')->field(['category_name', 'categoryList'])->findAll();
+        $categoryList = array_column($categoryList, 'categoryList', 'category_name');
         $this->assign('categoryList', $categoryList);
     }
 
@@ -60,8 +60,8 @@ class MessageController extends BaseController
             $this->assign('model', $model);
             $this->title = '编辑消息 - ' . $model['id'];
         }
-        $categoryList = \Db::table('MessageCategory,category_id')->field(['category_name', 'categoryList'])->findAll();
-        $categoryList = array_column($categoryList, 'categoryList','category_name');
+        $categoryList = \Db::table('MessageCategory')->field(['category_name', 'categoryList'])->findAll();
+        $categoryList = array_column($categoryList, 'categoryList', 'category_name');
         $this->assign('categoryList', $categoryList);
     }
 

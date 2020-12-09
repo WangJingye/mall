@@ -58,12 +58,12 @@
                 <td><?= date('Y-m-d H:i:s', $v['create_time']) ?></td>
                 <td>
                     <?php if ($v['status'] == 1): ?>
-                    <div class="btn btn-success btn-sm share-btn"
-                       data-url="<?= \App::$urlManager->createUrl('erp/suggest/reply') ?>"
-                       data-id="<?= $v['id'] ?>">
-                        <i class="glyphicon glyphicon-share-alt"></i> 回复
-                    </div>
-                    <?php endif;?>
+                        <div class="btn btn-success btn-sm share-btn"
+                             data-url="<?= \App::$urlManager->createUrl('erp/suggest/reply') ?>"
+                             data-id="<?= $v['id'] ?>">
+                            <i class="glyphicon glyphicon-share-alt"></i> 回复
+                        </div>
+                    <?php endif; ?>
                     <div class="btn btn-danger btn-sm remove-btn" data-id="<?= $v['id'] ?>">
                         <i class="glyphicon glyphicon-trash"></i> 删除
                     </div>

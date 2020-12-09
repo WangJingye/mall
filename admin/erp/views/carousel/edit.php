@@ -50,10 +50,13 @@
                 <?php if ($this->product): ?>
                     <tr class="search-product-data">
                         <td><?= $this->product['product_id'] ?></td>
-                        <td><input type="hidden" class="link_id" value="<?=$this->product['product_id']?>"><?= $this->product['product_name'] ?></td>
+                        <td><input type="hidden" class="link_id"
+                                   value="<?= $this->product['product_id'] ?>"><?= $this->product['product_name'] ?>
+                        </td>
                         <td>
                             <?php if ($this->product['pic']): ?>
-                                <img src="<?= \App::$urlManager->staticUrl($this->product['pic']) ?>" style="width: 40px;height: 40px;">
+                                <img src="<?= \App::$urlManager->staticUrl($this->product['pic']) ?>"
+                                     style="width: 40px;height: 40px;">
                             <?php endif; ?>
                         </td>
                         <td>

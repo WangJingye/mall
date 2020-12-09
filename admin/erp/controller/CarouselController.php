@@ -119,6 +119,7 @@ class CarouselController extends BaseController
             return $this->error($e->getMessage());
         }
     }
+
     /**
      * @throws \Exception
      */
