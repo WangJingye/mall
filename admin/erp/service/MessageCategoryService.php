@@ -26,6 +26,8 @@ class MessageCategoryService extends BaseService
         }
         if (isset($params['status']) && $params['status'] != '') {
             $selector->where(['status' => $params['status']]);
+        } else {
+            $selector->where(['status' => ['!=', 0]]);
         }
         if (isset($params['create_time']) && $params['create_time'] != '') {
             $selector->where(['create_time' => $params['create_time']]);

@@ -43,7 +43,7 @@ $(function () {
             status: $this.data('status')
         };
         $.loading('show');
-        $.post($this.data('url'), args, function (res) {
+       POST('/erp/message-category/set-status', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -56,10 +56,10 @@ $(function () {
                         'title': '使用中',
                     };
                 }
-                if (args.status == 0) {
+                if (args.status == 2) {
                     data = {
-                        'btn_class': 'btn-danger',
-                        'class_name': 'glyphicon-remove-circle',
+                        'btn_class': 'btn-success',
+                        'class_name': 'glyphicon-ok-circle',
                         'status': '1',
                         'name': '启用',
                         'title': '已删除',

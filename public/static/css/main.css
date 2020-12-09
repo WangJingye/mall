@@ -82,6 +82,7 @@
             position: sticky;
             z-index: 1000;
             height: calc(100vh - 3rem);
+            max-height: calc(100vh - 3rem);
         }
     }
 }
@@ -99,6 +100,7 @@
 @media (min-width: 768px) {
     @supports ((position:-webkit-sticky) or (position:sticky)) {
         .bd-links {
+            height: calc(100vh - 3rem);
             max-height: calc(100vh - 3rem);
             overflow-y: auto
         }

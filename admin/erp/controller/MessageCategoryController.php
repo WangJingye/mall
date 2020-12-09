@@ -77,7 +77,7 @@ class MessageCategoryController extends BaseController
                 if (empty($params['id'])) {
                     throw new \Exception('非法请求');
                 }
-                \Db::table('MessageCategory')->where(['category_id' => $params['id']])->delete();
+                \Db::table('MessageCategory')->where(['category_id' => $params['id']])->update(['status'=>0]);
                 return $this->success('删除成功');
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());
