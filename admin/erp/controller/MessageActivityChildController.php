@@ -148,7 +148,6 @@ class MessageActivityChildController extends BaseController
                 'user_id' => 0,//0 发给所有用户
                 'title' => $activity['title'],
                 'content' => $list[0]['title'],
-                'icon' => $activity['pic'],
             ];
             $children = [];
             $first = [];
@@ -169,7 +168,11 @@ class MessageActivityChildController extends BaseController
                     ];
                 }
             }
-            $data['extra'] = json_encode(['first' => $first, 'children' => $children]);
+            $data['extra'] = json_encode([
+                'icon' => $activity['pic'],
+                'first' => $first,
+                'children' => $children
+            ]);
             \Db::table('Message')->insert($data);
             \Db::table('MessageActivityChild')
                 ->where(['activity_id' => $params['activity_id']])

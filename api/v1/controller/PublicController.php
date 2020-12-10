@@ -70,7 +70,7 @@ class PublicController extends BaseController
     public function indexAction()
     {
         $carousels = \Db::table('Carousel')
-            ->field(['title', 'pic', 'link_type', 'link_id'])
+            ->field(['carousel_id', 'title', 'pic', 'link_type', 'link'])
             ->where(['carousel_type' => 1])
             ->where(['is_show' => 1])
             ->order('sort desc')

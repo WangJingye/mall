@@ -44,10 +44,12 @@ class MessageController extends BaseController
     public function listAction()
     {
         $params = \App::$request->params->toArray();
-        $category = \Db::table('MessageCategory')->where(['category_id' => $params['category_id']])->find();
+        $category = \Db::table('MessageCategory')
+            ->where(['category_id' => $params['category_id']])
+            ->find();
         $selector = \Db::table('Message')
             ->where(['category_id' => $params['category_id']])
-            ->where(['user_id' => \App::$user['user_id']])
+            ->where(['user_id' => ['in', [\App::$user['user_id'], 0]]])
             ->where(['status' => 1]);
         $page = 1;
         if (!empty($params['page'])) {
@@ -73,9 +75,13 @@ class MessageController extends BaseController
             if ($category['type'] == 1) {
                 $arr['pic'] = $extra['pic'];
                 $arr['order_code'] = $extra['order_code'];
+            } else if ($category['type'] == 2) {
+                $arr['icon'] = $extra['icon'];
+                $arr['first'] = $extra['first'];
+                $arr['children'] = $extra['children'];
             }
             $res[] = $arr;
         }
-        return $this->success('success', ['list' => $res, 'page' => $page, 'total_page' => $totalPage]);
+        return $this->success('success', ['type' => $category['type'], 'list' => $res, 'page' => $page, 'total_page' => $totalPage]);
     }
 }
