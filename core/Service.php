@@ -15,6 +15,7 @@ class Service extends ObjectAccess
     /**
      * @param \Db $selector
      * @param $params
+     * @return $this
      */
     public function pagination($selector, $params)
     {

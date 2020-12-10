@@ -13,6 +13,7 @@ class MessageController extends BaseController
     {
         $categoryIds = \Db::table('Message')
             ->field(['category_id'])
+            ->where(['user_id' => ['in', [\App::$user['user_id'], 0]]])
             ->where(['status' => 1])
             ->group('category_id')
             ->findAll();

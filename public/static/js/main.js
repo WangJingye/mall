@@ -324,9 +324,9 @@ function time2date(time, format) {
     Y = date.getFullYear();
     m = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
     d = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-    H = date.getHours();
-    i = date.getMinutes();
-    s = date.getSeconds();
+    H = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+    i = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+    s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
     if (!format) {
         format = 'Y-m-d H:i:s';
     }
@@ -335,7 +335,7 @@ function time2date(time, format) {
 
 function POST(url, args, callback, format) {
     if (location.pathname.indexOf('index.php') !== -1) {
-        url = location.pathname + '?s=' + trim(url,'/');
+        url = location.pathname + '?s=' + trim(url, '/');
     }
     if (format === undefined) {
         format = 'json';
@@ -358,8 +358,8 @@ function trim(str, glue) {
             break;
         }
     }
-    str= str.substring(start, end + 1);
-    if(str==glue){
+    str = str.substring(start, end + 1);
+    if (str == glue) {
         return '';
     }
     return str;

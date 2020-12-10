@@ -16,7 +16,7 @@ class CarouselController extends BaseController
     public $linkTypeList = [
         '0' => '无跳转',
         '1' => '商品详情页',
-        '2' => '分类页',
+        '2' => '搜索结果页',
     ];
     public $isShowList = [
         '0' => '否',
@@ -72,15 +72,15 @@ class CarouselController extends BaseController
                 throw new \Exception('数据不存在');
             }
             $this->assign('model', $model);
+
             if ($model['link_type'] == 1) {
-                $product = \Db::table('Product')->where(['product_id' => $model['link_id']])->find();
+                $product = \Db::table('Product')->where(['product_id' => $model['link']])->find();
                 $this->assign('product', $product);
             }
             $this->title = '编辑轮播 - ' . $model['carousel_id'];
         }
         $this->assign('carouselTypeList', $this->carouselTypeList);
         $this->assign('linkTypeList', $this->linkTypeList);
-        $this->assign('categoryList', $this->carouselService->getChildList(0, 0, 'ProductCategory', 'category_id', 'category_name'));
         $this->assign('isShowList', $this->isShowList);
     }
 

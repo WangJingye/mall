@@ -1,39 +1,19 @@
 $(function () {
     $('#save-form').validate({
         rules: {
-            carousel_type: {
-                required: true
-            },
-            title: {
-                required: true
-            },
             link_type: {
                 required: true
             },
-            is_show: {
+            link: {
                 required: true
-            },
-            sort: {
-                required: true,
-                digits: true
             }
         },
         messages: {
-            carousel_type: {
-                required: '请输入轮播类型'
-            },
-            title: {
-                required: '请输入标题'
-            },
             link_type: {
-                required: '请选择链接类型'
+                required: '请输入链接到'
             },
-            is_show: {
-                required: '请选择是否展示'
-            },
-            sort: {
-                required: '请输入排序值',
-                digits: '排序值只能是正整数',
+            link: {
+                required: '请输入链接内容'
             }
         },
         submitHandler: function (e) {
@@ -48,10 +28,10 @@ $(function () {
         }
         let $this = $(this);
         let args = {
-            carousel_id: $(this).data('carousel_id'),
+            id: $(this).data('id'),
         };
         $.loading('show');
-        POST('/erp/carousel/delete', args, function (res) {
+        $.post('/erp/message-activity-child/delete', args, function (res) {
             $.loading('hide');
             if (res.code == 200) {
                 $.success(res.message);
@@ -61,7 +41,6 @@ $(function () {
             }
         }, 'json');
     });
-
     $('select[name="link_type"]').change(function () {
         $('.link-type-form').hide();
         $('.link-type-form[data-id="' + $(this).val() + '"]').show();
@@ -83,23 +62,6 @@ $(function () {
             }
         });
     });
-
-    $('.is-show-btn').change(function (e) {
-        var args = {
-            id: $(this).val(),
-            is_show: $(this).prop('checked') ? 1 : 0
-        };
-        $.loading('show');
-        POST('/erp/carousel/set-show', args, function (res) {
-            $.loading('hide');
-            if (res.code == 200) {
-                $.success(res.message);
-            } else {
-                $.error(res.message);
-            }
-        }, 'json');
-    });
-
     $('.set-sort-btn').click(function () {
         var $this = $(this);
         var html = '<form><div class="form-group row">' +
@@ -119,11 +81,71 @@ $(function () {
                     return false;
                 }
                 $.loading('show');
-                POST('/erp/carousel/set-sort', args, function (res) {
+                POST('/erp/message-activity-child/set-sort', args, function (res) {
                     $.loading('hide');
                     if (res.code == 200) {
                         $.success(res.message);
                         $this.parents('tr').find('.sort').html(args.sort);
+                    } else {
+                        $.error(res.message);
+                    }
+                }, 'json')
+            }
+        })
+    });
+    $('.share-all-btn').click(function () {
+        var ids = [];
+        var activity = [];
+        $('.check-one:checked').each(function () {
+            if ($(this).data('status') == 1) {
+                ids.push($(this).val());
+                if (activity.indexOf($(this).data('p')) == -1) {
+                    activity.push($(this).data('p'))
+                }
+            }
+        });
+        if (!activity.length) {
+            $.error('没有需要发布的内容');
+            return false;
+        }
+        if (activity.length > 1) {
+            $.error('所属活动相同的内容才能进行发布');
+            return false;
+        }
+        activity = activityList[activity[0]];
+        var html = '<div class="publish-preview"><div class="publish-title">' +
+            '<div class="title-left"><img src="' + activity['pic'] + '" class="publish-title-icon"/><div class="publish-title-text">' + activity['title'] + '</div></div><div class="title-time">' + time2date(new Date().getTime() / 1000) + '</div></div>';
+        var length = $('.check-one:checked').length;
+        for (var i = 0; i < length; i++) {
+            var item = $('.check-one:checked').eq(i);
+            var tr = item.parents('tr');
+            if (item.data('status') != 1) {
+                continue;
+            }
+            if (i == 0) {
+                html += '<div class="publish-jumbotron">' +
+                    '<img src="' + tr.find('.pic').attr('src') + '" class="jumbotron-image"/>' +
+                    '<div class="jumbotron-text">' + tr.find('.content').html() + '</div></div>'
+            } else {
+                html += '<div class="publish-child">' +
+                    '<div class="child-text">' + tr.find('.content').html() + '</div>' +
+                    '<img class="child-image" src="' + tr.find('.pic').attr('src') + '"></div>';
+            }
+        }
+        html += '</div>'
+        $.showModal({
+            title: '内容发布预览', content: html, width: '30vw', okCallback: function () {
+                var args = {
+                    activity_id: activity['id'],
+                    ids: ids.join(','),
+                };
+                $.loading('show');
+                POST('/erp/message-activity-child/publish', args, function (res) {
+                    $.loading('hide');
+                    if (res.code == 200) {
+                        $.success(res.message,function () {
+                            location.reload();
+                        });
                     } else {
                         $.error(res.message);
                     }
