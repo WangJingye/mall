@@ -44,6 +44,7 @@ class MessageController extends BaseController
     public function listAction()
     {
         $params = \App::$request->params->toArray();
+
         $category = \Db::table('MessageCategory')
             ->where(['category_id' => $params['category_id']])
             ->find();
@@ -55,7 +56,7 @@ class MessageController extends BaseController
         if (!empty($params['page'])) {
             $page = $params['page'];
         }
-        $pageSize = 10;
+        $pageSize = 20;
         $total = $selector->count();
         $totalPage = (int)ceil($total / $pageSize);
         $page = min($page, $totalPage);
@@ -63,7 +64,6 @@ class MessageController extends BaseController
         $list = $selector->order('id desc')
             ->limit((($page - 1) * $pageSize) . ',' . $pageSize)
             ->findAll();
-        $list = array_reverse($list);
         $res = [];
         foreach ($list as $v) {
             $extra = $v['extra'] ? json_decode($v['extra'], true) : [];
@@ -82,6 +82,6 @@ class MessageController extends BaseController
             }
             $res[] = $arr;
         }
-        return $this->success('success', ['type' => $category['type'], 'list' => $res, 'page' => $page, 'total_page' => $totalPage]);
+        return $this->success('success', ['type' => $category['type'], 'title' => $category['category_name'], 'list' => $res, 'page' => $page, 'total_page' => $totalPage]);
     }
 }
