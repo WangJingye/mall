@@ -13,7 +13,7 @@ class MessageController extends BaseController
     {
         $categoryIds = \Db::table('Message')
             ->field(['category_id'])
-            ->where(['user_id' => ['in', [\App::$user['user_id'], 0]]])
+            ->where(['user_id' => \App::$user['user_id']])
             ->where(['status' => 1])
             ->group('category_id')
             ->findAll();
@@ -44,13 +44,12 @@ class MessageController extends BaseController
     public function listAction()
     {
         $params = \App::$request->params->toArray();
-
         $category = \Db::table('MessageCategory')
             ->where(['category_id' => $params['category_id']])
             ->find();
         $selector = \Db::table('Message')
             ->where(['category_id' => $params['category_id']])
-            ->where(['user_id' => ['in', [\App::$user['user_id'], 0]]])
+            ->where(['user_id' => \App::$user['user_id']])
             ->where(['status' => 1]);
         $page = 1;
         if (!empty($params['page'])) {
@@ -83,5 +82,18 @@ class MessageController extends BaseController
             $res[] = $arr;
         }
         return $this->success('success', ['type' => $category['type'], 'title' => $category['category_name'], 'list' => $res, 'page' => $page, 'total_page' => $totalPage]);
+    }
+
+    public function deleteAction()
+    {
+        $params = \App::$request->params->toArray();
+        if (empty($params['id'])) {
+            throw new \Exception('参数有误');
+        }
+        \Db::table('Message')->where([
+            'id' => $params['id'],
+            'user_id' => \App::$user['user_id']
+        ])->update(['status' => 0]);
+        return $this->success('success');
     }
 }

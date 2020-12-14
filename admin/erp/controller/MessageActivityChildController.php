@@ -17,7 +17,8 @@ class MessageActivityChildController extends BaseController
     ];
     public $statusList = [
         '1' => '未发布',
-        '2' => '已发布',
+        '2' => '发布中',
+        '3' => '已发布',
     ];
 
     public function init()
@@ -143,43 +144,12 @@ class MessageActivityChildController extends BaseController
             if (!count($list)) {
                 throw new \Exception('没有需要发布的内容');
             }
-            $data = [
-                'category_id' => 1,
-                'user_id' => 0,//0 发给所有用户
-                'title' => $activity['title'],
-                'content' => $list[0]['title'],
-            ];
-            $children = [];
-            $first = [];
-            foreach ($list as $i => $v) {
-                if ($i == 0) {
-                    $first = [
-                        'title' => $v['title'],
-                        'pic' => $v['pic'],
-                        'link_type' => $v['link_type'],
-                        'link' => $v['link']
-                    ];
-                } else {
-                    $children[] = [
-                        'title' => $v['title'],
-                        'pic' => $v['pic'],
-                        'link_type' => $v['link_type'],
-                        'link' => $v['link']
-                    ];
-                }
-            }
-            $data['extra'] = json_encode([
-                'icon' => $activity['pic'],
-                'first' => $first,
-                'children' => $children
-            ]);
-            \Db::table('Message')->insert($data);
             \Db::table('MessageActivityChild')
                 ->where(['activity_id' => $params['activity_id']])
                 ->where(['id' => ['in', explode(',', $params['ids'])]])
                 ->where(['status' => 1])
-                ->update(['status' => 2]);
-            return $this->success('已发布');
+                ->update(['status' => 2, 'publish_version' => time()]);
+            return $this->success('已加入发布队列');
         } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
