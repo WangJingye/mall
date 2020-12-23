@@ -51,24 +51,6 @@ class GrouponService extends BaseService
      */
     public function saveGroupon($data)
     {
-        $data['start_time'] = strtotime($data['start_time']);
-        if (!$data['start_time']) {
-            throw new \Exception('开始时间格式有误');
-        }
-        $data['end_time'] = strtotime($data['end_time']);
-        if (!$data['end_time']) {
-            throw new \Exception('结束时间格式有误');
-        }
-        if ($data['start_time'] >= $data['end_time']) {
-            throw new \Exception('开始时间必须小于结束时间');
-        }
-        $data['status'] = 1;
-        if ($data['start_time'] < time()) {
-            $data['status'] = 2;
-        }
-        if ($data['end_time'] < time()) {
-            $data['status'] = 3;
-        }
         $variations = json_decode($data['variation'], true);
         if (empty($variations)) {
             throw new \Exception('SKU不能为空');

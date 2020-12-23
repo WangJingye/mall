@@ -61,8 +61,8 @@ class UserController extends BaseController
             $arr['pic'] = $product['pic'];
             $arr['rules'] = $variation['rules_value'];
             $arr['price'] = $variation['price'];
-            $arr['stock'] = $variation['stock'];
-            $arr['number'] = min($v['number'], $variation['stock']);
+            $arr['stock'] = $variation['stock'] - $variation['sale_number'];
+            $arr['number'] = min($v['number'], $variation['stock'] - $variation['sale_number']);
             $arr['status'] = $product['status'];
             $res[] = $arr;
         }

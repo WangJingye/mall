@@ -61,17 +61,14 @@ class ProductController extends BaseController
                 'variation_code' => $obj['variation_code'],
                 'price' => $obj['price'],
                 'stock' => $obj['stock'],
+                'sale_number' => $obj['sale_number'],
                 'product_price' => $obj['product_price'],
             ]
         ];
-        if ($obj['status'] == 1) {
-            $res['left_time'] = time() - $obj['start_time'];
-        } else if ($obj['status'] == 2) {
-            $res['left_time'] = $obj['end_time'] - time();
-        } else {
-            $res['left_time'] = 0;
-        }
-        $res['show_time'] = $this->getLeftTime($res['left_time']);
+        $now = time();
+        $res['start_time'] = $obj['start_time'];
+        $res['end_time'] = $obj['end_time'];
+        $res['now_time'] = $now;
         $res['comments'] = $this->comment($product['product_id']);
         return $res;
     }
@@ -135,22 +132,15 @@ class ProductController extends BaseController
             'status' => $groupon['status'],
             'images' => explode(',', $extra['images']),
             'pic' => $groupon['pic'],
-            'rules' => $extra['rules']
+            'rules' => $extra['rules'],
         ];
-        if ($groupon['status'] == 1) {
-            $res['left_time'] = time() - $groupon['start_time'];
-        } else if ($groupon['status'] == 2) {
-            $res['left_time'] = $groupon['end_time'] - time();
-        } else {
-            $res['left_time'] = 0;
-        }
-        $res['show_time'] = $this->getLeftTime($res['left_time']);
         $list = [];
         foreach ($grouponVariations as $v) {
             $arr = [];
             $arr['variation_code'] = $v['variation_code'];
             $arr['rules_value'] = $v['rules_value'];
             $arr['stock'] = $v['stock'];
+            $arr['sale_number'] = $v['sale_number'];
             $arr['pic'] = $v['pic'];
             $arr['price'] = $v['price'];
             $arr['product_price'] = $v['product_price'];
@@ -179,6 +169,9 @@ class ProductController extends BaseController
         foreach ($joins as $v) {
             $user = $userList[$v['start_userid']];
             $leftTime = $v['create_time'] + \App::$config['site_info']['expire_order_pending'] * 60 - time();
+            if ($leftTime <= 0) {
+                continue;
+            }
             $joinUsers = [];
             if (!empty(\App::$user)) {
                 $flag = 0;
@@ -204,8 +197,7 @@ class ProductController extends BaseController
                 'avatar' => $user['avatar'],
                 'left_number' => max($v['number'] - count($extra), 0),
                 'left_time' => max($leftTime, 0),
-                'show_time' => $this->getLeftTime(max($leftTime, 0)),
-
+                'show_time' => $this->getLeftTime(max($leftTime, 0))
             ];
         }
         $res['join_list'] = $joinList;
@@ -246,6 +238,7 @@ class ProductController extends BaseController
             $arr['variation_code'] = $v['variation_code'];
             $arr['rules_value'] = $v['rules_value'];
             $arr['stock'] = $v['stock'];
+            $arr['sale_number'] = $v['sale_number'];
             $arr['pic'] = $v['pic'];
             $arr['price'] = $v['price'];
             $arr['product_price'] = $v['market_price'];
@@ -333,6 +326,10 @@ class ProductController extends BaseController
         $users = array_column($users, 'avatar', 'user_id');
         $res = [];
         foreach ($list as $v) {
+            $item = \Db::table('GrouponVariation')
+                ->field(['sum(sale_number) as sale_number'])
+                ->where(['go_id' => $v['id']])
+                ->where(['status' => 1])->find();
             $joins = $joinList[$v['id']] ?? [];
             $avatars = [];
             foreach ($joins as $j) {
@@ -346,7 +343,7 @@ class ProductController extends BaseController
                 'title' => $v['title'],
                 'price' => $v['price'],
                 'pic' => $v['pic'],
-                'sale' => rand(0, 999),//todo
+                'sale' => $item['sale_number'],
                 'joins' => $avatars,
             ];
         }
@@ -355,12 +352,18 @@ class ProductController extends BaseController
 
     public function flashSaleAction()
     {
+        $params = \App::$request->params->toArray();
         $page = 1;
         if (!empty($params['page'])) {
             $page = $params['page'];
         }
         $selector = \Db::table('FlashSale')
-            ->where(['status' => 2]);
+            ->where(['status' => 1]);
+        if (!empty($params['show_id'])) {
+            $selector->where(['type' => 2])
+                ->where(['show_id' => $params['show_id']])
+                ->where(['date' => date('Y-m-d')]);
+        }
         $pageSize = 10;
         $total = $selector->count();
         $totalPage = (int)ceil($total / $pageSize);
@@ -368,6 +371,7 @@ class ProductController extends BaseController
         $page = max($page, 1);
         $list = $selector->order('flash_id asc')->limit((($page - 1) * $pageSize) . ',' . $pageSize)->findAll();
         $res = [];
+        $now = time();
         foreach ($list as $k => $v) {
             $arr = [];
             $arr['id'] = $v['flash_id'];
@@ -376,17 +380,46 @@ class ProductController extends BaseController
             $arr['rules_value'] = $v['rules_value'];
             $arr['product_price'] = $v['product_price'];
             $arr['pic'] = $v['pic'];
-            $arr['percent'] = rand(0, 100);//todo
-            if ($v['status'] == 1) {
-                $arr['left_time'] = time() - $v['start_time'];
-            } else if ($v['status'] == 2) {
-                $arr['left_time'] = $v['end_time'] - time();
+            $arr['stock'] = $v['stock'];
+            $arr['status'] = $v['status'];
+            $arr['percent'] = round($v['sale_number'] / ($v['stock'] + $v['sale_number']) * 100, 2);
+            $arr['start_time'] = $v['start_time'];
+            $arr['end_time'] = $v['end_time'];
+            $arr['now_time'] = $now;
+            if ($now < $v['start_time']) {
+                $v['left_time'] = $v['start_time'] - time();
+            } else if ($now >= $v['start_time'] && $now < $v['end_time']) {
+                $v['left_time'] = $v['end_time'] - time();
             } else {
-                $arr['left_time'] = 0;
+                $v['left_time'] = 0;
             }
-            $arr['show_time'] = $this->getLeftTime($arr['left_time']);
+            $v['show_time'] = $this->getLeftTime($res['left_time']);
             $res[] = $arr;
         }
         return $this->success('success', ['list' => $res, 'page' => $page, 'total_page' => $totalPage]);
+    }
+
+    public function flashShowsAction()
+    {
+        $list = \Db::table('FlashShowing')
+            ->field(['start_time', 'end_time', 'show_id'])
+            ->where(['status' => 1])
+            ->order('start_time asc')
+            ->findAll();
+        $now = time();
+        foreach ($list as $k => $v) {
+            $arr = explode(':', $v['start_time']);
+            $list[$k]['start_time'] = $arr[0] . ':' . $arr[1];
+            $start = strtotime(date('Y-m-d ' . $v['start_time']));
+            $end = strtotime(date('Y-m-d ' . $v['end_time']));
+            if ($start > $now) {
+                $list[$k]['show_status'] = '即将开抢';
+            } else if ($start <= $now && $end >= $now) {
+                $list[$k]['show_status'] = '抢购中';
+            } else {
+                $list[$k]['show_status'] = '已结束';
+            }
+        }
+        return $this->success('success', $list);
     }
 }

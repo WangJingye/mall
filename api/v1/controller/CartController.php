@@ -32,8 +32,8 @@ class CartController extends BaseController
             ->where(['product_id' => $variation['product_id']])
             ->find();
         $res['status'] = $variation['status'] == 1 && $product['status'] == 1 ? 1 : 0;
-        $res['stock'] = $variation['stock'];
-        $number = min($variation['stock'], $params['number']);
+        $res['stock'] = $variation['stock'] - $variation['sale_number'];
+        $number = min($variation['stock'] - $variation['sale_number'], $params['number']);
         \Db::table('Cart')
             ->where(['user_id' => \App::$user['user_id']])
             ->where(['variation_code' => $params['variation_code']])

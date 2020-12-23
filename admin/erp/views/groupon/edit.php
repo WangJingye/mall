@@ -34,27 +34,11 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>开始时间</label>
-        <div class="col-sm-10">
-            <input type="text" name="start_time" class="form-control"
-                   value="<?= $this->model['start_time'] ? date('Y-m-d H:i:s', $this->model['start_time']) : '' ?>"
-                   placeholder="开始时间，格式为2019-01-01 00:00:00">
-        </div>
-    </div>
-    <div class="form-group row">
         <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>成团人数</label>
         <div class="col-sm-10">
             <input type="number" name="group_user_number" class="form-control"
                    value="<?= $this->model['group_user_number'] ? $this->model['group_user_number'] : 1 ?>"
                    placeholder="请输入成团人数">
-        </div>
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>结束时间</label>
-        <div class="col-sm-10">
-            <input type="text" name="end_time" class="form-control"
-                   value="<?= $this->model['end_time'] ? date('Y-m-d H:i:s', $this->model['end_time']) : '' ?>"
-                   placeholder="结束时间，格式为2019-01-01 00:00:00">
         </div>
     </div>
     <div class="form-group row">

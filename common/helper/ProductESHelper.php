@@ -80,7 +80,7 @@ class ProductESHelper
 
     public function createProduct()
     {
-        if (1 && !$this->existMapping('mall', 'product')) {
+        if (!$this->existMapping('mall', 'product')) {
             $params = [
                 'index' => 'mall',
                 'type' => 'product',
@@ -128,6 +128,38 @@ class ProductESHelper
                             'created_at' => [
                                 'type' => 'integer'
                             ],
+                        ]
+                    ],
+                ]
+            ];
+            $this->elasticsearch->indices()->putMapping($params);
+        }
+    }
+
+    public function createFlash()
+    {
+        if (!$this->existMapping('mall_flash', 'index')) {
+            $params = [
+                'index' => 'mall_flash',
+                'type' => 'index',
+                'body' => [
+                    'index' => [
+                        'properties' => [ //配置数据结构与类型
+                            'flash_id' => [ //
+                                'type' => 'integer',//类型 string、integer、float、double、boolean、date
+                            ],
+                            'show_id' => [ //
+                                'type' => 'integer',//类型 string、integer、float、double、boolean、date
+                            ],
+                            'date' => [ //
+                                'type' => 'date',//类型 string、integer、float、double、boolean、date
+                            ],
+                            'start_time' => [ //
+                                'type' => 'integer',//类型 string、integer、float、double、boolean、date
+                            ],
+                            'end_time' => [ //
+                                'type' => 'integer',//类型 string、integer、float、double、boolean、date
+                            ]
                         ]
                     ],
                 ]

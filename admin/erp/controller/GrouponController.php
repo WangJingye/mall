@@ -10,9 +10,8 @@ class GrouponController extends BaseController
     /** @var GrouponService */
     public $grouponService;
     public $statusList = [
-        '1' => '等待',
-        '2' => '进行中',
-        '3' => '已结束',
+        '1' => '进行中',
+        '2' => '已结束',
     ];
 
     public function init()
@@ -118,7 +117,7 @@ class GrouponController extends BaseController
                 if (empty($params['id'])) {
                     throw new \Exception('非法请求');
                 }
-                \Db::table('Groupon')->where(['id' => $params['id']])->update(['status' => 3]);
+                \Db::table('Groupon')->where(['id' => $params['id']])->update(['status' => 2]);
                 return $this->success('团购已结束');
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());

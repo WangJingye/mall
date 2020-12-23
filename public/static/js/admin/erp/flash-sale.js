@@ -30,11 +30,11 @@ $(function () {
             },
             start_time: {
                 required: true,
-                datetime:true
+                datetime: true
             },
             end_time: {
                 required: true,
-                datetime:true
+                datetime: true
             }
         },
         messages: {
@@ -63,13 +63,13 @@ $(function () {
             },
             start_time: {
                 required: '请输入开始时间',
-                datetime:'开始时间格式有误'
+                datetime: '开始时间格式有误'
             },
             end_time: {
                 required: '请输入结束时间',
-                datetime:'结束时间格式有误'
+                datetime: '结束时间格式有误'
             },
-            sort:{
+            sort: {
                 required: '请输入排序值',
                 digits: '库存只能是整数',
             }
@@ -80,6 +80,11 @@ $(function () {
         }
     });
 
+    $('#save-form input[name=type]').change(function () {
+        var type = $(this).val();
+        $('#save-form').find('.show-type').hide();
+        $('#save-form').find('.show-type' + type).show();
+    });
     $('.remove-btn').click(function () {
         if (!confirm('是否删除此记录？')) {
             return false;

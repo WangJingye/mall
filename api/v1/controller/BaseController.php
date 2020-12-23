@@ -23,6 +23,8 @@ class BaseController extends \api\common\controller\BaseController
         $seconds = $second % 60;
         if ($days > 0) {
             $days = $days . '天';
+        } else {
+            $days = '';
         }
         $hours = str_pad($hours, 2, '0', STR_PAD_LEFT);
         $minutes = str_pad($minutes, 2, '0', STR_PAD_LEFT);

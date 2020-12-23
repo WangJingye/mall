@@ -47,6 +47,12 @@
         </div>
     </div>
     <div class="form-group row">
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>秒杀类型</label>
+        <div class="col-sm-10">
+            <?= \admin\extend\input\SelectInput::instance($this->typeList, $this->model['type'] ?? 1, 'type', 'radio')->show() ?>
+        </div>
+    </div>
+    <div class="form-group row  show-type show-type1" <?= $this->model['type'] != 2 ? '' : 'style="display:none"' ?>>
         <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>开始时间</label>
         <div class="col-sm-10">
             <input type="text" name="start_time" class="form-control"
@@ -54,12 +60,31 @@
                    placeholder="开始时间，格式为2019-01-01 00:00:00">
         </div>
     </div>
-    <div class="form-group row">
+    <div class="form-group row  show-type show-type1" <?= $this->model['type'] != 2 ? '' : 'style="display:none"' ?>>
         <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>结束时间</label>
         <div class="col-sm-10">
             <input type="text" name="end_time" class="form-control"
                    value="<?= $this->model['end_time'] ? date('Y-m-d H:i:s', $this->model['end_time']) : '' ?>"
                    placeholder="结束时间，格式为2019-01-01 00:00:00">
+        </div>
+    </div>
+    <div class="form-group row show-type show-type2" <?= $this->model['type'] == 2 ? '' : 'style="display:none"' ?>>
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>日期</label>
+        <div class="col-sm-10">
+            <input type="text" name="date" class="form-control"
+                   value="<?= $this->model['date'] ? $this->model['date'] : date('Y-m-d', time() + 24 * 3600) ?>"
+                   placeholder="秒杀日期，格式为2019-01-01">
+        </div>
+    </div>
+    <div class="form-group row  show-type show-type2" <?= $this->model['type'] == 2 ? '' : 'style="display:none"' ?>>
+        <label class="col-sm-2 text-nowrap col-form-label form-label"><span style="color: red">*</span>场次</label>
+        <div class="col-sm-10">
+            <select name="show_id" class="form-control">
+                <option value="">请选择</option>
+                <?php foreach ($this->showList as $v): ?>
+                    <option value="<?= $v['show_id'] ?>" <?= $this->model['show_id'] == $v['show_id'] ? 'selected' : '' ?>><?= $v['start_time'] . ' ~ ' . $v['end_time'] ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
     </div>
     <div class="form-group row">

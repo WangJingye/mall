@@ -52,8 +52,6 @@
             <th>ID</th>
             <th>标题</th>
             <th>所属商品</th>
-            <th>开始时间</th>
-            <th>结束时间</th>
             <th>状态</th>
             <th>创建人</th>
             <th>显示到首页</th>
@@ -65,8 +63,6 @@
                 <td><?= $v['id'] ?></td>
                 <td><?= $v['title'] ?></td>
                 <td><?= $this->productList[$v['product_id']] ?></td>
-                <td><?= date('Y-m-d H:i:s', $v['start_time']) ?></td>
-                <td><?= date('Y-m-d H:i:s', $v['end_time']) ?></td>
                 <td class="status"><?= $this->statusList[$v['status']] ?></td>
                 <td><?= $this->userList[$v['create_userid']] ?></td>
                 <td><?= $this->boolList[$v['show_home']] ?></td>
@@ -79,7 +75,7 @@
                     <div class="btn btn-danger btn-sm remove-btn" data-id="<?= $v['id'] ?>">
                         <i class="glyphicon glyphicon-trash"></i> 删除
                     </div>
-                    <?php if ($v['status'] == 2): ?>
+                    <?php if ($v['status'] == 1): ?>
                         <div class="btn btn-outline-danger btn-sm end-btn" data-id="<?= $v['id'] ?>">
                             <i class="glyphicon glyphicon-remove"></i> 立即结束
                         </div>

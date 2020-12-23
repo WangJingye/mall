@@ -10,9 +10,12 @@ class FlashSaleController extends BaseController
     /** @var FlashSaleService */
     public $flashSaleService;
     public $statusList = [
-        '1' => '等待',
-        '2' => '进行中',
-        '3' => '已结束',
+        '1' => '进行中',
+        '2' => '已结束',
+    ];
+    public $typeList = [
+        '1' => '普通',
+        '2' => '场次',
     ];
 
     public function init()
@@ -81,6 +84,9 @@ class FlashSaleController extends BaseController
             $this->title = '编辑秒杀 - ' . $model['flash_id'];
         }
         $this->assign('statusList', $this->statusList);
+        $this->assign('typeList', $this->typeList);
+        $showList = \Db::table('FlashShowing')->where(['status' => 1])->findAll();
+        $this->assign('showList', $showList);
         $this->assign('boolList', $this->boolList);
     }
 

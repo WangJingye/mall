@@ -72,23 +72,25 @@ class FlashSaleService extends BaseService
      */
     public function saveFlashSale($data)
     {
-        $data['start_time'] = strtotime($data['start_time']);
-        if (!$data['start_time']) {
-            throw new \Exception('开始时间格式有误');
-        }
-        $data['end_time'] = strtotime($data['end_time']);
-        if (!$data['end_time']) {
-            throw new \Exception('结束时间格式有误');
-        }
-        if ($data['start_time'] >= $data['end_time']) {
-            throw new \Exception('开始时间必须小于结束时间');
-        }
-        $data['status'] = 1;
-        if ($data['start_time'] < time()) {
-            $data['status'] = 2;
-        }
-        if ($data['end_time'] < time()) {
-            $data['status'] = 3;
+        if ($data['type'] == 1) {
+            $data['start_time'] = strtotime($data['start_time']);
+            if (!$data['start_time']) {
+                throw new \Exception('开始时间格式有误');
+            }
+            $data['end_time'] = strtotime($data['end_time']);
+            if (!$data['end_time']) {
+                throw new \Exception('结束时间格式有误');
+            }
+            if ($data['start_time'] >= $data['end_time']) {
+                throw new \Exception('开始时间必须小于结束时间');
+            }
+        } else {
+            $show = \Db::table('FlashShowing')->where(['show_id' => $data['show_id']])->find();
+            if (!$show) {
+                throw new \Exception('秒杀场次有误');
+            }
+            $data['start_time'] = strtotime($data['date'] . ' ' . $show['start_time']);
+            $data['end_time'] = strtotime($data['date'] . ' ' . $show['end_time']);
         }
         $product = \Db::table('Product')->where(['product_id' => $data['product_id']])->find();
         $data['pic'] = $product['pic'];
@@ -99,4 +101,16 @@ class FlashSaleService extends BaseService
         }
     }
 
+    public function publish($data)
+    {
+        $obj = \Db::table('FlashSale')->where(['flash_id' => $data['id']])->find();
+        $params = [
+            'flash_id' => $obj['flash_id'],
+            'show_id' => $obj['show_id'],
+            'date' => $obj['date'],
+            'start_time' => $obj['start_time'],
+            'end_time' => $obj['end_time'],
+        ];
+
+    }
 }
